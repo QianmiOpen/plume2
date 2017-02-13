@@ -29,6 +29,8 @@
     "mitt": "^1.0.1"
   },
   "devDependencies": {
+    "@types/jest": "^18.1.1",
+    "@types/node": "^7.0.5",
     "jest": "^18.1.0",
     "typescript": "^2.1.6"
   }
