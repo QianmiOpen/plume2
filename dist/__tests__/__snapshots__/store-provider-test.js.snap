@@ -1,0 +1,11 @@
+exports[`store provider test suite first render 1`] = `
+<div>
+  plume
+</div>
+`;
+
+exports[`store provider test suite store change render 1`] = `
+<div>
+  plume++
+</div>
+`;
