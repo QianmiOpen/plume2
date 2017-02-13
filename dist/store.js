@@ -61,6 +61,21 @@ class Store {
         }
         this._callbacks.splice(index, 1);
     }
+    pprint() {
+        if (process.env.NODE_ENV != 'production') {
+            console.log(JSON.stringify(this._state, null, 2));
+        }
+    }
+    pprintActor() {
+        if (process.env.NODE_ENV != 'production') {
+            const stateObj = {};
+            this._actors.forEach((actor, index) => {
+                const name = actor.constructor.name;
+                stateObj[name] = this._actorsState[index].toJS();
+            });
+            console.log(JSON.stringify(stateObj, null, 2));
+        }
+    }
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Store;

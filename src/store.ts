@@ -68,7 +68,7 @@ export default class Store {
   }
 
   subscribe(cb: Handler) {
-    if (typeof(cb) != 'function' || this._callbacks.indexOf(cb) != -1) {
+    if (typeof (cb) != 'function' || this._callbacks.indexOf(cb) != -1) {
       return
     }
 
@@ -77,10 +77,28 @@ export default class Store {
 
   unsubscribe(cb: Handler) {
     const index = this._callbacks.indexOf(cb)
-    if (typeof(cb) != 'function' || index == -1) {
+    if (typeof (cb) != 'function' || index == -1) {
       return
     }
 
     this._callbacks.splice(index, 1)
+  }
+
+
+  pprint() {
+    if (process.env.NODE_ENV != 'production') {
+      console.log(JSON.stringify(this._state, null, 2))
+    }
+  }
+
+  pprintActor() {
+    if (process.env.NODE_ENV != 'production') {
+      const stateObj = {}
+      this._actors.forEach((actor, index) => {
+        const name = actor.constructor.name
+        stateObj[name] = this._actorsState[index].toJS()
+      })
+      console.log(JSON.stringify(stateObj, null, 2))
+    }
   }
 }
