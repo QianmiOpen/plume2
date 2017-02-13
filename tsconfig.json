@@ -5,6 +5,7 @@
         "jsx": "react",
         "noImplicitAny": false,
         "sourceMap": false,
+        "experimentalDecorators": true,
         "rootDir": "./src",
         "outDir": "./dist"
     }
