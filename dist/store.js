@@ -20,6 +20,28 @@ class Store {
             return state;
         });
     }
+    dispatch(msg, params) {
+        const newStoreState = this._state.withMutations(state => {
+            for (let i = 0, len = this._actors.length; i < len; i++) {
+                let actor = this._actors[i];
+                //debug
+                if (process.env.NODE_ENV != 'production') {
+                    const actorName = actor.constructor.name;
+                    console.log(`${actorName} will receive msg: ${msg}`);
+                }
+                let preState = this._actorsState[i];
+                const newState = actor.receive(msg, preState, params);
+                if (preState != newState) {
+                    this._actorsState[i] = newState;
+                    state = state.merge(newState);
+                }
+            }
+            return state;
+        });
+        if (newStoreState != this._state) {
+            this._state = newStoreState;
+        }
+    }
     state() {
         return this._state;
     }
