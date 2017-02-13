@@ -1,0 +1,35 @@
+{
+  "name": "plume",
+  "version": "1.0.0",
+  "description": "a lightweight of flux for mobile web",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "jest --verbose",
+    "compile": "./node_modules/.bin/tsc",
+    "watch": "./node_modules/.bin/tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hufeng/plume.git"
+  },
+  "keywords": [
+    "preact",
+    "immutable",
+    "flux",
+    "mobile"
+  ],
+  "author": "hufeng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hufeng/plume/issues"
+  },
+  "homepage": "https://github.com/hufeng/plume#readme",
+  "dependencies": {
+    "immutable": "^3.8.1",
+    "mitt": "^1.0.1"
+  },
+  "devDependencies": {
+    "jest": "^18.1.0",
+    "typescript": "^2.1.6"
+  }
+}
