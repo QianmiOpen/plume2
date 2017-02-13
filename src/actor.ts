@@ -16,4 +16,8 @@ export default class Actor {
     const action = this._route[msg]
     return action ? action.call(this, state, params) : state
   }
+
+  route(name: string) {
+    return name ? this._route[name] : this._route
+  }
 }

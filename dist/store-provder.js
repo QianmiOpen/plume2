@@ -7,16 +7,16 @@ function StoreProvider(AppStore, opts) {
                     super(props);
                     this.getChildContext = () => {
                         return {
-                            plume$Store: this._store
+                            plume$Store: this.store
                         };
                     };
                     this._handleStoreChange = (state) => {
                         this.setState((preState) => state.toObject());
                     };
                     this._isMounted = false;
-                    this._store = new AppStore(opts);
-                    this.state = this._store.state().toObject();
-                    this._store.subscribe(this._handleStoreChange);
+                    this.store = new AppStore(opts);
+                    this.state = this.store.state().toObject();
+                    this.store.subscribe(this._handleStoreChange);
                 }
                 componentWillMount() {
                     super.componentWillMount && super.componentWillMount();
@@ -36,7 +36,7 @@ function StoreProvider(AppStore, opts) {
                 }
                 componentWillUnmount() {
                     super.componentWillUnmount && super.componentWillUnmount();
-                    this._store.unsubscribe(this._handleStoreChange);
+                    this.store.unsubscribe(this._handleStoreChange);
                 }
                 render() {
                     return super.render();

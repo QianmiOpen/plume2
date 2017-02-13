@@ -10,7 +10,7 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
   return function wrapper(Base: React.Component): React.Component {
     return class WrapperComponent extends Base {
       _isMounted: boolean;
-      _store: Store;
+      store: Store;
       state: Object;
 
       static displayName = `StoreProvider(${getDisplayName(Base)})`;
@@ -21,7 +21,7 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
 
       getChildContext: Function = (): Object => {
         return {
-          plume$Store: this._store
+          plume$Store: this.store
         };
       };
 
@@ -29,9 +29,9 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
       constructor(props: Object) {
         super(props)
         this._isMounted = false
-        this._store = new AppStore(opts)
-        this.state = this._store.state().toObject()
-        this._store.subscribe(this._handleStoreChange)
+        this.store = new AppStore(opts)
+        this.state = this.store.state().toObject()
+        this.store.subscribe(this._handleStoreChange)
       }
 
       componentWillMount() {
@@ -56,7 +56,7 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
 
       componentWillUnmount() {
         super.componentWillUnmount && super.componentWillUnmount()
-        this._store.unsubscribe(this._handleStoreChange)
+        this.store.unsubscribe(this._handleStoreChange)
       }
 
       render() {

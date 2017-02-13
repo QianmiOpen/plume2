@@ -25,10 +25,15 @@ class Store {
         const newStoreState = this._state.withMutations(state => {
             for (let i = 0, len = this._actors.length; i < len; i++) {
                 let actor = this._actors[i];
+                const fn = actor.route(msg);
+                //如果actor没有处理msg的方法，直接跳过
+                if (!fn) {
+                    continue;
+                }
                 //debug
                 if (process.env.NODE_ENV != 'production') {
                     const actorName = actor.constructor.name;
-                    console.log(`${actorName} will receive msg: ${msg}`);
+                    console.log(`${actorName} => @Action('${msg}'), params => ${JSON.stringify(params)}'`);
                 }
                 let preState = this._actorsState[i];
                 const newState = actor.receive(msg, preState, params);
