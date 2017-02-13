@@ -1,0 +1,6 @@
+exports[`ql test suite ql init 1`] = `
+Array [
+  "loading",
+  [Function],
+]
+`;
