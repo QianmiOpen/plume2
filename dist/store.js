@@ -4,6 +4,7 @@ class Store {
     constructor(props) {
         this._state = immutable_1.fromJS({});
         this._actorsState = [];
+        this._callbacks = [];
         this._actors = this.bindActor();
         this.reduceActor();
     }
@@ -40,10 +41,25 @@ class Store {
         });
         if (newStoreState != this._state) {
             this._state = newStoreState;
+            //emit event
+            this._callbacks.forEach(cb => cb(this._state));
         }
     }
     state() {
         return this._state;
+    }
+    subscribe(cb) {
+        if (typeof (cb) != 'function' || this._callbacks.indexOf(cb) != -1) {
+            return;
+        }
+        this._callbacks.push(cb);
+    }
+    unsubscribe(cb) {
+        const index = this._callbacks.indexOf(cb);
+        if (typeof (cb) != 'function' || index == -1) {
+            return;
+        }
+        this._callbacks.splice(index, 1);
     }
 }
 Object.defineProperty(exports, "__esModule", { value: true });

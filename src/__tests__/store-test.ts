@@ -70,4 +70,18 @@ describe('store test suite', () => {
     expect([{name: 'plume++'}, {loading: true}])
       .toEqual([actorsState[0].toJS(), actorsState[1].toJS()])
   })
+
+  it('store subscribe', () => {
+    const store = new AppStore({})
+    const _handleStoreChange = (state: IMap) => {
+      expect({loading: true, name: 'plume++'})
+        .toEqual(store.state())
+    }
+    
+    store.subscribe(_handleStoreChange)
+    expect(1).toEqual(store._callbacks.length)
+
+    store.unsubscribe(_handleStoreChange)
+    expect(0).toEqual(store._callbacks.length)
+  })
 })

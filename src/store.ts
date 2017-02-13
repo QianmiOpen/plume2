@@ -3,14 +3,18 @@ import Actor from './actor'
 
 type IMap = Map<string, any>;
 
+type Handler = (state: IMap) => void;
+
 export default class Store {
-  _actors: Array<Actor>;
   _state: IMap;
+  _callbacks: Array<Handler>;
+  _actors: Array<Actor>;
   _actorsState: Array<IMap>;
 
   constructor(props) {
     this._state = fromJS({})
     this._actorsState = []
+    this._callbacks = []
     this._actors = this.bindActor()
     this.reduceActor()
   }
@@ -55,10 +59,28 @@ export default class Store {
     if (newStoreState != this._state) {
       this._state = newStoreState
       //emit event
+      this._callbacks.forEach(cb => cb(this._state))
     }
   }
 
   state() {
     return this._state
+  }
+
+  subscribe(cb: Handler) {
+    if (typeof(cb) != 'function' || this._callbacks.indexOf(cb) != -1) {
+      return
+    }
+
+    this._callbacks.push(cb)
+  }
+
+  unsubscribe(cb: Handler) {
+    const index = this._callbacks.indexOf(cb)
+    if (typeof(cb) != 'function' || index == -1) {
+      return
+    }
+
+    this._callbacks.splice(index, 1)
   }
 }
