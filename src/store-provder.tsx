@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import * as React from 'react'
 import {Map} from 'immutable'
 import Store from './store'
 
@@ -7,11 +7,24 @@ type IMap = Map<string, any>;
 type Options = {}
 
 export default function StoreProvider(AppStore: TStore, opts?: Options) {
-  return function wrapper(Base: Component): Component {
+  return function wrapper(Base: React.Component): React.Component {
     return class WrapperComponent extends Base {
       _isMounted: boolean;
       _store: Store;
       state: Object;
+
+      static displayName = `StoreProvider(${getDisplayName(Base)})`;
+
+      static childContextTypes = {
+        plume$Store: React.PropTypes.object
+      };
+
+      getChildContext: Function = (): Object => {
+        return {
+          plume$Store: this._store
+        };
+      };
+
 
       constructor(props: Object) {
         super(props)
@@ -54,5 +67,9 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
         (this as any).setState((preState) => state.toObject())
       };
     }
+  }
+
+  function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component'
   }
 }
