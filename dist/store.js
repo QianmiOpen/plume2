@@ -22,6 +22,9 @@ class Store {
         });
     }
     dispatch(msg, params) {
+        if (process.env.NODE_ENV != 'production') {
+            console.log(`store dispatch msg => ${msg}, params => ${JSON.stringify(params)}`);
+        }
         const newStoreState = this._state.withMutations(state => {
             for (let i = 0, len = this._actors.length; i < len; i++) {
                 let actor = this._actors[i];
