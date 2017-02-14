@@ -13,11 +13,13 @@ export default class Actor {
   }
 
   receive(msg: string, state: IMap, params?: any): IMap {
+    this._route = this._route || {}
     const action = this._route[msg]
     return action ? action.call(this, state, params) : state
   }
 
   route(name: string) {
+    this._route = this._route || {}
     return name ? this._route[name] : this._route
   }
 }
