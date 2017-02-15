@@ -63,7 +63,7 @@ describe('ql test suite', () => {
         expect({ loading: true, text: 'hello plume' })
             .toEqual(todo);
         //from cache
-        const todoCache = store.bigQuery(todoQL, { debug: true });
+        const todoCache = store.bigQuery(todoQL);
         expect({ loading: true, text: 'hello plume' })
             .toEqual(todoCache);
     });

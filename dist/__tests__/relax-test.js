@@ -9,6 +9,7 @@ const React = require("react");
 const renderer = require("react-test-renderer");
 const store_provder_1 = require("../store-provder");
 const store_1 = require("../store");
+const decorator_1 = require("../decorator");
 const actor_1 = require("../actor");
 const relax_1 = require("../relax");
 const ql_1 = require("../ql");
@@ -25,8 +26,18 @@ class HelloActor extends actor_1.default {
     defaultState() {
         return { mott: 'hello world!' };
     }
+    change(state, text) {
+        return state.set('mott', text);
+    }
 }
+__decorate([
+    decorator_1.Action('change')
+], HelloActor.prototype, "change", null);
 class AppStore extends store_1.default {
+    constructor(props) {
+        super(props);
+        window['_store'] = this;
+    }
     bindActor() {
         return [
             new LoadingActor,
@@ -81,6 +92,32 @@ HelloRelax = __decorate([
 describe('relax test suite', () => {
     it('initial render relax', () => {
         const tree = renderer.create(React.createElement(HelloApp, null)).toJSON();
+        expect(tree).toMatchSnapshot();
+    });
+    it('dispatch event', () => {
+        let HelloApp = class HelloApp extends React.Component {
+            render() {
+                return React.createElement(Hello, null);
+            }
+        };
+        HelloApp = __decorate([
+            store_provder_1.default(AppStore)
+        ], HelloApp);
+        let Hello = class Hello extends React.Component {
+            render() {
+                return (React.createElement("div", null,
+                    React.createElement("div", null, this.props.mott)));
+            }
+        };
+        Hello.defaultProps = {
+            mott: ''
+        };
+        Hello = __decorate([
+            relax_1.default
+        ], Hello);
+        const component = renderer.create(React.createElement(HelloApp, null));
+        window['_store'].dispatch('change', 'hello plume');
+        const tree = component.toJSON();
         expect(tree).toMatchSnapshot();
     });
 });

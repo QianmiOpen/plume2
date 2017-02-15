@@ -2,10 +2,11 @@ import * as React from 'react'
 import * as renderer from 'react-test-renderer'
 import StoreProvider from '../store-provder'
 import Store from '../store'
+import { Action } from '../decorator'
 import Actor from '../actor'
 import Relax from '../relax'
-import {QL} from '../ql'
-import {DQL} from '../dql'
+import { QL } from '../ql'
+import { DQL } from '../dql'
 jest.mock('react-dom')
 
 class LoadingActor extends Actor {
@@ -18,11 +19,21 @@ class LoadingActor extends Actor {
 
 class HelloActor extends Actor {
   defaultState() {
-    return {mott: 'hello world!'}
+    return { mott: 'hello world!' }
+  }
+
+  @Action('change')
+  change(state, text) {
+    return state.set('mott', text)
   }
 }
 
 class AppStore extends Store {
+  constructor(props) {
+    super(props)
+    window['_store'] = this
+  }
+
   bindActor() {
     return [
       new LoadingActor,
@@ -34,7 +45,7 @@ class AppStore extends Store {
 @StoreProvider(AppStore)
 class HelloApp extends React.Component {
   render() {
-    return <HelloRelax/>
+    return <HelloRelax />
   }
 }
 
@@ -46,7 +57,7 @@ const loadingQL = QL('loadingQL', [
 const mottQL = QL('mottQL', [
   loadingQL,
   'mott',
-  (loading, mott) => ({loading, mott})
+  (loading, mott) => ({ loading, mott })
 ])
 
 const loadingDQL = DQL('loadingDQL', [
@@ -62,7 +73,7 @@ class HelloRelax extends React.Component {
     loading: boolean;
     mott: string;
     loadingQL: boolean;
-    mottQL: {loading: boolean; mott: string};
+    mottQL: { loading: boolean; mott: string };
     loadingDQL: boolean;
   };
 
@@ -78,7 +89,7 @@ class HelloRelax extends React.Component {
   render() {
     const {loading, mott, loadingQL, mottQL, loadingDQL} = this.props
     expect(false).toEqual(loadingQL)
-    expect({loading: false, mott: 'hello world!'})
+    expect({ loading: false, mott: 'hello world!' })
       .toEqual(mottQL)
     expect("hello world!").toEqual(loadingDQL)
 
@@ -93,7 +104,38 @@ class HelloRelax extends React.Component {
 
 describe('relax test suite', () => {
   it('initial render relax', () => {
-    const tree = renderer.create(<HelloApp/>).toJSON()
+    const tree = renderer.create(<HelloApp />).toJSON()
+    expect(tree).toMatchSnapshot()
+  })
+
+  it('dispatch event', () => {
+    @StoreProvider(AppStore)
+    class HelloApp extends React.Component {
+      render() {
+        return <Hello />
+      }
+    }
+
+    @Relax
+    class Hello extends React.Component {
+      props: { mott: string };
+
+      static defaultProps = {
+        mott: ''
+      };
+
+      render() {
+        return (
+          <div>
+            <div>{this.props.mott}</div>
+          </div>
+        )
+      }
+    }
+
+    const component = renderer.create(<HelloApp />)
+    window['_store'].dispatch('change', 'hello plume')
+    const tree = component.toJSON()
     expect(tree).toMatchSnapshot()
   })
 })

@@ -1,3 +1,11 @@
+exports[`relax test suite dispatch event 1`] = `
+<div>
+  <div>
+    hello plume
+  </div>
+</div>
+`;
+
 exports[`relax test suite initial render relax 1`] = `
 <div>
   <div />
