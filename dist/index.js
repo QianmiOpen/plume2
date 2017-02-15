@@ -10,4 +10,6 @@ exports.Store = store_1.default;
 const store_provder_1 = require("./store-provder");
 exports.StoreProvider = store_provder_1.default;
 const ql_1 = require("./ql");
-exports.QL = ql_1.default;
+exports.QL = ql_1.QL;
+const relax_1 = require("./relax");
+exports.Relax = relax_1.default;

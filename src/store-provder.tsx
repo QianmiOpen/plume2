@@ -16,12 +16,12 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
       static displayName = `StoreProvider(${getDisplayName(Base)})`;
 
       static childContextTypes = {
-        plume$Store: React.PropTypes.object
+        _plume$Store: React.PropTypes.object
       };
 
       getChildContext: Function = (): Object => {
         return {
-          plume$Store: this.store
+          _plume$Store: this.store
         };
       };
 

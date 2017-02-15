@@ -2,7 +2,7 @@ type Lang = Array<any>;
 
 let id = 0;
 
-class QueryLang {
+export class QueryLang {
   private _id: number;
   private _name: string;
   private _lang: Lang;
@@ -27,6 +27,6 @@ class QueryLang {
 }
 
 //expose
-export default function QL(name: string, lang: Lang) {
+export function QL(name: string, lang: Lang) {
   return new QueryLang(name, lang)
 }

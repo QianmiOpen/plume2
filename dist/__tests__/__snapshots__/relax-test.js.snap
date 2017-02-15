@@ -1,0 +1,8 @@
+exports[`relax test suite initial render relax 1`] = `
+<div>
+  <div />
+  <div>
+    hello world!
+  </div>
+</div>
+`;

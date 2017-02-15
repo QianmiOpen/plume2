@@ -1,10 +1,13 @@
 "use strict";
 const immutable_1 = require("immutable");
+const ql_1 = require("./ql");
+const is_array_1 = require("./util/is-array");
 class Store {
     constructor(props) {
         this._state = immutable_1.fromJS({});
         this._actorsState = [];
         this._callbacks = [];
+        this._cacheQL = {};
         this._actors = this.bindActor();
         this.reduceActor();
     }
@@ -51,6 +54,45 @@ class Store {
             this._state = newStoreState;
             //emit event
             this._callbacks.forEach(cb => cb(this._state));
+        }
+    }
+    bigQuery(ql) {
+        if (!(ql instanceof ql_1.QueryLang)) {
+            throw new Error('invalid QL');
+        }
+        //数据是否过期,默认否
+        let outdata = false;
+        const id = ql.id();
+        const name = ql.name();
+        //获取缓存数据结构
+        this._cacheQL[id] = this._cacheQL[id] || [];
+        //copy lang
+        const lang = ql.lang().slice();
+        //reactive function
+        const rxFn = lang.pop();
+        let args = lang.map((elem, index) => {
+            if (elem instanceof ql_1.QueryLang) {
+                const value = this.bigQuery(elem);
+                outdata = value != this._cacheQL[id][index];
+                this._cacheQL[id][index] = value;
+                return value;
+            }
+            else {
+                const value = is_array_1.default(elem) ? this._state.getIn(elem) : this._state.get(elem);
+                outdata = value != this._cacheQL[id][index];
+                this._cacheQL[id][index] = value;
+                return value;
+            }
+        });
+        //如果数据过期，重新计算一次
+        if (outdata) {
+            const result = rxFn.apply(null, args);
+            this._cacheQL[id][args.length] = result;
+            return result;
+        }
+        else {
+            //返回cache中最后一个值
+            return this._cacheQL[id][args.length];
         }
     }
     state() {

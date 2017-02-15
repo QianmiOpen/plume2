@@ -16,9 +16,9 @@ class QueryLang {
         return this._lang;
     }
 }
+exports.QueryLang = QueryLang;
 //expose
 function QL(name, lang) {
     return new QueryLang(name, lang);
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = QL;
+exports.QL = QL;

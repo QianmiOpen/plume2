@@ -7,7 +7,7 @@ function StoreProvider(AppStore, opts) {
                     super(props);
                     this.getChildContext = () => {
                         return {
-                            plume$Store: this.store
+                            _plume$Store: this.store
                         };
                     };
                     this._handleStoreChange = (state) => {
@@ -44,7 +44,7 @@ function StoreProvider(AppStore, opts) {
             },
             _a.displayName = `StoreProvider(${getDisplayName(Base)})`,
             _a.childContextTypes = {
-                plume$Store: React.PropTypes.object
+                _plume$Store: React.PropTypes.object
             },
             _a;
         var _a;
