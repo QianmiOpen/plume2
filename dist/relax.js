@@ -20,6 +20,13 @@ function RelaxContainer(Wrapper) {
                 //先计算一次relaxProps
                 this.relaxProps = this.computeProps(this.props);
                 this._isMounted = false;
+                if (process.env.NODE_ENV != 'production') {
+                    if (this.context['_plume$Store']._opts.debug) {
+                        console.groupCollapsed(`${Relax.displayName} will mount 🚀`);
+                        console.log('props=>', JSON.stringify(this.relaxProps, null, 2));
+                        console.groupEnd();
+                    }
+                }
             }
             componentDidMount() {
                 this._isMounted = true;

@@ -4,8 +4,10 @@ import { QueryLang } from './ql'
 import isArray from './util/is-array'
 
 type IMap = Map<string, any>;
-
 type Handler = (state: IMap) => void;
+interface Options {
+  debug?: boolean;
+}
 
 export default class Store {
   _state: IMap;
@@ -13,8 +15,10 @@ export default class Store {
   _actors: Array<Actor>;
   _actorsState: Array<IMap>;
   _cacheQL: { [name: string]: Array<any> };
+  _opts: Options;
 
-  constructor(props) {
+  constructor(props: Options) {
+    this._opts = props || { debug: false }
     this._state = fromJS({})
     this._actorsState = []
     this._callbacks = []
@@ -40,7 +44,10 @@ export default class Store {
 
   dispatch(msg: string, params?: any) {
     if (process.env.NODE_ENV != 'production') {
-      console.log(`store dispatch msg => ${msg}, params => ${JSON.stringify(params)}`)
+      if (this._opts.debug) {
+        console.groupCollapsed(`store dispatch => '${msg}'`)
+        console.log(`params|>${JSON.stringify(params || 'no params')}`)
+      }
     }
 
     const newStoreState = this._state.withMutations(state => {
@@ -51,13 +58,23 @@ export default class Store {
 
         //如果actor没有处理msg的方法，直接跳过
         if (!fn) {
+
+          if (process.env.NODE_ENV != 'production') {
+            if (this._opts.debug) {
+              console.log(`${actor.constructor.name} receive '${msg}', but no handle 😭`)
+            }
+          }
+
           continue
         }
 
         //debug
         if (process.env.NODE_ENV != 'production') {
-          const actorName = actor.constructor.name
-          console.log(`${actorName} => @Action('${msg}'), params => ${JSON.stringify(params)}'`)
+          if (this._opts.debug) {
+            const actorName = actor.constructor.name
+            console.groupCollapsed(`${actorName} receive => '${msg}'`)
+            console.log(`params|>${JSON.stringify(params)}'`)
+          }
         }
 
         let preState = this._actorsState[i]
@@ -71,6 +88,12 @@ export default class Store {
       return state
     })
 
+    if (process.env.NODE_ENV != 'production') {
+      if (this._opts.debug) {
+        console.groupEnd()
+      }
+    }
+
     if (newStoreState != this._state) {
       this._state = newStoreState
       //emit event
@@ -78,11 +101,12 @@ export default class Store {
     }
   }
 
-  bigQuery(ql: QueryLang): any {
+  bigQuery(ql: QueryLang, params?: { debug: boolean }): any {
     if (!(ql instanceof QueryLang)) {
       throw new Error('invalid QL')
     }
-
+    //获取参数
+    const opt = params || { debug: false }
     //数据是否过期,默认否
     let outdata = false
     const id = ql.id()
@@ -94,16 +118,38 @@ export default class Store {
     //reactive function
     const rxFn = lang.pop()
 
+    //will drop on production env
+    if (process.env.NODE_ENV != 'production') {
+      if (opt.debug) {
+        console.log(`🔥:tracing: QL(${name})....`)
+        console.time('duration')
+      }
+    }
+
     let args = lang.map((elem, index) => {
       if (elem instanceof QueryLang) {
         const value = this.bigQuery(elem)
         outdata = value != this._cacheQL[id][index]
         this._cacheQL[id][index] = value
+
+        if (process.env.NODE_ENV != 'production') {
+          if (opt.debug) {
+            console.log(`dep:${elem.name()}|>QL, cache:${!outdata} value:${JSON.stringify(value,null,2)}`)
+          }
+        }
+
         return value
       } else {
         const value = isArray(elem) ? this._state.getIn(elem) : this._state.get(elem)
-        outdata = value !=  this._cacheQL[id][index]
-         this._cacheQL[id][index] = value
+        outdata = value != this._cacheQL[id][index]
+        this._cacheQL[id][index] = value
+
+        if (process.env.NODE_ENV != 'production') {
+          if (opt.debug) {
+            console.log(`dep:${elem}|> cache:${!outdata} value:${JSON.stringify(value, null, 2)}`)
+          }
+        }
+
         return value
       }
     })
@@ -112,8 +158,23 @@ export default class Store {
     if (outdata) {
       const result = rxFn.apply(null, args)
       this._cacheQL[id][args.length] = result
+
+      if (process.env.NODE_ENV != 'production') {
+        if (opt.debug) {
+          console.log(`QL(${name})|> result: ${JSON.stringify(result, null, 2)}`)
+          console.timeEnd('duration')
+        }
+      }
+
       return result
     } else {
+      if (process.env.NODE_ENV != 'production') {
+        if (opt.debug) {
+          console.log(`🚀:QL(${name})|> cache: true; result: ${JSON.stringify(this._cacheQL[id][args.length], null, 2)}`)
+          console.timeEnd('duration')
+        }
+      }
+
       //返回cache中最后一个值
       return this._cacheQL[id][args.length]
     }

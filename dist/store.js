@@ -4,6 +4,7 @@ const ql_1 = require("./ql");
 const is_array_1 = require("./util/is-array");
 class Store {
     constructor(props) {
+        this._opts = props || { debug: false };
         this._state = immutable_1.fromJS({});
         this._actorsState = [];
         this._callbacks = [];
@@ -26,7 +27,10 @@ class Store {
     }
     dispatch(msg, params) {
         if (process.env.NODE_ENV != 'production') {
-            console.log(`store dispatch msg => ${msg}, params => ${JSON.stringify(params)}`);
+            if (this._opts.debug) {
+                console.groupCollapsed(`store dispatch => '${msg}'`);
+                console.log(`params|>${JSON.stringify(params || 'no params')}`);
+            }
         }
         const newStoreState = this._state.withMutations(state => {
             for (let i = 0, len = this._actors.length; i < len; i++) {
@@ -34,12 +38,20 @@ class Store {
                 const fn = actor.route(msg);
                 //如果actor没有处理msg的方法，直接跳过
                 if (!fn) {
+                    if (process.env.NODE_ENV != 'production') {
+                        if (this._opts.debug) {
+                            console.log(`${actor.constructor.name} receive '${msg}', but no handle 😭`);
+                        }
+                    }
                     continue;
                 }
                 //debug
                 if (process.env.NODE_ENV != 'production') {
-                    const actorName = actor.constructor.name;
-                    console.log(`${actorName} => @Action('${msg}'), params => ${JSON.stringify(params)}'`);
+                    if (this._opts.debug) {
+                        const actorName = actor.constructor.name;
+                        console.groupCollapsed(`${actorName} receive => '${msg}'`);
+                        console.log(`params|>${JSON.stringify(params)}'`);
+                    }
                 }
                 let preState = this._actorsState[i];
                 const newState = actor.receive(msg, preState, params);
@@ -50,16 +62,23 @@ class Store {
             }
             return state;
         });
+        if (process.env.NODE_ENV != 'production') {
+            if (this._opts.debug) {
+                console.groupEnd();
+            }
+        }
         if (newStoreState != this._state) {
             this._state = newStoreState;
             //emit event
             this._callbacks.forEach(cb => cb(this._state));
         }
     }
-    bigQuery(ql) {
+    bigQuery(ql, params) {
         if (!(ql instanceof ql_1.QueryLang)) {
             throw new Error('invalid QL');
         }
+        //获取参数
+        const opt = params || { debug: false };
         //数据是否过期,默认否
         let outdata = false;
         const id = ql.id();
@@ -70,17 +89,34 @@ class Store {
         const lang = ql.lang().slice();
         //reactive function
         const rxFn = lang.pop();
+        //will drop on production env
+        if (process.env.NODE_ENV != 'production') {
+            if (opt.debug) {
+                console.log(`🔥:tracing: QL(${name})....`);
+                console.time('duration');
+            }
+        }
         let args = lang.map((elem, index) => {
             if (elem instanceof ql_1.QueryLang) {
                 const value = this.bigQuery(elem);
                 outdata = value != this._cacheQL[id][index];
                 this._cacheQL[id][index] = value;
+                if (process.env.NODE_ENV != 'production') {
+                    if (opt.debug) {
+                        console.log(`dep:${elem.name()}|>QL, cache:${!outdata} value:${JSON.stringify(value, null, 2)}`);
+                    }
+                }
                 return value;
             }
             else {
                 const value = is_array_1.default(elem) ? this._state.getIn(elem) : this._state.get(elem);
                 outdata = value != this._cacheQL[id][index];
                 this._cacheQL[id][index] = value;
+                if (process.env.NODE_ENV != 'production') {
+                    if (opt.debug) {
+                        console.log(`dep:${elem}|> cache:${!outdata} value:${JSON.stringify(value, null, 2)}`);
+                    }
+                }
                 return value;
             }
         });
@@ -88,9 +124,21 @@ class Store {
         if (outdata) {
             const result = rxFn.apply(null, args);
             this._cacheQL[id][args.length] = result;
+            if (process.env.NODE_ENV != 'production') {
+                if (opt.debug) {
+                    console.log(`QL(${name})|> result: ${JSON.stringify(result, null, 2)}`);
+                    console.timeEnd('duration');
+                }
+            }
             return result;
         }
         else {
+            if (process.env.NODE_ENV != 'production') {
+                if (opt.debug) {
+                    console.log(`🚀:QL(${name})|> cache: true; result: ${JSON.stringify(this._cacheQL[id][args.length], null, 2)}`);
+                    console.timeEnd('duration');
+                }
+            }
             //返回cache中最后一个值
             return this._cacheQL[id][args.length];
         }

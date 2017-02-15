@@ -4,7 +4,9 @@ import Store from './store'
 
 type TStore = typeof Store
 type IMap = Map<string, any>;
-type Options = {}
+type Options = {
+  debug?: boolean;
+}
 
 export default function StoreProvider(AppStore: TStore, opts?: Options) {
   return function wrapper(Base: React.Component): React.Component {
@@ -37,6 +39,13 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
       componentWillMount() {
         super.componentWillMount && super.componentWillMount()
         this._isMounted = false
+        
+        //will drop on production env
+        if (process.env.NODE_ENV != 'production') {
+          if (this.store._opts.debug) {
+            console.log(`${WrapperComponent.displayName} will mount 🚀`)
+          }
+        }
       }
 
       componentDidMount() {

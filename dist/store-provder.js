@@ -21,6 +21,12 @@ function StoreProvider(AppStore, opts) {
                 componentWillMount() {
                     super.componentWillMount && super.componentWillMount();
                     this._isMounted = false;
+                    //will drop on production env
+                    if (process.env.NODE_ENV != 'production') {
+                        if (this.store._opts.debug) {
+                            console.log(`${WrapperComponent.displayName} will mount 🚀`);
+                        }
+                    }
                 }
                 componentDidMount() {
                     super.componentDidMount && super.componentDidMount();
