@@ -2,6 +2,7 @@
 const React = require("react");
 const ql_1 = require("./ql");
 const dql_1 = require("./dql");
+const immutable_1 = require("immutable");
 function RelaxContainer(Wrapper) {
     return _a = class Relax extends React.Component {
             constructor(props, context) {
@@ -17,7 +18,7 @@ function RelaxContainer(Wrapper) {
             }
             componentWillMount() {
                 //先计算一次relaxProps
-                this.computeProps();
+                this.relaxProps = this.computeProps(this.props);
                 this._isMounted = false;
             }
             componentDidMount() {
@@ -29,46 +30,56 @@ function RelaxContainer(Wrapper) {
             componentDidUpdate() {
                 this._isMounted = true;
             }
+            shouldComponentUpdate(nextProps) {
+                //如果前后两次props的数量都不一致，直接刷新
+                if (Object.keys(nextProps).length != Object.keys(this.props).length) {
+                    return true;
+                }
+                const newRelaxProps = this.computeProps(nextProps);
+                if (immutable_1.is(immutable_1.fromJS(this.relaxProps), immutable_1.fromJS(newRelaxProps))) {
+                    return false;
+                }
+                this.relaxProps = newRelaxProps;
+                return true;
+            }
             componentWillUnmount() {
                 this.context.unsubscribe(this._handleStoreChange);
             }
             render() {
                 return React.createElement(Wrapper, Object.assign({}, this.props, this.relaxProps));
             }
-            computeProps() {
-                this.relaxProps = this.relaxProps || {};
+            computeProps(props) {
+                const relaxProps = {};
                 const store = this.context['_plume$Store'];
-                const defaultProps = Relax.defaultProps;
                 const dqlList = {};
-                for (let propName in defaultProps) {
-                    const propValue = defaultProps[propName];
+                for (let propName in props) {
+                    const propValue = props[propName];
                     //先取默认值
-                    this.relaxProps[propName] = propValue;
+                    relaxProps[propName] = propValue;
                     //属性值如果是function，直接根据名称注入store中的方法
                     if (typeof (propValue) === 'function') {
-                        this.relaxProps[propName] = store[propName];
-                        continue;
+                        relaxProps[propName] = store[propName];
                     }
-                    //是不是源于store中的state
-                    if (_isNotValidValue(store.state().get(propName))) {
-                        this.relaxProps[propName] = store.state().get(propName);
+                    else if (_isNotValidValue(store.state().get(propName))) {
+                        relaxProps[propName] = store.state().get(propName);
                     }
-                    //是不是ql
-                    if (propValue instanceof ql_1.QueryLang) {
-                        this.relaxProps[propName] = store.bigQuery(propValue);
+                    else if (propValue instanceof ql_1.QueryLang) {
+                        relaxProps[propName] = store.bigQuery(propValue);
                     }
-                    //是不是dql
-                    if (propValue instanceof dql_1.DynamicQueryLang) {
+                    else if (propValue instanceof dql_1.DynamicQueryLang) {
                         dqlList[propName] = propValue;
                     }
                 }
                 //计算dql
                 for (let propName in dqlList) {
-                    let ql = dqlList[propName].withContext(this.relaxProps).ql();
-                    this.relaxProps[propName] = store.bigQuery(ql);
+                    let ql = dqlList[propName].withContext(relaxProps).ql();
+                    relaxProps[propName] = store.bigQuery(ql);
                 }
+                return relaxProps;
             }
         },
+        //displayName
+        _a.displayName = `StoreProvider(${getDisplayName(Wrapper)})`,
         //拷贝WrapperComponent的defaultProps
         _a.defaultProps = Wrapper.defaultProps || {},
         //声明上下文依赖
@@ -78,6 +89,9 @@ function RelaxContainer(Wrapper) {
         _a;
     function _isNotValidValue(v) {
         return (typeof (v) != 'undefined' && v != null);
+    }
+    function getDisplayName(WrappedComponent) {
+        return WrappedComponent.displayName || WrappedComponent.name || 'Component';
     }
     var _a;
 }

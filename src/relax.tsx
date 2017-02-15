@@ -1,8 +1,8 @@
 import * as React from 'react'
 import Store from './store'
-import {QueryLang} from './ql'
-import {DynamicQueryLang} from './dql'
-import { Map } from 'immutable'
+import { QueryLang } from './ql'
+import { DynamicQueryLang } from './dql'
+import { Map, is, fromJS } from 'immutable'
 
 type IMap = Map<string, any>;
 
@@ -12,6 +12,9 @@ interface RelaxContext {
 
 export default function RelaxContainer(Wrapper: React.Component): React.Component {
   return class Relax extends React.Component {
+    //displayName
+    static displayName = `StoreProvider(${getDisplayName(Wrapper)})`;
+
     //拷贝WrapperComponent的defaultProps
     static defaultProps = Wrapper.defaultProps || {}
 
@@ -34,7 +37,7 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
 
     componentWillMount() {
       //先计算一次relaxProps
-      this.computeProps()
+      this.relaxProps = this.computeProps(this.props)
       this._isMounted = false
     }
 
@@ -50,52 +53,67 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
       this._isMounted = true
     }
 
+    shouldComponentUpdate(nextProps) {
+      //如果前后两次props的数量都不一致，直接刷新
+      if (Object.keys(nextProps).length != Object.keys(this.props).length) {
+        return true
+      }
+
+      const newRelaxProps = this.computeProps(nextProps)
+      if (is(fromJS(this.relaxProps), fromJS(newRelaxProps))) {
+        return false
+      }
+
+      this.relaxProps = newRelaxProps
+      return true
+    }
+
     componentWillUnmount() {
       this.context.unsubscribe(this._handleStoreChange)
     }
 
     render() {
-      return <Wrapper {...this.props} {...this.relaxProps}/>
+      return <Wrapper {...this.props} {...this.relaxProps} />
     }
 
-    computeProps() {
-      this.relaxProps = this.relaxProps || {}
+    computeProps(props) {
+      const relaxProps = {}
       const store: Store = this.context['_plume$Store']
-      const defaultProps = Relax.defaultProps
       const dqlList = {}
 
-      for (let propName in defaultProps) {
-        const propValue = defaultProps[propName]
+      for (let propName in props) {
+        const propValue = props[propName]
         //先取默认值
-        this.relaxProps[propName] = propValue
+        relaxProps[propName] = propValue
 
         //属性值如果是function，直接根据名称注入store中的方法
-        if (typeof(propValue) === 'function') {
-          this.relaxProps[propName] = store[propName]
-          continue
+        if (typeof (propValue) === 'function') {
+          relaxProps[propName] = store[propName]
         }
 
         //是不是源于store中的state
-       if (_isNotValidValue(store.state().get(propName))) {
-          this.relaxProps[propName] = store.state().get(propName)
+        else if (_isNotValidValue(store.state().get(propName))) {
+          relaxProps[propName] = store.state().get(propName)
         }
 
         //是不是ql
-        if (propValue instanceof QueryLang) {
-          this.relaxProps[propName] = store.bigQuery(propValue)
+        else if (propValue instanceof QueryLang) {
+          relaxProps[propName] = store.bigQuery(propValue)
         }
 
         //是不是dql
-        if (propValue instanceof DynamicQueryLang) {
+        else if (propValue instanceof DynamicQueryLang) {
           dqlList[propName] = propValue
         }
       }
 
       //计算dql
       for (let propName in dqlList) {
-        let ql = (dqlList[propName] as DynamicQueryLang).withContext(this.relaxProps).ql()
-        this.relaxProps[propName] = store.bigQuery(ql)
+        let ql = (dqlList[propName] as DynamicQueryLang).withContext(relaxProps).ql()
+        relaxProps[propName] = store.bigQuery(ql)
       }
+
+      return relaxProps
     }
 
     _handleStoreChange = (state: IMap) => {
@@ -107,5 +125,9 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
 
   function _isNotValidValue(v: any) {
     return (typeof (v) != 'undefined' && v != null)
+  }
+
+  function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component'
   }
 }

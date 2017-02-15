@@ -54,9 +54,11 @@ const loadingDQL = DQL('loadingDQL', [
   loading => loading
 ])
 
+
 @Relax
 class HelloRelax extends React.Component {
   props: {
+    mottFlag: string;
     loading: boolean;
     mott: string;
     loadingQL: boolean;
