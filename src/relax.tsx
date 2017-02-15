@@ -13,7 +13,7 @@ interface RelaxContext {
 export default function RelaxContainer(Wrapper: React.Component): React.Component {
   return class Relax extends React.Component {
     //displayName
-    static displayName = `StoreProvider(${getDisplayName(Wrapper)})`;
+    static displayName = `Relax(${getDisplayName(Wrapper)})`;
 
     //拷贝WrapperComponent的defaultProps
     static defaultProps = Wrapper.defaultProps || {}

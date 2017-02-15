@@ -93,7 +93,7 @@ function RelaxContainer(Wrapper) {
             }
         },
         //displayName
-        _a.displayName = `StoreProvider(${getDisplayName(Wrapper)})`,
+        _a.displayName = `Relax(${getDisplayName(Wrapper)})`,
         //拷贝WrapperComponent的defaultProps
         _a.defaultProps = Wrapper.defaultProps || {},
         //声明上下文依赖
