@@ -39,7 +39,7 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
       componentWillMount() {
         super.componentWillMount && super.componentWillMount()
         this._isMounted = false
-        
+
         //will drop on production env
         if (process.env.NODE_ENV != 'production') {
           if (this.store._opts.debug) {
@@ -51,6 +51,13 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
       componentDidMount() {
         super.componentDidMount && super.componentDidMount()
         this._isMounted = true
+
+        //will drop on production env
+        if (process.env.NODE_ENV != 'production') {
+          if (this.store._opts.debug) {
+            console.log(`${WrapperComponent.displayName} will update 🚀`)
+          }
+        }
       }
 
       componentWillUpdate() {

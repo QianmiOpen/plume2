@@ -47,6 +47,13 @@ function RelaxContainer(Wrapper) {
                     return false;
                 }
                 this.relaxProps = newRelaxProps;
+                if (process.env.NODE_ENV != 'production') {
+                    if (this.context['_plume$Store']._opts.debug) {
+                        console.groupCollapsed(`${Relax.displayName} will update 🚀`);
+                        console.log('props=>', JSON.stringify(this.relaxProps, null, 2));
+                        console.groupEnd();
+                    }
+                }
                 return true;
             }
             componentWillUnmount() {

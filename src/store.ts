@@ -53,12 +53,10 @@ export default class Store {
     const newStoreState = this._state.withMutations(state => {
       for (let i = 0, len = this._actors.length; i < len; i++) {
         let actor = this._actors[i]
-
         const fn = actor.route(msg)
 
         //如果actor没有处理msg的方法，直接跳过
         if (!fn) {
-
           if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
               console.log(`${actor.constructor.name} receive '${msg}', but no handle 😭`)
