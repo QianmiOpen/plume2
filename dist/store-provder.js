@@ -11,6 +11,12 @@ function StoreProvider(AppStore, opts) {
                         };
                     };
                     this._handleStoreChange = (state) => {
+                        //will drop on production env
+                        if (process.env.NODE_ENV != 'production') {
+                            if (this.store._opts.debug) {
+                                console.log(`${WrapperComponent.displayName} will update 🚀`);
+                            }
+                        }
                         this.setState((preState) => state.toObject());
                     };
                     this._isMounted = false;
@@ -35,12 +41,6 @@ function StoreProvider(AppStore, opts) {
                 componentWillUpdate() {
                     super.componentWillUpdate && super.componentWillUpdate();
                     this._isMounted = false;
-                    //will drop on production env
-                    if (process.env.NODE_ENV != 'production') {
-                        if (this.store._opts.debug) {
-                            console.log(`${WrapperComponent.displayName} will update 🚀`);
-                        }
-                    }
                 }
                 componentDidUpdate() {
                     super.componentDidUpdate && super.componentDidUpdate();

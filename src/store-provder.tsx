@@ -56,13 +56,6 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
       componentWillUpdate() {
         super.componentWillUpdate && super.componentWillUpdate()
         this._isMounted = false
-
-        //will drop on production env
-        if (process.env.NODE_ENV != 'production') {
-          if (this.store._opts.debug) {
-            console.log(`${WrapperComponent.displayName} will update 🚀`)
-          }
-        }
       }
 
       componentDidUpdate() {
@@ -80,6 +73,13 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
       }
 
       _handleStoreChange = (state: IMap) => {
+        //will drop on production env
+        if (process.env.NODE_ENV != 'production') {
+          if (this.store._opts.debug) {
+            console.log(`${WrapperComponent.displayName} will update 🚀`)
+          }
+        }
+
         (this as any).setState((preState) => state.toObject())
       };
     }

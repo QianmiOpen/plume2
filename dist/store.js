@@ -51,6 +51,7 @@ class Store {
                         const actorName = actor.constructor.name;
                         console.groupCollapsed(`${actorName} receive => '${msg}'`);
                         console.log(`params|>${JSON.stringify(params)}'`);
+                        console.groupEnd();
                     }
                 }
                 let preState = this._actorsState[i];
