@@ -11,5 +11,7 @@ const store_provder_1 = require("./store-provder");
 exports.StoreProvider = store_provder_1.default;
 const ql_1 = require("./ql");
 exports.QL = ql_1.QL;
+const dql_1 = require("./dql");
+exports.DQL = dql_1.DQL;
 const relax_1 = require("./relax");
 exports.Relax = relax_1.default;
