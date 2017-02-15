@@ -11,6 +11,8 @@ const store_provder_1 = require("../store-provder");
 const store_1 = require("../store");
 const actor_1 = require("../actor");
 const relax_1 = require("../relax");
+const ql_1 = require("../ql");
+const dql_1 = require("../dql");
 jest.mock('react-dom');
 class LoadingActor extends actor_1.default {
     defaultState() {
@@ -40,17 +42,38 @@ let HelloApp = class HelloApp extends React.Component {
 HelloApp = __decorate([
     store_provder_1.default(AppStore)
 ], HelloApp);
+const loadingQL = ql_1.QL('loadingQL', [
+    'loading',
+    loading => loading
+]);
+const mottQL = ql_1.QL('mottQL', [
+    loadingQL,
+    'mott',
+    (loading, mott) => ({ loading, mott })
+]);
+const loadingDQL = dql_1.DQL('loadingDQL', [
+    '$mottFlag',
+    loading => loading
+]);
 let HelloRelax = class HelloRelax extends React.Component {
     render() {
-        const { loading, mott } = this.props;
+        const { loading, mott, loadingQL, mottQL, loadingDQL } = this.props;
+        expect(false).toEqual(loadingQL);
+        expect({ loading: false, mott: 'hello world!' })
+            .toEqual(mottQL);
+        expect("hello world!").toEqual(loadingDQL);
         return (React.createElement("div", null,
             React.createElement("div", null, loading),
             React.createElement("div", null, mott)));
     }
 };
 HelloRelax.defaultProps = {
+    mottFlag: 'mott',
     loading: false,
-    mott: ''
+    mott: '',
+    loadingQL,
+    mottQL,
+    loadingDQL
 };
 HelloRelax = __decorate([
     relax_1.default

@@ -4,6 +4,8 @@ import StoreProvider from '../store-provder'
 import Store from '../store'
 import Actor from '../actor'
 import Relax from '../relax'
+import {QL} from '../ql'
+import {DQL} from '../dql'
 jest.mock('react-dom')
 
 class LoadingActor extends Actor {
@@ -36,20 +38,47 @@ class HelloApp extends React.Component {
   }
 }
 
+const loadingQL = QL('loadingQL', [
+  'loading',
+  loading => loading
+])
+
+const mottQL = QL('mottQL', [
+  loadingQL,
+  'mott',
+  (loading, mott) => ({loading, mott})
+])
+
+const loadingDQL = DQL('loadingDQL', [
+  '$mottFlag',
+  loading => loading
+])
+
 @Relax
 class HelloRelax extends React.Component {
   props: {
     loading: boolean;
-    mott: string
+    mott: string;
+    loadingQL: boolean;
+    mottQL: {loading: boolean; mott: string};
+    loadingDQL: boolean;
   };
 
   static defaultProps = {
+    mottFlag: 'mott',
     loading: false,
-    mott: ''
+    mott: '',
+    loadingQL,
+    mottQL,
+    loadingDQL
   }
 
   render() {
-    const {loading, mott} = this.props
+    const {loading, mott, loadingQL, mottQL, loadingDQL} = this.props
+    expect(false).toEqual(loadingQL)
+    expect({loading: false, mott: 'hello world!'})
+      .toEqual(mottQL)
+    expect("hello world!").toEqual(loadingDQL)
 
     return (
       <div>

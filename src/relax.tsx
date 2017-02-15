@@ -1,5 +1,7 @@
 import * as React from 'react'
 import Store from './store'
+import {QueryLang} from './ql'
+import {DynamicQueryLang} from './dql'
 import { Map } from 'immutable'
 
 type IMap = Map<string, any>;
@@ -58,8 +60,9 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
 
     computeProps() {
       this.relaxProps = this.relaxProps || {}
-      const store = this.context['_plume$Store']
+      const store: Store = this.context['_plume$Store']
       const defaultProps = Relax.defaultProps
+      const dqlList = {}
 
       for (let propName in defaultProps) {
         const propValue = defaultProps[propName]
@@ -76,6 +79,22 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
        if (_isNotValidValue(store.state().get(propName))) {
           this.relaxProps[propName] = store.state().get(propName)
         }
+
+        //是不是ql
+        if (propValue instanceof QueryLang) {
+          this.relaxProps[propName] = store.bigQuery(propValue)
+        }
+
+        //是不是dql
+        if (propValue instanceof DynamicQueryLang) {
+          dqlList[propName] = propValue
+        }
+      }
+
+      //计算dql
+      for (let propName in dqlList) {
+        let ql = (dqlList[propName] as DynamicQueryLang).withContext(this.relaxProps).ql()
+        this.relaxProps[propName] = store.bigQuery(ql)
       }
     }
 

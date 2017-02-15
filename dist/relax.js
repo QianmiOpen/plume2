@@ -1,5 +1,7 @@
 "use strict";
 const React = require("react");
+const ql_1 = require("./ql");
+const dql_1 = require("./dql");
 function RelaxContainer(Wrapper) {
     return _a = class Relax extends React.Component {
             constructor(props, context) {
@@ -37,6 +39,7 @@ function RelaxContainer(Wrapper) {
                 this.relaxProps = this.relaxProps || {};
                 const store = this.context['_plume$Store'];
                 const defaultProps = Relax.defaultProps;
+                const dqlList = {};
                 for (let propName in defaultProps) {
                     const propValue = defaultProps[propName];
                     //先取默认值
@@ -50,6 +53,19 @@ function RelaxContainer(Wrapper) {
                     if (_isNotValidValue(store.state().get(propName))) {
                         this.relaxProps[propName] = store.state().get(propName);
                     }
+                    //是不是ql
+                    if (propValue instanceof ql_1.QueryLang) {
+                        this.relaxProps[propName] = store.bigQuery(propValue);
+                    }
+                    //是不是dql
+                    if (propValue instanceof dql_1.DynamicQueryLang) {
+                        dqlList[propName] = propValue;
+                    }
+                }
+                //计算dql
+                for (let propName in dqlList) {
+                    let ql = dqlList[propName].withContext(this.relaxProps).ql();
+                    this.relaxProps[propName] = store.bigQuery(ql);
                 }
             }
         },
