@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {Map} from 'immutable'
+import { Map } from 'immutable'
 import Store from './store'
 
 type TStore = typeof Store
@@ -51,6 +51,11 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
       componentDidMount() {
         super.componentDidMount && super.componentDidMount()
         this._isMounted = true
+      }
+
+      componentWillUpdate() {
+        super.componentWillUpdate && super.componentWillUpdate()
+        this._isMounted = false
 
         //will drop on production env
         if (process.env.NODE_ENV != 'production') {
@@ -58,11 +63,6 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
             console.log(`${WrapperComponent.displayName} will update 🚀`)
           }
         }
-      }
-
-      componentWillUpdate() {
-        super.componentWillUpdate && super.componentWillUpdate()
-        this._isMounted = false
       }
 
       componentDidUpdate() {

@@ -31,16 +31,16 @@ function StoreProvider(AppStore, opts) {
                 componentDidMount() {
                     super.componentDidMount && super.componentDidMount();
                     this._isMounted = true;
+                }
+                componentWillUpdate() {
+                    super.componentWillUpdate && super.componentWillUpdate();
+                    this._isMounted = false;
                     //will drop on production env
                     if (process.env.NODE_ENV != 'production') {
                         if (this.store._opts.debug) {
                             console.log(`${WrapperComponent.displayName} will update 🚀`);
                         }
                     }
-                }
-                componentWillUpdate() {
-                    super.componentWillUpdate && super.componentWillUpdate();
-                    this._isMounted = false;
                 }
                 componentDidUpdate() {
                     super.componentDidUpdate && super.componentDidUpdate();
