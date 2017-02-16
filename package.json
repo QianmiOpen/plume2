@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest --verbose",
     "compile": "./node_modules/.bin/tsc",
-    "watch": "./node_modules/.bin/tsc --watch"
+    "watch": "./node_modules/.bin/tsc --watch",
+    "release": "yarn run compile && cp ./typings/index.d.ts ./dist"
   },
   "repository": {
     "type": "git",
@@ -17,6 +18,11 @@
     "immutable",
     "flux",
     "mobile"
+  ],
+  "files": [
+    "package.json",
+    "dist",
+    "README.md"
   ],
   "author": "hufeng",
   "license": "ISC",
