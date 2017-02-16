@@ -81,7 +81,7 @@ class Store {
         //获取参数
         const opt = params || { debug: false };
         //数据是否过期,默认否
-        let outdata = false;
+        let outdate = false;
         const id = ql.id();
         const name = ql.name();
         //获取缓存数据结构
@@ -100,29 +100,29 @@ class Store {
         let args = lang.map((elem, index) => {
             if (elem instanceof ql_1.QueryLang) {
                 const value = this.bigQuery(elem);
-                outdata = value != this._cacheQL[id][index];
+                outdate = value != this._cacheQL[id][index];
                 this._cacheQL[id][index] = value;
                 if (process.env.NODE_ENV != 'production') {
                     if (opt.debug) {
-                        console.log(`dep:${elem.name()}|>QL, cache:${!outdata} value:${JSON.stringify(value, null, 2)}`);
+                        console.log(`dep:${elem.name()}|>QL, cache:${!outdate} value:${JSON.stringify(value, null, 2)}`);
                     }
                 }
                 return value;
             }
             else {
                 const value = is_array_1.default(elem) ? this._state.getIn(elem) : this._state.get(elem);
-                outdata = value != this._cacheQL[id][index];
+                outdate = value != this._cacheQL[id][index];
                 this._cacheQL[id][index] = value;
                 if (process.env.NODE_ENV != 'production') {
                     if (opt.debug) {
-                        console.log(`dep:${elem}|> cache:${!outdata} value:${JSON.stringify(value, null, 2)}`);
+                        console.log(`dep:${elem}|> cache:${!outdate} value:${JSON.stringify(value, null, 2)}`);
                     }
                 }
                 return value;
             }
         });
         //如果数据过期，重新计算一次
-        if (outdata) {
+        if (outdate) {
             const result = rxFn.apply(null, args);
             this._cacheQL[id][args.length] = result;
             if (process.env.NODE_ENV != 'production') {
