@@ -17,7 +17,7 @@ export default class Store {
   _cacheQL: { [name: string]: Array<any> };
   _opts: Options;
 
-  constructor(props: Options) {
+  constructor(props?: Options) {
     this._opts = props || { debug: false }
     this._state = fromJS({})
     this._actorsState = []
