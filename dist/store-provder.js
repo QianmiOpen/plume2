@@ -20,7 +20,7 @@ function StoreProvider(AppStore, opts) {
                         this.setState((preState) => state.toObject());
                     };
                     this._isMounted = false;
-                    this.store = new AppStore(opts);
+                    this.store = new AppStore(opts || { debug: false });
                     this.state = this.store.state().toObject();
                     this.store.subscribe(this._handleStoreChange);
                 }

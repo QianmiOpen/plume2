@@ -45,13 +45,15 @@ class AppStore extends store_1.default {
         ];
     }
 }
+// console.groupCollapsed = console.log
+// console.groupEnd = console.log
 let HelloApp = class HelloApp extends React.Component {
     render() {
         return React.createElement(HelloRelax, null);
     }
 };
 HelloApp = __decorate([
-    store_provder_1.default(AppStore)
+    store_provder_1.default(AppStore, { debug: false })
 ], HelloApp);
 const loadingQL = ql_1.QL('loadingQL', [
     'loading',

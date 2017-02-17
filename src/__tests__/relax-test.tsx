@@ -42,7 +42,10 @@ class AppStore extends Store {
   }
 }
 
-@StoreProvider(AppStore)
+// console.groupCollapsed = console.log
+// console.groupEnd = console.log
+
+@StoreProvider(AppStore, {debug: false})
 class HelloApp extends React.Component {
   render() {
     return <HelloRelax />
