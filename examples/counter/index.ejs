@@ -1,0 +1,13 @@
+<html>
+  <head>
+    <title>hello iflux2</title>
+  </head>
+  <body>
+  <div id="app"></div>
+  <% if (htmlWebpackPlugin.options.dev) { %>
+  <script src="/webpack-dev-server.js"></script>
+  <% } else { %>
+  <script src="vendor.dll.js"></script>
+  <% } %>
+  </body>
+</html>
