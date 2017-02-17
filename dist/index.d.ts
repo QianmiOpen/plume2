@@ -72,15 +72,15 @@ declare namespace plume {
 
   export function Action(msg: string): Function;
 
-  export function Relax<IProps>(
-    Wrapper: React.ComponentClass<IProps>
-  ): React.ComponentClass<IProps>;
+  export function Relax<TFunction extends React.ComponentClass<any>>(
+    target: TFunction
+  ): TFunction;
 
   type TStore = typeof Store
   type Wrapper<IProps> = React.ComponentClass<IProps>;
-  
+
   export function StoreProvider<IProps>(
-    AppStore: TStore, 
-    opts?: IOptions 
+    AppStore: TStore,
+    opts?: IOptions
   ): (Base: Wrapper<IProps>) => Wrapper<IProps>;
 }

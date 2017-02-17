@@ -8,7 +8,8 @@
     "test": "jest --verbose",
     "compile": "./node_modules/.bin/tsc",
     "watch": "./node_modules/.bin/tsc --watch",
-    "release": "yarn run compile && cp ./typings/index.d.ts ./dist"
+    "types": "cp ./typings/index.d.ts ./dist",
+    "build": "npm run compile"
   },
   "repository": {
     "type": "git",
