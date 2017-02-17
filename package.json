@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "a lightweight of flux for mobile web",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "test": "jest --verbose",
     "compile": "./node_modules/.bin/tsc",
