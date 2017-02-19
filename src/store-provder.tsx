@@ -6,6 +6,7 @@ type TStore = typeof Store
 type IMap = Map<string, any>;
 type Options = {
   debug?: boolean;
+  syncDispatch?: boolean;
 }
 
 export default function StoreProvider(AppStore: TStore, opts?: Options) {
@@ -31,7 +32,7 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
       constructor(props: Object) {
         super(props)
         this._isMounted = false
-        this.store = new AppStore(opts || {debug: false})
+        this.store = new AppStore(opts || { debug: false, syncDispatch: false })
         this.state = this.store.state().toObject()
         this.store.subscribe(this._handleStoreChange)
       }

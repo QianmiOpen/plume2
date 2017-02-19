@@ -2,13 +2,16 @@
 const immutable_1 = require("immutable");
 const ql_1 = require("./ql");
 const is_array_1 = require("./util/is-array");
+const defer_1 = require("./util/defer");
 class Store {
     constructor(props) {
-        this._opts = props || { debug: false };
+        this._opts = props || { debug: false, syncDispatch: false };
         this._state = immutable_1.fromJS({});
         this._actorsState = [];
         this._callbacks = [];
         this._cacheQL = {};
+        this._dQueue = [];
+        this._pending = false;
         this._actors = this.bindActor();
         this.reduceActor();
     }
@@ -26,53 +29,80 @@ class Store {
         });
     }
     dispatch(msg, params) {
+        //sync dispatch 
+        if (this._opts.syncDispatch) {
+            this.transaction((state) => this.dispatchActor(msg, state, params));
+        }
+        else {
+            this._dQueue.push({ msg, params });
+            //be sure, only emit one time
+            if (!this._pending) {
+                defer_1.default(() => {
+                    this.transaction((state) => {
+                        for (let payload of this._dQueue) {
+                            const { msg, params } = payload;
+                            state = this.dispatchActor(msg, state, params);
+                        }
+                        //recover 
+                        this._pending = false;
+                        this._dQueue = [];
+                        return state;
+                    });
+                });
+            }
+            this._pending = true;
+        }
+    }
+    transaction(dispatchActor) {
+        const newStoreState = this._state.withMutations(state => {
+            return dispatchActor(state);
+        });
+        if (newStoreState != this._state) {
+            this._state = newStoreState;
+            this._callbacks.forEach(cb => cb(this._state));
+        }
+    }
+    dispatchActor(msg, storeState, params) {
         if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
-                console.groupCollapsed(`store dispatch => '${msg}'`);
-                console.log(`params|>${JSON.stringify(params || 'no params')}`);
+                //node can not support groupCollapsed
+                (console.groupCollapsed && console.log)(`store dispatch => '${msg}'`);
+                console.log(`params |> ${JSON.stringify(params || 'no params')}`);
             }
         }
-        const newStoreState = this._state.withMutations(state => {
-            for (let i = 0, len = this._actors.length; i < len; i++) {
-                let actor = this._actors[i];
-                const fn = actor.route(msg);
-                //如果actor没有处理msg的方法，直接跳过
-                if (!fn) {
-                    if (process.env.NODE_ENV != 'production') {
-                        if (this._opts.debug) {
-                            console.log(`${actor.constructor.name} receive '${msg}', but no handle 😭`);
-                        }
-                    }
-                    continue;
-                }
-                //debug
+        for (let i = 0, len = this._actors.length; i < len; i++) {
+            let actor = this._actors[i];
+            const fn = actor.route(msg);
+            //如果actor没有处理msg的方法，直接跳过
+            if (!fn) {
+                //log
                 if (process.env.NODE_ENV != 'production') {
                     if (this._opts.debug) {
-                        const actorName = actor.constructor.name;
-                        console.groupCollapsed(`${actorName} receive => '${msg}'`);
-                        console.log(`params|>${JSON.stringify(params)}'`);
-                        console.groupEnd();
+                        console.log(`${actor.constructor.name} receive '${msg}', but no handle 😭`);
                     }
                 }
-                let preState = this._actorsState[i];
-                const newState = actor.receive(msg, preState, params);
-                if (preState != newState) {
-                    this._actorsState[i] = newState;
-                    state = state.merge(newState);
+                continue;
+            }
+            //debug
+            if (process.env.NODE_ENV != 'production') {
+                if (this._opts.debug) {
+                    const actorName = actor.constructor.name;
+                    console.log(`${actorName} receive => '${msg}'`);
                 }
             }
-            return state;
-        });
+            let preActorState = this._actorsState[i];
+            const newActorState = actor.receive(msg, preActorState, params);
+            if (preActorState != newActorState) {
+                this._actorsState[i] = newActorState;
+                storeState = storeState.merge(newActorState);
+            }
+        }
         if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
                 console.groupEnd();
             }
         }
-        if (newStoreState != this._state) {
-            this._state = newStoreState;
-            //emit event
-            this._callbacks.forEach(cb => cb(this._state));
-        }
+        return storeState;
     }
     bigQuery(ql, params) {
         if (!(ql instanceof ql_1.QueryLang)) {

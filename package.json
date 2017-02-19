@@ -11,6 +11,12 @@
     "types": "cp ./typings/index.d.ts ./dist",
     "build": "npm run compile"
   },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/examples/"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hufeng/plume.git"

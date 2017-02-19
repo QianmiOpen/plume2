@@ -3,13 +3,13 @@ import * as renderer from 'react-test-renderer';
 import StoreProvider from '../store-provder'
 import Store from '../store'
 import Actor from '../actor'
-import {Action} from '../decorator'
+import { Action } from '../decorator'
 jest.mock('react-dom')
 
 
 class HelloActor extends Actor {
   defaultState() {
-    return {name: 'plume'}
+    return { name: 'plume' }
   }
 
   @Action('change')
@@ -35,7 +35,7 @@ class AppStore extends Store {
 
 @StoreProvider(AppStore)
 class Home extends React.Component {
-  state: {name: string}
+  state: { name: string }
 
   render() {
     return (
@@ -47,14 +47,31 @@ class Home extends React.Component {
 
 describe('store provider test suite', () => {
   it('first render', () => {
-    const tree = renderer.create(<Home/>).toJSON()
+    const tree = renderer.create(<Home />).toJSON()
     expect(tree).toMatchSnapshot();
   })
 
-  it('store change render', () => {
-    const component = renderer.create(<Home/>)
-    window['_store'].change()
+  it('store sync dispath change render', () => {
+    const component = renderer.create(<Home />)
+    const store = window['_store'] as AppStore
+    //hack
+    store._opts.syncDispatch = false
+    //测试同步渲染
+    store.change()
     const tree = component.toJSON()
     expect(tree).toMatchSnapshot()
+  })
+
+  it('store async dispatch change render', () => {
+    const component = renderer.create(<Home />)
+    const store = window['_store'] as AppStore
+    //hack
+    store._opts.syncDispatch = true
+    //测试同步渲染
+    store.change()
+    process.nextTick(() => {
+      const tree = component.toJSON()
+      expect(tree).toMatchSnapshot()
+    })
   })
 })

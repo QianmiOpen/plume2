@@ -46,7 +46,7 @@ class AppStore extends store_1.default {
 }
 describe('store test suite', () => {
     it('default state', () => {
-        const store = new AppStore({});
+        const store = new AppStore();
         //defautlState
         expect({
             loading: false,
@@ -59,14 +59,25 @@ describe('store test suite', () => {
         expect([{ name: "plume" }, { loading: false }])
             .toEqual([actorState[0].toJS(), actorState[1].toJS()]);
     });
-    it('store dispatch', () => {
-        const store = new AppStore({});
+    it('store sync dispatch', () => {
+        const store = new AppStore({ syncDispatch: true });
         store.change();
         const storeState = store.state();
-        expect({ loading: true, name: 'plume++' }).toEqual(storeState.toJS());
+        expect(storeState.toJS()).toEqual({ loading: true, name: 'plume++' });
         const actorsState = store._actorsState;
         expect([{ name: 'plume++' }, { loading: true }])
             .toEqual([actorsState[0].toJS(), actorsState[1].toJS()]);
+    });
+    it('store async dispatch', () => {
+        const store = new AppStore({ syncDispatch: false });
+        store.change();
+        process.nextTick(() => {
+            const storeState = store.state();
+            expect(storeState.toJS()).toEqual({ loading: true, name: 'plume++' });
+            const actorsState = store._actorsState;
+            expect([{ name: 'plume++' }, { loading: true }])
+                .toEqual([actorsState[0].toJS(), actorsState[1].toJS()]);
+        });
     });
     it('store subscribe', () => {
         const store = new AppStore({});

@@ -2,11 +2,13 @@ import { Map, fromJS } from 'immutable'
 import Actor from './actor'
 import { QueryLang } from './ql'
 import isArray from './util/is-array'
+import defer from './util/defer'
 
 type IMap = Map<string, any>;
 type Handler = (state: IMap) => void;
 interface Options {
   debug?: boolean;
+  syncDispatch?: boolean;
 }
 
 export default class Store {
@@ -16,13 +18,17 @@ export default class Store {
   _actorsState: Array<IMap>;
   _cacheQL: { [name: string]: Array<any> };
   _opts: Options;
+  _dQueue: Array<{ msg: string, params?: any }>;
+  _pending: boolean;
 
   constructor(props?: Options) {
-    this._opts = props || { debug: false }
+    this._opts = props || { debug: false, syncDispatch: false }
     this._state = fromJS({})
     this._actorsState = []
     this._callbacks = []
     this._cacheQL = {}
+    this._dQueue = []
+    this._pending = false
     this._actors = this.bindActor()
     this.reduceActor()
   }
@@ -43,49 +49,87 @@ export default class Store {
   }
 
   dispatch(msg: string, params?: any) {
+    //sync dispatch 
+    if (this._opts.syncDispatch) {
+      this.transaction((state: IMap) => this.dispatchActor(msg, state, params))
+    }
+    //merge all dispatch in one event-loop
+    else {
+      this._dQueue.push({ msg, params })
+
+      //be sure, only emit one time
+      if (!this._pending) {
+        defer(() => {
+          this.transaction((state: IMap) => {
+
+            for (let payload of this._dQueue) {
+              const {msg, params} = payload
+              state = this.dispatchActor(msg, state, params)
+            }
+
+            //recover 
+            this._pending = false
+            this._dQueue = []
+            return state;
+          })
+        })
+      }
+
+      this._pending = true
+    }
+  }
+
+  transaction(dispatchActor: (state: IMap) => IMap) {
+    const newStoreState = this._state.withMutations(state => {
+      return dispatchActor(state)
+    })
+
+    if (newStoreState != this._state) {
+      this._state = newStoreState
+      this._callbacks.forEach(cb => cb(this._state))
+    }
+  }
+
+  dispatchActor(msg: string, storeState: IMap, params?: any): IMap {
     if (process.env.NODE_ENV != 'production') {
       if (this._opts.debug) {
-        console.groupCollapsed(`store dispatch => '${msg}'`)
-        console.log(`params|>${JSON.stringify(params || 'no params')}`)
+        //node can not support groupCollapsed
+        (console.groupCollapsed && console.log)(`store dispatch => '${msg}'`)
+        console.log(`params |> ${JSON.stringify(params || 'no params')}`)
       }
     }
 
-    const newStoreState = this._state.withMutations(state => {
-      for (let i = 0, len = this._actors.length; i < len; i++) {
-        let actor = this._actors[i]
-        const fn = actor.route(msg)
+    for (let i = 0, len = this._actors.length; i < len; i++) {
+      let actor = this._actors[i]
+      const fn = actor.route(msg)
 
-        //如果actor没有处理msg的方法，直接跳过
-        if (!fn) {
-          if (process.env.NODE_ENV != 'production') {
-            if (this._opts.debug) {
-              console.log(`${actor.constructor.name} receive '${msg}', but no handle 😭`)
-            }
-          }
-
-          continue
-        }
-
-        //debug
+      //如果actor没有处理msg的方法，直接跳过
+      if (!fn) {
+        //log
         if (process.env.NODE_ENV != 'production') {
           if (this._opts.debug) {
-            const actorName = actor.constructor.name
-            console.groupCollapsed(`${actorName} receive => '${msg}'`)
-            console.log(`params|>${JSON.stringify(params)}'`)
-            console.groupEnd()
+            console.log(`${actor.constructor.name} receive '${msg}', but no handle 😭`)
           }
         }
 
-        let preState = this._actorsState[i]
-        const newState = actor.receive(msg, preState, params)
-        if (preState != newState) {
-          this._actorsState[i] = newState
-          state = state.merge(newState)
+        continue
+      }
+
+      //debug
+      if (process.env.NODE_ENV != 'production') {
+        if (this._opts.debug) {
+          const actorName = actor.constructor.name
+          console.log(`${actorName} receive => '${msg}'`)
         }
       }
 
-      return state
-    })
+      let preActorState = this._actorsState[i]
+      const newActorState = actor.receive(msg, preActorState, params)
+      if (preActorState != newActorState) {
+        this._actorsState[i] = newActorState
+        storeState = storeState.merge(newActorState)
+      }
+    }
 
     if (process.env.NODE_ENV != 'production') {
       if (this._opts.debug) {
@@ -93,11 +137,7 @@ export default class Store {
       }
     }
 
-    if (newStoreState != this._state) {
-      this._state = newStoreState
-      //emit event
-      this._callbacks.forEach(cb => cb(this._state))
-    }
+    return storeState
   }
 
   bigQuery(ql: QueryLang, params?: { debug: boolean }): any {
@@ -133,7 +173,7 @@ export default class Store {
 
         if (process.env.NODE_ENV != 'production') {
           if (opt.debug) {
-            console.log(`dep:${elem.name()}|>QL, cache:${!outdate} value:${JSON.stringify(value,null,2)}`)
+            console.log(`dep:${elem.name()}|>QL, cache:${!outdate} value:${JSON.stringify(value, null, 2)}`)
           }
         }
 

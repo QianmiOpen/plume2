@@ -42,10 +42,7 @@ class AppStore extends Store {
   }
 }
 
-// console.groupCollapsed = console.log
-// console.groupEnd = console.log
-
-@StoreProvider(AppStore, {debug: false})
+@StoreProvider(AppStore, { debug: false })
 class HelloApp extends React.Component {
   render() {
     return <HelloRelax />
@@ -111,8 +108,8 @@ describe('relax test suite', () => {
     expect(tree).toMatchSnapshot()
   })
 
-  it('dispatch event', () => {
-    @StoreProvider(AppStore)
+  it('sync dispatch event', () => {
+    @StoreProvider(AppStore, { syncDispatch: true })
     class HelloApp extends React.Component {
       render() {
         return <Hello />
@@ -137,9 +134,47 @@ describe('relax test suite', () => {
     }
 
     const component = renderer.create(<HelloApp />)
-    window['_store'].dispatch('change', 'hello plume')
+    const store = window['_store'] as AppStore
+    //同步渲染
+    store.dispatch('change', 'hello plume')
     const tree = component.toJSON()
     expect(tree).toMatchSnapshot()
   })
+
+  it('async dispatch event', () => {
+    @StoreProvider(AppStore, { syncDispatch: false })
+    class HelloApp extends React.Component {
+      render() {
+        return <Hello />
+      }
+    }
+
+    @Relax
+    class Hello extends React.Component {
+      props: { mott: string };
+
+      static defaultProps = {
+        mott: ''
+      };
+
+      render() {
+        return (
+          <div>
+            <div>{this.props.mott}</div>
+          </div>
+        )
+      }
+    }
+
+    const component = renderer.create(<HelloApp />)
+    const store = window['_store'] as AppStore
+    store.dispatch('change', 'hello plume')
+
+    process.nextTick(() => {
+      const tree = component.toJSON()
+      expect(tree).toMatchSnapshot()
+    })
+  })
+
 })
 

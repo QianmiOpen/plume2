@@ -45,8 +45,6 @@ class AppStore extends store_1.default {
         ];
     }
 }
-// console.groupCollapsed = console.log
-// console.groupEnd = console.log
 let HelloApp = class HelloApp extends React.Component {
     render() {
         return React.createElement(HelloRelax, null);
@@ -96,14 +94,14 @@ describe('relax test suite', () => {
         const tree = renderer.create(React.createElement(HelloApp, null)).toJSON();
         expect(tree).toMatchSnapshot();
     });
-    it('dispatch event', () => {
+    it('sync dispatch event', () => {
         let HelloApp = class HelloApp extends React.Component {
             render() {
                 return React.createElement(Hello, null);
             }
         };
         HelloApp = __decorate([
-            store_provder_1.default(AppStore)
+            store_provder_1.default(AppStore, { syncDispatch: true })
         ], HelloApp);
         let Hello = class Hello extends React.Component {
             render() {
@@ -118,8 +116,39 @@ describe('relax test suite', () => {
             relax_1.default
         ], Hello);
         const component = renderer.create(React.createElement(HelloApp, null));
-        window['_store'].dispatch('change', 'hello plume');
+        const store = window['_store'];
+        //同步渲染
+        store.dispatch('change', 'hello plume');
         const tree = component.toJSON();
         expect(tree).toMatchSnapshot();
+    });
+    it('async dispatch event', () => {
+        let HelloApp = class HelloApp extends React.Component {
+            render() {
+                return React.createElement(Hello, null);
+            }
+        };
+        HelloApp = __decorate([
+            store_provder_1.default(AppStore, { syncDispatch: false })
+        ], HelloApp);
+        let Hello = class Hello extends React.Component {
+            render() {
+                return (React.createElement("div", null,
+                    React.createElement("div", null, this.props.mott)));
+            }
+        };
+        Hello.defaultProps = {
+            mott: ''
+        };
+        Hello = __decorate([
+            relax_1.default
+        ], Hello);
+        const component = renderer.create(React.createElement(HelloApp, null));
+        const store = window['_store'];
+        store.dispatch('change', 'hello plume');
+        process.nextTick(() => {
+            const tree = component.toJSON();
+            expect(tree).toMatchSnapshot();
+        });
     });
 });
