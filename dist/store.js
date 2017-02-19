@@ -13,12 +13,12 @@ class Store {
         this._dQueue = [];
         this._pending = false;
         this._actors = this.bindActor();
-        this.reduceActor();
+        this.reduceActorState();
     }
     bindActor() {
         return [];
     }
-    reduceActor() {
+    reduceActorState() {
         this._state = this._state.withMutations(state => {
             for (let actor of this._actors) {
                 let initState = immutable_1.fromJS(actor.defaultState());
@@ -66,7 +66,7 @@ class Store {
         if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
                 //node can not support groupCollapsed
-                (console.groupCollapsed && console.log)(`store dispatch => '${msg}'`);
+                console.groupCollapsed && console.groupCollapsed(`store dispatch => '${msg}'`);
                 console.log(`params |> ${JSON.stringify(params || 'no params')}`);
             }
         }
@@ -99,7 +99,7 @@ class Store {
         }
         if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
-                console.groupEnd();
+                console.groupEnd && console.groupEnd();
             }
         }
         return storeState;
