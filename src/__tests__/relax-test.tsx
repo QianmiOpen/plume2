@@ -109,7 +109,7 @@ describe('relax test suite', () => {
   })
 
   it('sync dispatch event', () => {
-    @StoreProvider(AppStore, { syncDispatch: true })
+    @StoreProvider(AppStore)
     class HelloApp extends React.Component {
       render() {
         return <Hello />
@@ -142,7 +142,7 @@ describe('relax test suite', () => {
   })
 
   it('async dispatch event', () => {
-    @StoreProvider(AppStore, { syncDispatch: false })
+    @StoreProvider(AppStore)
     class HelloApp extends React.Component {
       render() {
         return <Hello />

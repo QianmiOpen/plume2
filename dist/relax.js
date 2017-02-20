@@ -1,4 +1,12 @@
 "use strict";
+var __assign = (this && this.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
 const React = require("react");
 const ql_1 = require("./ql");
 const dql_1 = require("./dql");
@@ -60,7 +68,7 @@ function RelaxContainer(Wrapper) {
                 this.context.unsubscribe(this._handleStoreChange);
             }
             render() {
-                return React.createElement(Wrapper, Object.assign({}, this.props, this.relaxProps));
+                return React.createElement(Wrapper, __assign({}, this.props, this.relaxProps));
             }
             computeProps(props) {
                 const relaxProps = {};

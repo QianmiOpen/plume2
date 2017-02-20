@@ -101,7 +101,7 @@ describe('relax test suite', () => {
             }
         };
         HelloApp = __decorate([
-            store_provder_1.default(AppStore, { syncDispatch: true })
+            store_provder_1.default(AppStore)
         ], HelloApp);
         let Hello = class Hello extends React.Component {
             render() {
@@ -129,7 +129,7 @@ describe('relax test suite', () => {
             }
         };
         HelloApp = __decorate([
-            store_provder_1.default(AppStore, { syncDispatch: false })
+            store_provder_1.default(AppStore)
         ], HelloApp);
         let Hello = class Hello extends React.Component {
             render() {
