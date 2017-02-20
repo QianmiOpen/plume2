@@ -85,7 +85,7 @@ describe('store test suite', () => {
   })
 
   it('store transation disptch', () => {
-    const store = new AppStore({ debug: true })
+    const store = new AppStore({ debug: false })
     store.changeTransation()
     store.subscribe(state => {
       expect(state.toJS()).toEqual({

@@ -2,7 +2,6 @@ import { Map, fromJS } from 'immutable'
 import Actor from './actor'
 import { QueryLang } from './ql'
 import isArray from './util/is-array'
-import defer from './util/defer'
 
 type IMap = Map<string, any>;
 type Handler = (state: IMap) => void;

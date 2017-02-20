@@ -82,7 +82,7 @@ describe('store test suite', () => {
             .toEqual([actorsState[0].toJS(), actorsState[1].toJS()]);
     });
     it('store transation disptch', () => {
-        const store = new AppStore({ debug: true });
+        const store = new AppStore({ debug: false });
         store.changeTransation();
         store.subscribe(state => {
             expect(state.toJS()).toEqual({
