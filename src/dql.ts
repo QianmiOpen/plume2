@@ -31,9 +31,7 @@ export class DynamicQueryLang {
         lang[i] = []
         for (let j = 0, len = path.length; j < len; j++) {
           let field = dLang[i][j];
-          if (isstring(field)) {
-            lang[i][j] = field[0] === '$' ? this._ctx[field.substring(1)] : field
-          }
+          lang[i][j] = (isstring(field) && field[0] === '$') ? this._ctx[field.substring(1)] : field
         }
       } else {
         lang[i] = path
