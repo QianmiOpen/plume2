@@ -51,23 +51,9 @@ describe('store provider test suite', () => {
     it('store sync dispath change render', () => {
         const component = renderer.create(React.createElement(Home, null));
         const store = window['_store'];
-        //hack
-        store._opts.syncDispatch = false;
         //测试同步渲染
         store.change();
         const tree = component.toJSON();
         expect(tree).toMatchSnapshot();
-    });
-    it('store async dispatch change render', () => {
-        const component = renderer.create(React.createElement(Home, null));
-        const store = window['_store'];
-        //hack
-        store._opts.syncDispatch = true;
-        //测试同步渲染
-        store.change();
-        process.nextTick(() => {
-            const tree = component.toJSON();
-            expect(tree).toMatchSnapshot();
-        });
     });
 });

@@ -14,6 +14,11 @@ class HelloActor extends Actor {
   change(state: IMap) {
     return state.set('name', 'plume++')
   }
+
+  @Action('changeText')
+  changeTexst(state: IMap, text) {
+    return state.set('name', text)
+  }
 }
 
 class LoadingActor extends Actor {
@@ -38,6 +43,14 @@ class AppStore extends Store {
   change = () => {
     this.dispatch('change')
   }
+
+  changeTransation() {
+    this.transaction(() => {
+      this.dispatch('changeText', 'iflux2')
+      this.dispatch('changeText', 'plume')
+      this.dispatch('changeText', 'plume2')
+    })
+  }
 }
 
 describe('store test suite', () => {
@@ -60,7 +73,7 @@ describe('store test suite', () => {
   })
 
   it('store sync dispatch', () => {
-    const store = new AppStore({ syncDispatch: true })
+    const store = new AppStore({ debug: false })
     store.change()
 
     const storeState = store.state()
@@ -71,17 +84,14 @@ describe('store test suite', () => {
       .toEqual([actorsState[0].toJS(), actorsState[1].toJS()])
   })
 
-  it('store async dispatch', () => {
-    const store = new AppStore({ syncDispatch: false })
-    store.change()
-
-    process.nextTick(() => {
-      const storeState = store.state()
-      expect(storeState.toJS()).toEqual({ loading: true, name: 'plume++' })
-
-      const actorsState = store._actorsState
-      expect([{ name: 'plume++' }, { loading: true }])
-        .toEqual([actorsState[0].toJS(), actorsState[1].toJS()])
+  it('store transation disptch', () => {
+    const store = new AppStore({ debug: true })
+    store.changeTransation()
+    store.subscribe(state => {
+      expect(state.toJS()).toEqual({
+        loading: false,
+        name: 'plume2'
+      })
     })
   })
 

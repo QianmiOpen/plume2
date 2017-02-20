@@ -15,10 +15,16 @@ class HelloActor extends actor_1.default {
     change(state) {
         return state.set('name', 'plume++');
     }
+    changeTexst(state, text) {
+        return state.set('name', text);
+    }
 }
 __decorate([
     decorator_1.Action('change')
 ], HelloActor.prototype, "change", null);
+__decorate([
+    decorator_1.Action('changeText')
+], HelloActor.prototype, "changeTexst", null);
 class LoadingActor extends actor_1.default {
     defaultState() {
         return { loading: false };
@@ -43,6 +49,13 @@ class AppStore extends store_1.default {
             new LoadingActor
         ];
     }
+    changeTransation() {
+        this.transaction(() => {
+            this.dispatch('changeText', 'iflux2');
+            this.dispatch('changeText', 'plume');
+            this.dispatch('changeText', 'plume2');
+        });
+    }
 }
 describe('store test suite', () => {
     it('default state', () => {
@@ -60,7 +73,7 @@ describe('store test suite', () => {
             .toEqual([actorState[0].toJS(), actorState[1].toJS()]);
     });
     it('store sync dispatch', () => {
-        const store = new AppStore({ syncDispatch: true });
+        const store = new AppStore({ debug: false });
         store.change();
         const storeState = store.state();
         expect(storeState.toJS()).toEqual({ loading: true, name: 'plume++' });
@@ -68,15 +81,14 @@ describe('store test suite', () => {
         expect([{ name: 'plume++' }, { loading: true }])
             .toEqual([actorsState[0].toJS(), actorsState[1].toJS()]);
     });
-    it('store async dispatch', () => {
-        const store = new AppStore({ syncDispatch: false });
-        store.change();
-        process.nextTick(() => {
-            const storeState = store.state();
-            expect(storeState.toJS()).toEqual({ loading: true, name: 'plume++' });
-            const actorsState = store._actorsState;
-            expect([{ name: 'plume++' }, { loading: true }])
-                .toEqual([actorsState[0].toJS(), actorsState[1].toJS()]);
+    it('store transation disptch', () => {
+        const store = new AppStore({ debug: true });
+        store.changeTransation();
+        store.subscribe(state => {
+            expect(state.toJS()).toEqual({
+                loading: false,
+                name: 'plume2'
+            });
         });
     });
     it('store subscribe', () => {

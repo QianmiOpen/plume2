@@ -8,7 +8,6 @@ type IMap = Map<string, any>;
 type Handler = (state: IMap) => void;
 interface Options {
   debug?: boolean;
-  syncDispatch?: boolean;
 }
 
 export default class Store {
@@ -18,17 +17,15 @@ export default class Store {
   _actorsState: Array<IMap>;
   _cacheQL: { [name: string]: Array<any> };
   _opts: Options;
-  _dQueue: Array<{ msg: string, params?: any }>;
-  _pending: boolean;
+  _isInTranstion: boolean;
 
   constructor(props?: Options) {
-    this._opts = props || { debug: false, syncDispatch: false }
+    this._opts = props || { debug: false }
     this._state = fromJS({})
     this._actorsState = []
     this._callbacks = []
     this._cacheQL = {}
-    this._dQueue = []
-    this._pending = false
+    this._isInTranstion = false
     this._actors = this.bindActor()
     this.reduceActorState()
   }
@@ -49,48 +46,46 @@ export default class Store {
   }
 
   dispatch(msg: string, params?: any) {
-    //sync dispatch 
-    if (this._opts.syncDispatch) {
-      this.transaction((state: IMap) => this.dispatchActor(msg, state, params))
-    }
-    //merge all dispatch in one event-loop
-    else {
-      this._dQueue.push({ msg, params })
-
-      //be sure, only emit one time
-      if (!this._pending) {
-        defer(() => {
-          this.transaction((state: IMap) => {
-
-            for (let payload of this._dQueue) {
-              const {msg, params} = payload
-              state = this.dispatchActor(msg, state, params)
-            }
-
-            //recover 
-            this._pending = false
-            this._dQueue = []
-            return state;
-          })
-        })
-      }
-
-      this._pending = true
-    }
-  }
-
-  transaction(dispatchActor: (state: IMap) => IMap) {
-    const newStoreState = this._state.withMutations(state => {
-      return dispatchActor(state)
-    })
-
+    const newStoreState = this._dispatchActor(msg, params)
+    //如果发生store的状态变化
     if (newStoreState != this._state) {
       this._state = newStoreState
-      this._callbacks.forEach(cb => cb(this._state))
+      //如果在dispatch不在transation内，通知UI去re-render
+      if (!this._isInTranstion) {
+        this._callbacks.forEach(cb => cb(this._state))
+      }
     }
   }
 
-  dispatchActor(msg: string, storeState: IMap, params?: any): IMap {
+  transaction(fn: () => void) {
+    //log
+    if (process.env.NODE_ENV != 'production') {
+      if (this._opts.debug) {
+        console.log('::::::::::::::::🚀 open new transaction 🚀:::::::::::::::::::::::::')
+      }
+    }
+
+    this._isInTranstion = true
+    //record current state 
+    const currentStoreState = this._state
+    fn()
+    //fn前后状态有没有发生变化
+    if (currentStoreState != this._state) {
+      this._callbacks.forEach(cb => cb(this._state))
+    }
+    this._isInTranstion = false
+
+    //log
+    if (process.env.NODE_ENV != 'production') {
+      if (this._opts.debug) {
+        console.log('::::::::::::::::🚀 end new transaction 🚀:::::::::::::::::::::::::')
+      }
+    }
+  }
+
+  _dispatchActor(msg: string, params?: any) {
+    let _state = this._state
+
     if (process.env.NODE_ENV != 'production') {
       if (this._opts.debug) {
         //node can not support groupCollapsed
@@ -127,7 +122,7 @@ export default class Store {
       const newActorState = actor.receive(msg, preActorState, params)
       if (preActorState != newActorState) {
         this._actorsState[i] = newActorState
-        storeState = storeState.merge(newActorState)
+        _state = _state.merge(newActorState)
       }
     }
 
@@ -137,7 +132,7 @@ export default class Store {
       }
     }
 
-    return storeState
+    return _state
   }
 
   bigQuery(ql: QueryLang, params?: { debug: boolean }): any {

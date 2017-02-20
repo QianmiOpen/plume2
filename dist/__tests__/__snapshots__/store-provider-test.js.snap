@@ -6,6 +6,6 @@ exports[`store provider test suite first render 1`] = `
 
 exports[`store provider test suite store sync dispath change render 1`] = `
 <div>
-  plume
+  plume++
 </div>
 `;

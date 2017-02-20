@@ -2,16 +2,14 @@
 const immutable_1 = require("immutable");
 const ql_1 = require("./ql");
 const is_array_1 = require("./util/is-array");
-const defer_1 = require("./util/defer");
 class Store {
     constructor(props) {
-        this._opts = props || { debug: false, syncDispatch: false };
+        this._opts = props || { debug: false };
         this._state = immutable_1.fromJS({});
         this._actorsState = [];
         this._callbacks = [];
         this._cacheQL = {};
-        this._dQueue = [];
-        this._pending = false;
+        this._isInTranstion = false;
         this._actors = this.bindActor();
         this.reduceActorState();
     }
@@ -29,40 +27,41 @@ class Store {
         });
     }
     dispatch(msg, params) {
-        //sync dispatch 
-        if (this._opts.syncDispatch) {
-            this.transaction((state) => this.dispatchActor(msg, state, params));
-        }
-        else {
-            this._dQueue.push({ msg, params });
-            //be sure, only emit one time
-            if (!this._pending) {
-                defer_1.default(() => {
-                    this.transaction((state) => {
-                        for (let payload of this._dQueue) {
-                            const { msg, params } = payload;
-                            state = this.dispatchActor(msg, state, params);
-                        }
-                        //recover 
-                        this._pending = false;
-                        this._dQueue = [];
-                        return state;
-                    });
-                });
-            }
-            this._pending = true;
-        }
-    }
-    transaction(dispatchActor) {
-        const newStoreState = this._state.withMutations(state => {
-            return dispatchActor(state);
-        });
+        const newStoreState = this._dispatchActor(msg, params);
+        //如果发生store的状态变化
         if (newStoreState != this._state) {
             this._state = newStoreState;
-            this._callbacks.forEach(cb => cb(this._state));
+            //如果在dispatch不在transation内，通知UI去re-render
+            if (!this._isInTranstion) {
+                this._callbacks.forEach(cb => cb(this._state));
+            }
         }
     }
-    dispatchActor(msg, storeState, params) {
+    transaction(fn) {
+        //log
+        if (process.env.NODE_ENV != 'production') {
+            if (this._opts.debug) {
+                console.log('::::::::::::::::🚀 open new transaction 🚀:::::::::::::::::::::::::');
+            }
+        }
+        this._isInTranstion = true;
+        //record current state 
+        const currentStoreState = this._state;
+        fn();
+        //fn前后状态有没有发生变化
+        if (currentStoreState != this._state) {
+            this._callbacks.forEach(cb => cb(this._state));
+        }
+        this._isInTranstion = false;
+        //log
+        if (process.env.NODE_ENV != 'production') {
+            if (this._opts.debug) {
+                console.log('::::::::::::::::🚀 end new transaction 🚀:::::::::::::::::::::::::');
+            }
+        }
+    }
+    _dispatchActor(msg, params) {
+        let _state = this._state;
         if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
                 //node can not support groupCollapsed
@@ -94,7 +93,7 @@ class Store {
             const newActorState = actor.receive(msg, preActorState, params);
             if (preActorState != newActorState) {
                 this._actorsState[i] = newActorState;
-                storeState = storeState.merge(newActorState);
+                _state = _state.merge(newActorState);
             }
         }
         if (process.env.NODE_ENV != 'production') {
@@ -102,7 +101,7 @@ class Store {
                 console.groupEnd && console.groupEnd();
             }
         }
-        return storeState;
+        return _state;
     }
     bigQuery(ql, params) {
         if (!(ql instanceof ql_1.QueryLang)) {
