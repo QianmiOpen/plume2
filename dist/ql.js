@@ -15,6 +15,10 @@ class QueryLang {
     lang() {
         return this._lang;
     }
+    setLang(lang) {
+        this._lang = lang;
+        return this;
+    }
 }
 exports.QueryLang = QueryLang;
 //expose

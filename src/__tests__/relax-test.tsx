@@ -88,7 +88,9 @@ class HelloRelax extends React.Component {
 
   render() {
     const {loading, mott, loadingQL, mottQL, loadingDQL} = this.props
+
     expect(false).toEqual(loadingQL)
+
     expect({ loading: false, mott: 'hello world!' })
       .toEqual(mottQL)
     expect("hello world!").toEqual(loadingDQL)

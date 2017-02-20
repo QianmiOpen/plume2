@@ -24,6 +24,11 @@ export class QueryLang {
   lang() {
     return this._lang
   }
+
+  setLang(lang: Array<any>) {
+    this._lang = lang
+    return this
+  }
 }
 
 //expose

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Store from './store'
 import { QueryLang } from './ql'
-import { DynamicQueryLang } from './dql'
+import { DynamicQueryLang, DQLVO } from './dql'
 import { Map, is, fromJS } from 'immutable'
 
 type IMap = Map<string, any>;
@@ -26,11 +26,13 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     props: Object;
     relaxProps: Object;
     context: Store;
+    _dql: Object;
     _isMounted: boolean;
 
     constructor(props: Object, context: RelaxContext) {
       super(props)
       this._isMounted = false
+      this._dql = {}
       //提前绑定事件，为了争取父子有序
       context._plume$Store.subscribe(this._handleStoreChange)
     }
@@ -96,10 +98,10 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     computeProps(props) {
       const relaxProps = {}
       const store: Store = this.context['_plume$Store']
-      const dqlList = {}
 
       for (let propName in props) {
         const propValue = props[propName]
+
         //先取默认值
         relaxProps[propName] = propValue
 
@@ -119,14 +121,16 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
         }
 
         //是不是dql
-        else if (propValue instanceof DynamicQueryLang) {
-          dqlList[propName] = propValue
+        else if (propValue instanceof DQLVO) {
+          if (!this._dql[propName]) {
+            this._dql[propName] = new DynamicQueryLang(propValue.name, propValue.lang)
+          }
         }
       }
 
       //计算dql
-      for (let propName in dqlList) {
-        let ql = (dqlList[propName] as DynamicQueryLang).withContext(relaxProps).ql()
+      for (let propName in this._dql) {
+        let ql = (this._dql[propName] as DynamicQueryLang).withContext(relaxProps).ql()
         relaxProps[propName] = store.bigQuery(ql)
       }
 

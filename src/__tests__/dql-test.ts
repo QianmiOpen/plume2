@@ -1,20 +1,22 @@
-import {QL} from '../ql'
-import {DQL} from '../dql'
+import { QL } from '../ql'
+import { DQL, DynamicQueryLang } from '../dql'
 import Actor from '../actor'
 import Store from '../store'
 
 class LoadingActor extends Actor {
   defaultState() {
-    return {loading: false}
+    return { loading: false }
   }
 }
 
 
 class TodoActor extends Actor {
   defaultState() {
-    return {todo: [
-      {id: 1, text: 'hello plume', done: false}
-    ]}
+    return {
+      todo: [
+        { id: 1, text: 'hello plume', done: false }
+      ]
+    }
   }
 }
 
@@ -43,8 +45,8 @@ describe('dql test suite', () => {
       })
     ])
 
-    const todoQL = todoDQL.withContext({index: 0}).ql()
+    const todoQL = new DynamicQueryLang(todoDQL.name, todoDQL.lang).withContext({ index: 0 }).ql()
     expect(['todo', 0, 'text']).toEqual(todoQL.lang()[1])
-    expect({loading: false, text: 'hello plume'}).toEqual(store.bigQuery(todoQL))
+    expect({ loading: false, text: 'hello plume' }).toEqual(store.bigQuery(todoQL))
   })
 })

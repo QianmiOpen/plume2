@@ -1,12 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 const React = require("react");
 const ql_1 = require("./ql");
 const dql_1 = require("./dql");
@@ -21,6 +13,7 @@ function RelaxContainer(Wrapper) {
                     }
                 };
                 this._isMounted = false;
+                this._dql = {};
                 //提前绑定事件，为了争取父子有序
                 context._plume$Store.subscribe(this._handleStoreChange);
             }
@@ -68,12 +61,11 @@ function RelaxContainer(Wrapper) {
                 this.context.unsubscribe(this._handleStoreChange);
             }
             render() {
-                return React.createElement(Wrapper, __assign({}, this.props, this.relaxProps));
+                return React.createElement(Wrapper, Object.assign({}, this.props, this.relaxProps));
             }
             computeProps(props) {
                 const relaxProps = {};
                 const store = this.context['_plume$Store'];
-                const dqlList = {};
                 for (let propName in props) {
                     const propValue = props[propName];
                     //先取默认值
@@ -88,13 +80,15 @@ function RelaxContainer(Wrapper) {
                     else if (propValue instanceof ql_1.QueryLang) {
                         relaxProps[propName] = store.bigQuery(propValue);
                     }
-                    else if (propValue instanceof dql_1.DynamicQueryLang) {
-                        dqlList[propName] = propValue;
+                    else if (propValue instanceof dql_1.DQLVO) {
+                        if (!this._dql[propName]) {
+                            this._dql[propName] = new dql_1.DynamicQueryLang(propValue.name, propValue.lang);
+                        }
                     }
                 }
                 //计算dql
-                for (let propName in dqlList) {
-                    let ql = dqlList[propName].withContext(relaxProps).ql();
+                for (let propName in this._dql) {
+                    let ql = this._dql[propName].withContext(relaxProps).ql();
                     relaxProps[propName] = store.bigQuery(ql);
                 }
                 return relaxProps;

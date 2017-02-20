@@ -1,0 +1,44 @@
+exports[`relax dql initialize 1`] = `
+<div>
+  <div>
+    <div>
+      1
+    </div>
+    <div>
+      p1
+    </div>
+  </div>
+  <div>
+    <div>
+      2
+    </div>
+    <div>
+      p2
+    </div>
+  </div>
+  <div>
+    <div>
+      3
+    </div>
+    <div>
+      p3
+    </div>
+  </div>
+  <div>
+    <div>
+      4
+    </div>
+    <div>
+      p4
+    </div>
+  </div>
+  <div>
+    <div>
+      5
+    </div>
+    <div>
+      p5
+    </div>
+  </div>
+</div>
+`;

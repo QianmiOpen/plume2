@@ -4,36 +4,43 @@ import isstring from './util/is-string'
 
 export class DynamicQueryLang {
   private _ctx: Object;
+  private _name: string;
+  private _lang: Array<any>;
   private _ql: QueryLang;
 
   constructor(name: string, lang: Array<any>) {
     this._ctx = {}
-    this._ql = QL(name, lang)
+    this._name = name;
+    this._lang = lang;
   }
 
-  analyserLang(ql: QueryLang) {
-    //获取语法结构
-    let lang = ql.lang();
-    for (let i = 0, len = lang.length - 1; i < len; i++) {
-      //获取当前的路径
-      let path = lang[i];
-      if (isstring(path) && path[0] === '$') {
-        //重新赋值
-        lang[i] = this._ctx[path.substring(1)];
+  /**
+   * 暂时不支持DQL的递归， 这解析起来非常复杂，性能也不好
+   * 思维定式，slice之前去slice基本数据都非常ok，做了值拷贝
+   * 但是slice一个对象数组的时候一定小心，slice前后的数组包含的对象还是同一个
+   */
+  analyserLang(dLang: Array<any>) {
+    const lang = []
+
+    for (let i = 0, len = dLang.length; i < len; i++) {
+      let path = dLang[i];
+
+      if (isstring(path)) {
+        lang[i] = path[0] === '$' ? this._ctx[path.substring(1)] : path
       } else if (isArray(path)) {
+        lang[i] = []
         for (let j = 0, len = path.length; j < len; j++) {
-          let path = lang[i][j];
-          if (isstring(path) && path[0] === '$') {
-            //重新赋值
-            lang[i][j] = this._ctx[path.substring(1)];
+          let field = dLang[i][j];
+          if (isstring(field)) {
+            lang[i][j] = field[0] === '$' ? this._ctx[field.substring(1)] : field
           }
         }
-      } else if (path instanceof DynamicQueryLang) {
-        //递归一次
-        this.analyserLang(path._ql);
-        lang[i] = path._ql;
+      } else {
+        lang[i] = path
       }
     }
+
+    return lang
   }
 
 
@@ -43,11 +50,26 @@ export class DynamicQueryLang {
   }
 
   ql() {
-    this.analyserLang(this._ql)
+    const lang = this.analyserLang(this._lang)
+    if (!this._ql) {
+      this._ql = new QueryLang(this._name, lang)
+    } else {
+      this._ql.setLang(lang)
+    }
     return this._ql
   }
 }
 
+export class DQLVO {
+  name: string;
+  lang: Array<any>;
+
+  constructor(name: string, lang: Array<any>) {
+    this.name = name
+    this.lang = lang
+  }
+}
+
 export function DQL(name: string, lang: Array<any>) {
-  return new DynamicQueryLang(name, lang)
+  return new DQLVO(name, lang)
 }

@@ -10,9 +10,11 @@ class LoadingActor extends actor_1.default {
 }
 class TodoActor extends actor_1.default {
     defaultState() {
-        return { todo: [
+        return {
+            todo: [
                 { id: 1, text: 'hello plume', done: false }
-            ] };
+            ]
+        };
     }
 }
 class AppStore extends store_1.default {
@@ -37,7 +39,7 @@ describe('dql test suite', () => {
                 loading, text
             })
         ]);
-        const todoQL = todoDQL.withContext({ index: 0 }).ql();
+        const todoQL = new dql_1.DynamicQueryLang(todoDQL.name, todoDQL.lang).withContext({ index: 0 }).ql();
         expect(['todo', 0, 'text']).toEqual(todoQL.lang()[1]);
         expect({ loading: false, text: 'hello plume' }).toEqual(store.bigQuery(todoQL));
     });
