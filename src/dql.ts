@@ -6,7 +6,6 @@ export class DynamicQueryLang {
   private _ctx: Object;
   private _name: string;
   private _lang: Array<any>;
-  private _ql: QueryLang;
 
   constructor(name: string, lang: Array<any>) {
     this._ctx = {}
@@ -30,10 +29,15 @@ export class DynamicQueryLang {
       } else if (isArray(path)) {
         lang[i] = []
         for (let j = 0, len = path.length; j < len; j++) {
-          let field = dLang[i][j];
-          lang[i][j] = (isstring(field) && field[0] === '$') ? this._ctx[field.substring(1)] : field
+          let field = dLang[i][j]
+          lang[i][j] = (isstring(field) && field[0] === '$')
+            ? this._ctx[field.substring(1)]
+            : field
         }
-      } else {
+      } else if (path instanceof DynamicQueryLang) {
+        lang[i] = this.analyserLang(path._lang)
+      }
+      else {
         lang[i] = path
       }
     }
@@ -47,27 +51,15 @@ export class DynamicQueryLang {
     return this
   }
 
-  ql() {
-    const lang = this.analyserLang(this._lang)
-    if (!this._ql) {
-      this._ql = new QueryLang(this._name, lang)
-    } else {
-      this._ql.setLang(lang)
-    }
-    return this._ql
+  name() {
+    return this._name
+  }
+
+  lang() {
+    return this._lang
   }
 }
 
-export class DQLVO {
-  name: string;
-  lang: Array<any>;
-
-  constructor(name: string, lang: Array<any>) {
-    this.name = name
-    this.lang = lang
-  }
-}
-
-export function DQL(name: string, lang: Array<any>) {
-  return new DQLVO(name, lang)
+export function DQL(name: string, lang: Array<any>): DynamicQueryLang {
+  return new DynamicQueryLang(name, lang)
 }

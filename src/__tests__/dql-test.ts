@@ -1,4 +1,4 @@
-import { QL } from '../ql'
+import { QL, QueryLang } from '../ql'
 import { DQL, DynamicQueryLang } from '../dql'
 import Actor from '../actor'
 import Store from '../store'
@@ -45,7 +45,8 @@ describe('dql test suite', () => {
       })
     ])
 
-    const todoQL = new DynamicQueryLang(todoDQL.name, todoDQL.lang).withContext({ index: 0 }).ql()
+    const lang = todoDQL.withContext({ index: 0 }).analyserLang(todoDQL.lang())
+    const todoQL = new QueryLang('todoQL', lang)
     expect(['todo', 0, 'text']).toEqual(todoQL.lang()[1])
     expect({ loading: false, text: 'hello plume' }).toEqual(store.bigQuery(todoQL))
   })

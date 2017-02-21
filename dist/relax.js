@@ -13,7 +13,7 @@ function RelaxContainer(Wrapper) {
                     }
                 };
                 this._isMounted = false;
-                this._dql = {};
+                this._dql2QL = {};
                 //提前绑定事件，为了争取父子有序
                 context._plume$Store.subscribe(this._handleStoreChange);
             }
@@ -64,6 +64,7 @@ function RelaxContainer(Wrapper) {
                 return React.createElement(Wrapper, Object.assign({}, this.props, this.relaxProps));
             }
             computeProps(props) {
+                const dqlMap = {};
                 const relaxProps = {};
                 const store = this.context['_plume$Store'];
                 for (let propName in props) {
@@ -80,15 +81,21 @@ function RelaxContainer(Wrapper) {
                     else if (propValue instanceof ql_1.QueryLang) {
                         relaxProps[propName] = store.bigQuery(propValue);
                     }
-                    else if (propValue instanceof dql_1.DQLVO) {
-                        if (!this._dql[propName]) {
-                            this._dql[propName] = new dql_1.DynamicQueryLang(propValue.name, propValue.lang);
+                    else if (propValue instanceof dql_1.DynamicQueryLang) {
+                        if (!this._dql2QL[propName]) {
+                            //根据DynamicQueryLang保存一份QL
+                            //先用DQL的lang来填充QL
+                            //后面会根据Dynamic的动态的计算lang
+                            this._dql2QL[propName] = new ql_1.QueryLang(propValue.name(), propValue.lang());
                         }
+                        dqlMap[propName] = propValue;
                     }
                 }
                 //计算dql
-                for (let propName in this._dql) {
-                    let ql = this._dql[propName].withContext(relaxProps).ql();
+                for (let propName in dqlMap) {
+                    const dql = dqlMap[propName];
+                    const lang = dql.withContext(relaxProps).analyserLang(dql.lang());
+                    const ql = this._dql2QL[propName].setLang(lang);
                     relaxProps[propName] = store.bigQuery(ql);
                 }
                 return relaxProps;

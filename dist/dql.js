@@ -1,5 +1,4 @@
 "use strict";
-const ql_1 = require("./ql");
 const is_array_1 = require("./util/is-array");
 const is_string_1 = require("./util/is-string");
 class DynamicQueryLang {
@@ -24,8 +23,13 @@ class DynamicQueryLang {
                 lang[i] = [];
                 for (let j = 0, len = path.length; j < len; j++) {
                     let field = dLang[i][j];
-                    lang[i][j] = (is_string_1.default(field) && field[0] === '$') ? this._ctx[field.substring(1)] : field;
+                    lang[i][j] = (is_string_1.default(field) && field[0] === '$')
+                        ? this._ctx[field.substring(1)]
+                        : field;
                 }
+            }
+            else if (path instanceof DynamicQueryLang) {
+                lang[i] = this.analyserLang(path._lang);
             }
             else {
                 lang[i] = path;
@@ -37,26 +41,15 @@ class DynamicQueryLang {
         this._ctx = ctx;
         return this;
     }
-    ql() {
-        const lang = this.analyserLang(this._lang);
-        if (!this._ql) {
-            this._ql = new ql_1.QueryLang(this._name, lang);
-        }
-        else {
-            this._ql.setLang(lang);
-        }
-        return this._ql;
+    name() {
+        return this._name;
+    }
+    lang() {
+        return this._lang;
     }
 }
 exports.DynamicQueryLang = DynamicQueryLang;
-class DQLVO {
-    constructor(name, lang) {
-        this.name = name;
-        this.lang = lang;
-    }
-}
-exports.DQLVO = DQLVO;
 function DQL(name, lang) {
-    return new DQLVO(name, lang);
+    return new DynamicQueryLang(name, lang);
 }
 exports.DQL = DQL;

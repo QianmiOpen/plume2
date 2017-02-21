@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Store from './store'
 import { QueryLang } from './ql'
-import { DynamicQueryLang, DQLVO } from './dql'
+import { DynamicQueryLang } from './dql'
 import { Map, is, fromJS } from 'immutable'
 
 type IMap = Map<string, any>;
@@ -16,7 +16,7 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     static displayName = `Relax(${getDisplayName(Wrapper)})`;
 
     //拷贝WrapperComponent的defaultProps
-    static defaultProps = Wrapper.defaultProps || {}
+    static defaultProps = Wrapper.defaultProps || {};
 
     //声明上下文依赖
     static contextTypes = {
@@ -26,13 +26,13 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     props: Object;
     relaxProps: Object;
     context: Store;
-    _dql: Object;
+    _dql2QL: { [name: string]: QueryLang };
     _isMounted: boolean;
 
     constructor(props: Object, context: RelaxContext) {
       super(props)
       this._isMounted = false
-      this._dql = {}
+      this._dql2QL = {}
       //提前绑定事件，为了争取父子有序
       context._plume$Store.subscribe(this._handleStoreChange)
     }
@@ -96,6 +96,7 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     }
 
     computeProps(props) {
+      const dqlMap = {} as { [name: string]: DynamicQueryLang }
       const relaxProps = {}
       const store: Store = this.context['_plume$Store']
 
@@ -121,16 +122,25 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
         }
 
         //是不是dql
-        else if (propValue instanceof DQLVO) {
-          if (!this._dql[propName]) {
-            this._dql[propName] = new DynamicQueryLang(propValue.name, propValue.lang)
+        else if (propValue instanceof DynamicQueryLang) {
+          if (!this._dql2QL[propName]) {
+            //根据DynamicQueryLang保存一份QL
+            //先用DQL的lang来填充QL
+            //后面会根据Dynamic的动态的计算lang
+            this._dql2QL[propName] = new QueryLang(
+              propValue.name(),
+              propValue.lang()
+            )
           }
+          dqlMap[propName] = propValue
         }
       }
 
       //计算dql
-      for (let propName in this._dql) {
-        let ql = (this._dql[propName] as DynamicQueryLang).withContext(relaxProps).ql()
+      for (let propName in dqlMap) {
+        const dql = dqlMap[propName]
+        const lang = dql.withContext(relaxProps).analyserLang(dql.lang())
+        const ql = this._dql2QL[propName].setLang(lang)
         relaxProps[propName] = store.bigQuery(ql)
       }
 

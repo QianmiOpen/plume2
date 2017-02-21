@@ -39,7 +39,8 @@ describe('dql test suite', () => {
                 loading, text
             })
         ]);
-        const todoQL = new dql_1.DynamicQueryLang(todoDQL.name, todoDQL.lang).withContext({ index: 0 }).ql();
+        const lang = todoDQL.withContext({ index: 0 }).analyserLang(todoDQL.lang());
+        const todoQL = new ql_1.QueryLang('todoQL', lang);
         expect(['todo', 0, 'text']).toEqual(todoQL.lang()[1]);
         expect({ loading: false, text: 'hello plume' }).toEqual(store.bigQuery(todoQL));
     });
