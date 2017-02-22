@@ -1,4 +1,5 @@
 "use strict";
+const ql_1 = require("./ql");
 const is_array_1 = require("./util/is-array");
 const is_string_1 = require("./util/is-string");
 class DynamicQueryLang {
@@ -7,11 +8,6 @@ class DynamicQueryLang {
         this._name = name;
         this._lang = lang;
     }
-    /**
-     * 暂时不支持DQL的递归， 这解析起来非常复杂，性能也不好
-     * 思维定式，slice之前去slice基本数据都非常ok，做了值拷贝
-     * 但是slice一个对象数组的时候一定小心，slice前后的数组包含的对象还是同一个
-     */
     analyserLang(dLang) {
         const lang = [];
         for (let i = 0, len = dLang.length; i < len; i++) {
@@ -29,7 +25,9 @@ class DynamicQueryLang {
                 }
             }
             else if (path instanceof DynamicQueryLang) {
-                lang[i] = this.analyserLang(path._lang);
+                //each time, we create a new QueryLang
+                //in this case, we don't need any cache
+                lang[i] = new ql_1.QueryLang(`${path._name}2QL`, this.analyserLang(path._lang));
             }
             else {
                 lang[i] = path;

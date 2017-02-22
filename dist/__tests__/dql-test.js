@@ -1,6 +1,5 @@
 "use strict";
 const ql_1 = require("../ql");
-const dql_1 = require("../dql");
 const actor_1 = require("../actor");
 const store_1 = require("../store");
 class LoadingActor extends actor_1.default {
@@ -32,7 +31,7 @@ describe('dql test suite', () => {
             'loading',
             (loading) => loading
         ]);
-        const todoDQL = dql_1.DQL('todoDQL', [
+        const todoDQL = ql_1.QL('todoDQL', [
             loadingQL,
             ['todo', '$index', 'text'],
             (loading, text) => ({
@@ -41,6 +40,22 @@ describe('dql test suite', () => {
         ]);
         const lang = todoDQL.withContext({ index: 0 }).analyserLang(todoDQL.lang());
         const todoQL = new ql_1.QueryLang('todoQL', lang);
+        expect(['todo', 0, 'text']).toEqual(todoQL.lang()[1]);
+        expect({ loading: false, text: 'hello plume' }).toEqual(store.bigQuery(todoQL));
+    });
+    it('dql nested dql', () => {
+        const store = new AppStore({});
+        const loadingDQL = ql_1.QL('loadingDQL', [
+            '$loading',
+            (loading) => loading
+        ]);
+        const todoDQL = ql_1.QL('todoDQL', [
+            loadingDQL,
+            ['todo', '$index', 'text'],
+            (loading, text) => ({ loading, text })
+        ]);
+        const lang = todoDQL.withContext({ index: 0, loading: 'loading' }).analyserLang(todoDQL.lang());
+        const todoQL = new ql_1.QueryLang('todoDQL', lang);
         expect(['todo', 0, 'text']).toEqual(todoQL.lang()[1]);
         expect({ loading: false, text: 'hello plume' }).toEqual(store.bigQuery(todoQL));
     });

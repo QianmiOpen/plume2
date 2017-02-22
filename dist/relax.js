@@ -1,7 +1,6 @@
 "use strict";
 const React = require("react");
 const ql_1 = require("./ql");
-const dql_1 = require("./dql");
 const immutable_1 = require("immutable");
 function RelaxContainer(Wrapper) {
     return _a = class Relax extends React.Component {
@@ -81,7 +80,7 @@ function RelaxContainer(Wrapper) {
                     else if (propValue instanceof ql_1.QueryLang) {
                         relaxProps[propName] = store.bigQuery(propValue);
                     }
-                    else if (propValue instanceof dql_1.DynamicQueryLang) {
+                    else if (propValue instanceof ql_1.DynamicQueryLang) {
                         if (!this._dql2QL[propName]) {
                             //根据DynamicQueryLang保存一份QL
                             //先用DQL的lang来填充QL

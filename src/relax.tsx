@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Store from './store'
-import { QueryLang } from './ql'
-import { DynamicQueryLang } from './dql'
+import { QueryLang, DynamicQueryLang } from './ql'
 import { Map, is, fromJS } from 'immutable'
 
 type IMap = Map<string, any>;

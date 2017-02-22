@@ -40,7 +40,7 @@ let ProductApp = class ProductApp extends React.Component {
 ProductApp = __decorate([
     index_1.StoreProvider(AppStore)
 ], ProductApp);
-const productDQL = index_1.DQL('productDQL', [
+const productQL = index_1.QL('productQL', [
     ['products', '$index'],
     p => p
 ]);
@@ -54,7 +54,7 @@ let ProductItem = class ProductItem extends React.Component {
 };
 ProductItem.defaultProps = {
     index: 0,
-    product: productDQL
+    product: productQL
 };
 ProductItem = __decorate([
     index_1.Relax

@@ -5,7 +5,7 @@ import {
   Actor,
   Store,
   Relax,
-  DQL,
+  QL,
   StoreProvider
 } from '../index'
 
@@ -54,7 +54,7 @@ class ProductApp extends React.Component {
   }
 }
 
-const productDQL = DQL('productDQL', [
+const productQL = QL('productQL', [
   ['products', '$index'],
   p => p
 ])
@@ -63,7 +63,7 @@ const productDQL = DQL('productDQL', [
 class ProductItem extends React.Component {
   static defaultProps = {
     index: 0,
-    product: productDQL
+    product: productQL
   };
 
   props: {

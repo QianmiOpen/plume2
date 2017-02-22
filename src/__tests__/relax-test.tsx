@@ -6,7 +6,6 @@ import { Action } from '../decorator'
 import Actor from '../actor'
 import Relax from '../relax'
 import { QL } from '../ql'
-import { DQL } from '../dql'
 jest.mock('react-dom')
 
 class LoadingActor extends Actor {
@@ -60,7 +59,7 @@ const mottQL = QL('mottQL', [
   (loading, mott) => ({ loading, mott })
 ])
 
-const loadingDQL = DQL('loadingDQL', [
+const loadingDQL = QL('loadingDQL', [
   '$mottFlag',
   loading => loading
 ])

@@ -13,7 +13,6 @@ const decorator_1 = require("../decorator");
 const actor_1 = require("../actor");
 const relax_1 = require("../relax");
 const ql_1 = require("../ql");
-const dql_1 = require("../dql");
 jest.mock('react-dom');
 class LoadingActor extends actor_1.default {
     defaultState() {
@@ -62,7 +61,7 @@ const mottQL = ql_1.QL('mottQL', [
     'mott',
     (loading, mott) => ({ loading, mott })
 ]);
-const loadingDQL = dql_1.DQL('loadingDQL', [
+const loadingDQL = ql_1.QL('loadingDQL', [
     '$mottFlag',
     loading => loading
 ]);
