@@ -13,11 +13,6 @@ export class DynamicQueryLang {
     this._lang = lang;
   }
 
-  /**
-   * 暂时不支持DQL的递归， 这解析起来非常复杂，性能也不好
-   * 思维定式，slice之前去slice基本数据都非常ok，做了值拷贝
-   * 但是slice一个对象数组的时候一定小心，slice前后的数组包含的对象还是同一个
-   */
   analyserLang(dLang: Array<any>) {
     const lang = []
 
