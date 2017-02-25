@@ -1,9 +1,9 @@
 import { Map } from 'immutable'
 import * as React from 'react'
 
-export = plume
+export = plume2
 
-declare namespace plume {
+declare namespace plume2 {
 
   export type IMap = Map<string, any>
   export type Handler = (state: IMap) => void;
@@ -20,6 +20,8 @@ declare namespace plume {
     constructor(props?: IOptions);
 
     dispatch(msg: string, params?: any): IMap;
+
+    transaction(cb: () => void): void;
 
     bindActor(): Array<Actor>;
 
@@ -42,25 +44,10 @@ declare namespace plume {
     lang(): Array<any>;
   }
 
-  export class DynamicLang {
-    constructor(name: string, lang: Array<any>);
-
-    id(): number;
-
-    name(): string;
-
-    lang(): Array<any>;
-  }
-
   export function QL(
     name: string,
     lang: Array<any>
   ): QueryLang;
-
-  export function DQL(
-    name: string,
-    lang: Array<any>
-  ): DynamicLang;
 
   interface Emitter {
     on(type: string, handler: Handler): void;

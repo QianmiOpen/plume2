@@ -99,6 +99,7 @@ export default class Store {
 
       //如果actor没有处理msg的方法，直接跳过
       if (!fn) {
+
         //log
         if (process.env.NODE_ENV != 'production') {
           if (this._opts.debug) {
