@@ -5,7 +5,7 @@ import Store from './store'
 import StoreProvider from './store-provder'
 import { QL } from './ql'
 import Relax from './relax'
-import { storePath, StoreMethod } from './inject'
+import { storePath, storeMethod } from './inject'
 
 export {
   QL,
@@ -13,7 +13,7 @@ export {
 
   Relax,
   storePath,
-  StoreMethod,
+  storeMethod,
 
   Action,
   Actor,

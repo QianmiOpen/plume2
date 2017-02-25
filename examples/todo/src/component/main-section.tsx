@@ -1,13 +1,13 @@
 //@flow
 import * as React from 'react'
-import { Relax, IMap } from 'plume2'
+import { Relax, IMap, storeMethod } from 'plume2'
 import { List } from 'immutable'
 import { todoQL } from '../ql'
 const noop = () => { }
 
 interface IProps {
   index?: number;
-  todoQL?: List<IMap>;
+  todo?: List<IMap>;
   toggle?: Function;
   destroy?: Function;
   toggleAll?: Function;
@@ -20,14 +20,14 @@ export default class MainSection extends React.Component<IProps, any> {
    */
   static defaultProps = {
     index: 0,//假设是父组件传递的属性
-    todoQL,
-    toggle: noop,
-    destroy: noop,
-    toggleAll: noop
+    todo: todoQL,
+    toggle: storeMethod('toggle'),
+    destroy: storeMethod('destroy'),
+    toggleAll: storeMethod('toggleAll')
   };
 
   render() {
-    const {toggle, toggleAll, destroy, todoQL} = this.props
+    const {toggle, toggleAll, destroy, todo} = this.props
 
     return (
       <section className="main">
@@ -36,7 +36,7 @@ export default class MainSection extends React.Component<IProps, any> {
           onChange={(e) => toggleAll(e.target.checked)} />
         <label htmlFor="toggle-all">Mark all as complete</label>
         <ul className="todo-list">
-          {todoQL.toArray().map((v, k) =>
+          {todo.toArray().map((v, k) =>
             <li key={v.get('id')}>
               <div className="view">
                 <input className="toggle"

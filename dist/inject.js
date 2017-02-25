@@ -12,12 +12,13 @@ function storePath(statePath, defaultValue) {
 }
 exports.storePath = storePath;
 class StoreMethod {
-    constructor(methodName) {
+    constructor(methodName, defaultValue) {
         this.methodName = methodName;
+        this.defaultValue = defaultValue || (() => { });
     }
 }
 exports.StoreMethod = StoreMethod;
-function storeMethod(methodName) {
-    return new StoreMethod(methodName);
+function storeMethod(methodName, defaultValue) {
+    return new StoreMethod(methodName, defaultValue);
 }
 exports.storeMethod = storeMethod;

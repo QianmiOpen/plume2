@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Relax } from 'plume2'
+import { Relax, storeMethod } from 'plume2'
 import { valueQL } from '../ql'
 const noop = () => { };
 
@@ -13,8 +13,8 @@ interface HeaderProps {
 export default class Header extends React.Component<HeaderProps, any> {
   static defaultProps = {
     value: valueQL,
-    submit: noop,
-    changeValue: noop
+    submit: storeMethod('submit'),
+    changeValue: storeMethod('changeValue')
   };
 
   render() {

@@ -4,13 +4,26 @@ import * as React from 'react'
 export = plume2
 
 declare namespace plume2 {
-
   export type IMap = Map<string, any>
   export type Handler = (state: IMap) => void;
 
   export interface IOptions {
     debug?: boolean;
   }
+
+  export interface StorePath {
+    path: string | Array<string | number>;
+    defaultValue: any;
+  }
+
+  export function storePath(path: string | Array<string | number>, defaultValue: any): StorePath
+
+  export interface StoreMethod {
+    methodName: string;
+    defaultValue: () => void;
+  }
+
+  export function storeMethod(methodName: string, defaultValue?: () => void): StoreMethod;
 
   export class Actor {
     defaultState(): Object;

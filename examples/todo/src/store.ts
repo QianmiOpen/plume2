@@ -31,7 +31,15 @@ export default class AppStore extends Store {
     this.dispatch('toggleAll', checked)
   };
 
+  toggle = (index: number) => {
+    this.dispatch('toggle', index)
+  }
+
   changeFilter = (filter: string) => {
     this.dispatch('change:filter', filter)
   };
+
+  destroy = (index: number) => this.dispatch('destroy', index)
+
+  clearCompleted = () => this.dispatch('clearCompleted')
 }

@@ -16,4 +16,4 @@ const relax_1 = require("./relax");
 exports.Relax = relax_1.default;
 const inject_1 = require("./inject");
 exports.storePath = inject_1.storePath;
-exports.StoreMethod = inject_1.StoreMethod;
+exports.storeMethod = inject_1.storeMethod;

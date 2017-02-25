@@ -2770,9 +2770,9 @@ pkg-dir@^1.0.0:
   dependencies:
     find-up "^1.0.0"
 
-plume2@^0.0.0:
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/plume2/-/plume2-0.0.0.tgz#d58e73f6e605270fcf6e4df120b8356279cce2ee"
+plume2@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/plume2/-/plume2-0.0.2.tgz#f9db0bc378fe326f75d2ef7f49d3cd160351fafd"
   dependencies:
     immutable "^3.8.1"
     mitt "^1.0.1"
@@ -3706,9 +3706,9 @@ type-is@~1.6.13:
     media-typer "0.3.0"
     mime-types "~2.1.11"
 
-typescript@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.2.0.tgz#626f2fc70087d2480f21ebb12c1888288c8614e3"
+typescript@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.2.1.tgz#4862b662b988a4c8ff691cc7969622d24db76ae9"
 
 uglify-js@2.7.x, uglify-js@^2.7.5:
   version "2.7.5"

@@ -33,4 +33,9 @@ export default class TodoActor extends Actor {
   toggleAll(state: IMap, checked: boolean) {
     return state.update('todo', todo => todo.map(item => item.set('done', checked)))
   }
+
+  @Action('clearCompleted')
+  clear(state: IMap) {
+    return state.update('todo', todo => todo.filter(item => !item.get('done')))
+  }
 }

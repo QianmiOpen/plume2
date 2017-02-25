@@ -18,13 +18,14 @@ export function storePath(
 
 export class StoreMethod {
   methodName: string;
-  defaultValue: () => {};
+  defaultValue: Function;
 
-  constructor(methodName: string) {
+  constructor(methodName: string, defaultValue: Function) {
     this.methodName = methodName
+    this.defaultValue = defaultValue || (() => { })
   }
 }
 
-export function storeMethod(methodName: string) {
-  return new StoreMethod(methodName)
+export function storeMethod(methodName: string, defaultValue?: Function) {
+  return new StoreMethod(methodName, defaultValue)
 }
