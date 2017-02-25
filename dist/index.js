@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const msg_1 = require("./msg");
 exports.msg = msg_1.default;
 const decorator_1 = require("./decorator");
@@ -13,3 +14,6 @@ const ql_1 = require("./ql");
 exports.QL = ql_1.QL;
 const relax_1 = require("./relax");
 exports.Relax = relax_1.default;
+const inject_1 = require("./inject");
+exports.storePath = inject_1.storePath;
+exports.StoreMethod = inject_1.StoreMethod;

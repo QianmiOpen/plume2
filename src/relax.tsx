@@ -1,7 +1,9 @@
 import * as React from 'react'
-import Store from './store'
-import { QueryLang, DynamicQueryLang } from './ql'
 import { Map, is, fromJS } from 'immutable'
+import isArray from './util/is-array'
+import Store from './store'
+import { StorePath, StoreMethod } from './inject'
+import { QueryLang, DynamicQueryLang } from './ql'
 
 type IMap = Map<string, any>;
 
@@ -38,7 +40,7 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
 
     componentWillMount() {
       //先计算一次relaxProps
-      this.relaxProps = this.computeProps(this.props)
+      this.relaxProps = this.computeProps()
       this._isMounted = false
 
       if (process.env.NODE_ENV != 'production') {
@@ -68,7 +70,7 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
         return true
       }
 
-      const newRelaxProps = this.computeProps(nextProps)
+      const newRelaxProps = this.computeProps()
       if (is(fromJS(this.relaxProps), fromJS(newRelaxProps))) {
         return false
       }
@@ -94,28 +96,39 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
       return <Wrapper {...this.props} {...this.relaxProps} />
     }
 
-    computeProps(props) {
-      const dqlMap = {} as { [name: string]: DynamicQueryLang }
+    computeProps() {
       const relaxProps = {}
+      const defaultProps = Relax.defaultProps
+      const dqlMap = {} as { [name: string]: DynamicQueryLang }
       const store: Store = this.context['_plume$Store']
 
-      for (let propName in props) {
-        const propValue = props[propName]
+      for (let propName in defaultProps) {
+        //props的属性值
+        const propValue = defaultProps[propName]
 
-        //先取默认值
-        relaxProps[propName] = propValue
-
-        //属性值如果是function，直接根据名称注入store中的方法
-        if (typeof (propValue) === 'function') {
-          relaxProps[propName] = store[propName]
+        //如果值是StorePath
+        if (propValue instanceof StorePath) {
+          const {defaultValue, path} = propValue as StorePath
+          const state = store._state
+          relaxProps[propName] = (isArray(path)
+            ? state.getIn(path as string[])
+            : state.get(path as string)
+          ) || defaultValue
         }
 
-        //是不是源于store中的state
-        else if (_isNotValidValue(store.state().get(propName))) {
-          relaxProps[propName] = store.state().get(propName)
+        //如果是StoreMethod
+        else if (propValue instanceof StoreMethod) {
+          const {defaultValue, methodName} = propValue as StoreMethod
+          relaxProps[propName] = store[methodName] || defaultValue
+
+          if (process.env.NODE_ENV != 'production') {
+            if (!store[methodName]) {
+              console.warn(`${Relax.displayName} can not find ${methodName} method in store`)
+            }
+          }
         }
 
-        //是不是ql
+        //如果是querylang         
         else if (propValue instanceof QueryLang) {
           relaxProps[propName] = store.bigQuery(propValue)
         }
@@ -138,7 +151,7 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
       //计算dql
       for (let propName in dqlMap) {
         const dql = dqlMap[propName]
-        const lang = dql.withContext(relaxProps).analyserLang(dql.lang())
+        const lang = dql.withContext(this.props).analyserLang(dql.lang())
         const ql = this._dql2QL[propName].setLang(lang)
         relaxProps[propName] = store.bigQuery(ql)
       }

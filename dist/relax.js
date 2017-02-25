@@ -1,7 +1,10 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const React = require("react");
-const ql_1 = require("./ql");
 const immutable_1 = require("immutable");
+const is_array_1 = require("./util/is-array");
+const inject_1 = require("./inject");
+const ql_1 = require("./ql");
 function RelaxContainer(Wrapper) {
     return _a = class Relax extends React.Component {
             constructor(props, context) {
@@ -18,7 +21,7 @@ function RelaxContainer(Wrapper) {
             }
             componentWillMount() {
                 //先计算一次relaxProps
-                this.relaxProps = this.computeProps(this.props);
+                this.relaxProps = this.computeProps();
                 this._isMounted = false;
                 if (process.env.NODE_ENV != 'production') {
                     if (this.context['_plume$Store']._opts.debug) {
@@ -42,7 +45,7 @@ function RelaxContainer(Wrapper) {
                 if (Object.keys(nextProps).length != Object.keys(this.props).length) {
                     return true;
                 }
-                const newRelaxProps = this.computeProps(nextProps);
+                const newRelaxProps = this.computeProps();
                 if (immutable_1.is(immutable_1.fromJS(this.relaxProps), immutable_1.fromJS(newRelaxProps))) {
                     return false;
                 }
@@ -62,20 +65,30 @@ function RelaxContainer(Wrapper) {
             render() {
                 return React.createElement(Wrapper, Object.assign({}, this.props, this.relaxProps));
             }
-            computeProps(props) {
-                const dqlMap = {};
+            computeProps() {
                 const relaxProps = {};
+                const defaultProps = Relax.defaultProps;
+                const dqlMap = {};
                 const store = this.context['_plume$Store'];
-                for (let propName in props) {
-                    const propValue = props[propName];
-                    //先取默认值
-                    relaxProps[propName] = propValue;
-                    //属性值如果是function，直接根据名称注入store中的方法
-                    if (typeof (propValue) === 'function') {
-                        relaxProps[propName] = store[propName];
+                for (let propName in defaultProps) {
+                    //props的属性值
+                    const propValue = defaultProps[propName];
+                    //如果值是StorePath
+                    if (propValue instanceof inject_1.StorePath) {
+                        const { defaultValue, path } = propValue;
+                        const state = store._state;
+                        relaxProps[propName] = (is_array_1.default(path)
+                            ? state.getIn(path)
+                            : state.get(path)) || defaultValue;
                     }
-                    else if (_isNotValidValue(store.state().get(propName))) {
-                        relaxProps[propName] = store.state().get(propName);
+                    else if (propValue instanceof inject_1.StoreMethod) {
+                        const { defaultValue, methodName } = propValue;
+                        relaxProps[propName] = store[methodName] || defaultValue;
+                        if (process.env.NODE_ENV != 'production') {
+                            if (!store[methodName]) {
+                                console.warn(`${Relax.displayName} can not find ${methodName} method in store`);
+                            }
+                        }
                     }
                     else if (propValue instanceof ql_1.QueryLang) {
                         relaxProps[propName] = store.bigQuery(propValue);
@@ -93,7 +106,7 @@ function RelaxContainer(Wrapper) {
                 //计算dql
                 for (let propName in dqlMap) {
                     const dql = dqlMap[propName];
-                    const lang = dql.withContext(relaxProps).analyserLang(dql.lang());
+                    const lang = dql.withContext(this.props).analyserLang(dql.lang());
                     const ql = this._dql2QL[propName].setLang(lang);
                     relaxProps[propName] = store.bigQuery(ql);
                 }
@@ -117,5 +130,4 @@ function RelaxContainer(Wrapper) {
     }
     var _a;
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = RelaxContainer;

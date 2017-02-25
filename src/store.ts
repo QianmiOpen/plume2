@@ -95,7 +95,7 @@ export default class Store {
 
     for (let i = 0, len = this._actors.length; i < len; i++) {
       let actor = this._actors[i]
-      const fn = actor.route(msg)
+      const fn = (actor._route || {})[msg]
 
       //如果actor没有处理msg的方法，直接跳过
       if (!fn) {
@@ -154,7 +154,7 @@ export default class Store {
     //will drop on production env
     if (process.env.NODE_ENV != 'production') {
       if (opt.debug) {
-        console.log(`🔥:tracing: QL(${name})....`)
+        console.log(`🔥:tracing: QL(${name})`)
         console.time('duration')
       }
     }
@@ -162,8 +162,10 @@ export default class Store {
     let args = lang.map((elem, index) => {
       if (elem instanceof QueryLang) {
         const value = this.bigQuery(elem)
-        outdate = value != this._cacheQL[id][index]
-        this._cacheQL[id][index] = value
+        if (value != this._cacheQL[id][index]) {
+          outdate = true
+          this._cacheQL[id][index] = value
+        }
 
         if (process.env.NODE_ENV != 'production') {
           if (opt.debug) {
@@ -174,8 +176,10 @@ export default class Store {
         return value
       } else {
         const value = isArray(elem) ? this._state.getIn(elem) : this._state.get(elem)
-        outdate = value != this._cacheQL[id][index]
-        this._cacheQL[id][index] = value
+        if (value != this._cacheQL[id][index]) {
+          outdate = true
+          this._cacheQL[id][index] = value
+        }
 
         if (process.env.NODE_ENV != 'production') {
           if (opt.debug) {

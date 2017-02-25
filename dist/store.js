@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const immutable_1 = require("immutable");
 const ql_1 = require("./ql");
 const is_array_1 = require("./util/is-array");
@@ -71,7 +72,7 @@ class Store {
         }
         for (let i = 0, len = this._actors.length; i < len; i++) {
             let actor = this._actors[i];
-            const fn = actor.route(msg);
+            const fn = (actor._route || {})[msg];
             //如果actor没有处理msg的方法，直接跳过
             if (!fn) {
                 //log
@@ -122,15 +123,17 @@ class Store {
         //will drop on production env
         if (process.env.NODE_ENV != 'production') {
             if (opt.debug) {
-                console.log(`🔥:tracing: QL(${name})....`);
+                console.log(`🔥:tracing: QL(${name})`);
                 console.time('duration');
             }
         }
         let args = lang.map((elem, index) => {
             if (elem instanceof ql_1.QueryLang) {
                 const value = this.bigQuery(elem);
-                outdate = value != this._cacheQL[id][index];
-                this._cacheQL[id][index] = value;
+                if (value != this._cacheQL[id][index]) {
+                    outdate = true;
+                    this._cacheQL[id][index] = value;
+                }
                 if (process.env.NODE_ENV != 'production') {
                     if (opt.debug) {
                         console.log(`dep:${elem.name()}|>QL, cache:${!outdate} value:${JSON.stringify(value, null, 2)}`);
@@ -140,8 +143,10 @@ class Store {
             }
             else {
                 const value = is_array_1.default(elem) ? this._state.getIn(elem) : this._state.get(elem);
-                outdate = value != this._cacheQL[id][index];
-                this._cacheQL[id][index] = value;
+                if (value != this._cacheQL[id][index]) {
+                    outdate = true;
+                    this._cacheQL[id][index] = value;
+                }
                 if (process.env.NODE_ENV != 'production') {
                     if (opt.debug) {
                         console.log(`dep:${elem}|> cache:${!outdate} value:${JSON.stringify(value, null, 2)}`);
@@ -205,5 +210,4 @@ class Store {
         }
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Store;

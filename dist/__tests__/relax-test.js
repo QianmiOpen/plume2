@@ -5,6 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const React = require("react");
 const renderer = require("react-test-renderer");
 const store_provder_1 = require("../store-provder");
@@ -13,6 +14,7 @@ const decorator_1 = require("../decorator");
 const actor_1 = require("../actor");
 const relax_1 = require("../relax");
 const ql_1 = require("../ql");
+const inject_1 = require("../inject");
 jest.mock('react-dom');
 class LoadingActor extends actor_1.default {
     defaultState() {
@@ -79,8 +81,8 @@ let HelloRelax = class HelloRelax extends React.Component {
 };
 HelloRelax.defaultProps = {
     mottFlag: 'mott',
-    loading: false,
-    mott: '',
+    loading: inject_1.storePath('loading', false),
+    mott: inject_1.storePath('mott', ''),
     loadingQL,
     mottQL,
     loadingDQL
@@ -109,7 +111,7 @@ describe('relax test suite', () => {
             }
         };
         Hello.defaultProps = {
-            mott: ''
+            mott: inject_1.storePath('mott', '')
         };
         Hello = __decorate([
             relax_1.default
@@ -121,7 +123,7 @@ describe('relax test suite', () => {
         const tree = component.toJSON();
         expect(tree).toMatchSnapshot();
     });
-    it('async dispatch event', () => {
+    it('dispatch event', () => {
         let HelloApp = class HelloApp extends React.Component {
             render() {
                 return React.createElement(Hello, null);
@@ -137,7 +139,7 @@ describe('relax test suite', () => {
             }
         };
         Hello.defaultProps = {
-            mott: ''
+            mott: inject_1.storePath('mott', '')
         };
         Hello = __decorate([
             relax_1.default
@@ -145,9 +147,7 @@ describe('relax test suite', () => {
         const component = renderer.create(React.createElement(HelloApp, null));
         const store = window['_store'];
         store.dispatch('change', 'hello plume');
-        process.nextTick(() => {
-            const tree = component.toJSON();
-            expect(tree).toMatchSnapshot();
-        });
+        const tree = component.toJSON();
+        expect(tree).toMatchSnapshot();
     });
 });

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const msg_1 = require("../msg");
 describe('msg test suite', () => {
     it('msg emit', () => {

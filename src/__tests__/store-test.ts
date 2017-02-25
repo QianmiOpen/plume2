@@ -72,7 +72,7 @@ describe('store test suite', () => {
       .toEqual([actorState[0].toJS(), actorState[1].toJS()])
   })
 
-  it('store sync dispatch', () => {
+  it('store dispatch', () => {
     const store = new AppStore({ debug: false })
     store.change()
 

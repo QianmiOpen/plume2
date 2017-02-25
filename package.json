@@ -52,6 +52,6 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-test-renderer": "^15.4.2",
-    "typescript": "^2.1.6"
+    "typescript": "2.2.1"
   }
 }

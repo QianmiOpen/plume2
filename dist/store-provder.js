@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const React = require("react");
 function StoreProvider(AppStore, opts) {
     return function wrapper(Base) {
@@ -65,5 +66,4 @@ function StoreProvider(AppStore, opts) {
         return WrappedComponent.displayName || WrappedComponent.name || 'Component';
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = StoreProvider;

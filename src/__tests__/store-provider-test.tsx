@@ -6,7 +6,6 @@ import Actor from '../actor'
 import { Action } from '../decorator'
 jest.mock('react-dom')
 
-
 class HelloActor extends Actor {
   defaultState() {
     return { name: 'plume' }

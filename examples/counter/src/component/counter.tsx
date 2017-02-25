@@ -1,6 +1,6 @@
 import * as React from 'react'
-import {Relax} from 'plume2'
-const noop = ()=>{}
+import { Relax } from 'plume2'
+const noop = () => { }
 
 type Handler = () => void;
 
@@ -17,7 +17,7 @@ export default class Counter extends React.Component<any, any> {
     increment: noop,
     decrement: noop,
   };
-  
+
   render() {
     const {count, increment, decrement} = this.props
 

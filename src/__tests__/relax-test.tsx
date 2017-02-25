@@ -6,6 +6,7 @@ import { Action } from '../decorator'
 import Actor from '../actor'
 import Relax from '../relax'
 import { QL } from '../ql'
+import { storePath, storeMethod } from '../inject'
 jest.mock('react-dom')
 
 class LoadingActor extends Actor {
@@ -78,8 +79,8 @@ class HelloRelax extends React.Component {
 
   static defaultProps = {
     mottFlag: 'mott',
-    loading: false,
-    mott: '',
+    loading: storePath('loading', false),
+    mott: storePath('mott', ''),
     loadingQL,
     mottQL,
     loadingDQL
@@ -122,7 +123,7 @@ describe('relax test suite', () => {
       props: { mott: string };
 
       static defaultProps = {
-        mott: ''
+        mott: storePath('mott', '')
       };
 
       render() {
@@ -142,7 +143,7 @@ describe('relax test suite', () => {
     expect(tree).toMatchSnapshot()
   })
 
-  it('async dispatch event', () => {
+  it('dispatch event', () => {
     @StoreProvider(AppStore)
     class HelloApp extends React.Component {
       render() {
@@ -155,7 +156,7 @@ describe('relax test suite', () => {
       props: { mott: string };
 
       static defaultProps = {
-        mott: ''
+        mott: storePath('mott', '')
       };
 
       render() {
@@ -170,11 +171,8 @@ describe('relax test suite', () => {
     const component = renderer.create(<HelloApp />)
     const store = window['_store'] as AppStore
     store.dispatch('change', 'hello plume')
-
-    process.nextTick(() => {
-      const tree = component.toJSON()
-      expect(tree).toMatchSnapshot()
-    })
+    const tree = component.toJSON()
+    expect(tree).toMatchSnapshot()
   })
 
 })
