@@ -10,6 +10,7 @@ interface Options {
 }
 
 export default class Store {
+
   _state: IMap;
   _callbacks: Array<Handler>;
   _actors: Array<Actor>;
@@ -46,6 +47,7 @@ export default class Store {
 
   dispatch(msg: string, params?: any) {
     const newStoreState = this._dispatchActor(msg, params)
+
     //如果发生store的状态变化
     if (newStoreState != this._state) {
       this._state = newStoreState
@@ -60,7 +62,7 @@ export default class Store {
     //log
     if (process.env.NODE_ENV != 'production') {
       if (this._opts.debug) {
-        console.log('::::::::::::::::🚀 open new transaction 🚀:::::::::::::::::::::::::')
+        console.log('::::::::::::::::🚀 open new transaction 🚀::::::::::::::::::')
       }
     }
 
@@ -77,7 +79,7 @@ export default class Store {
     //log
     if (process.env.NODE_ENV != 'production') {
       if (this._opts.debug) {
-        console.log('::::::::::::::::🚀 end new transaction 🚀:::::::::::::::::::::::::')
+        console.log('::::::::::::::::🚀 end new transaction 🚀::::::::::::::::::')
       }
     }
   }
@@ -87,7 +89,6 @@ export default class Store {
 
     if (process.env.NODE_ENV != 'production') {
       if (this._opts.debug) {
-        //node can not support groupCollapsed
         console.groupCollapsed && console.groupCollapsed(`store dispatch => '${msg}'`)
         console.log(`params |> ${JSON.stringify(params || 'no params')}`)
       }
@@ -96,17 +97,14 @@ export default class Store {
     for (let i = 0, len = this._actors.length; i < len; i++) {
       let actor = this._actors[i]
       const fn = (actor._route || {})[msg]
-
       //如果actor没有处理msg的方法，直接跳过
       if (!fn) {
-
         //log
         if (process.env.NODE_ENV != 'production') {
           if (this._opts.debug) {
             console.log(`${actor.constructor.name} receive '${msg}', but no handle 😭`)
           }
         }
-
         continue
       }
 
@@ -139,6 +137,7 @@ export default class Store {
     if (!(ql instanceof QueryLang)) {
       throw new Error('invalid QL')
     }
+
     //获取参数
     const opt = params || { debug: false }
     //数据是否过期,默认否

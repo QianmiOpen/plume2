@@ -31,7 +31,7 @@ class DynamicQueryLang {
         this._lang = lang;
     }
     //parse DQL's lang
-    //return DQL's lang
+    //return QL's lang
     analyserLang(dLang) {
         const lang = [];
         for (let i = 0, len = dLang.length; i < len; i++) {

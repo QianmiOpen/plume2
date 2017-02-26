@@ -65,9 +65,9 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     }
 
     shouldComponentUpdate(nextProps) {
-      //如果前后两次props的数量都不一致，直接刷新
-      if (Object.keys(nextProps).length != Object.keys(this.props).length) {
-        return true
+      //如果属性不一致，直接re-render
+      if (!is(fromJS(nextProps), fromJS(this.props))) {
+        return true;
       }
 
       const newRelaxProps = this.computeProps()

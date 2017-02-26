@@ -41,8 +41,8 @@ function RelaxContainer(Wrapper) {
                 this._isMounted = true;
             }
             shouldComponentUpdate(nextProps) {
-                //如果前后两次props的数量都不一致，直接刷新
-                if (Object.keys(nextProps).length != Object.keys(this.props).length) {
+                //如果属性不一致，直接re-render
+                if (!immutable_1.is(immutable_1.fromJS(nextProps), immutable_1.fromJS(this.props))) {
                     return true;
                 }
                 const newRelaxProps = this.computeProps();

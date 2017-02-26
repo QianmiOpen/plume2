@@ -42,7 +42,7 @@ class Store {
         //log
         if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
-                console.log('::::::::::::::::🚀 open new transaction 🚀:::::::::::::::::::::::::');
+                console.log('::::::::::::::::🚀 open new transaction 🚀::::::::::::::::::');
             }
         }
         this._isInTranstion = true;
@@ -57,7 +57,7 @@ class Store {
         //log
         if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
-                console.log('::::::::::::::::🚀 end new transaction 🚀:::::::::::::::::::::::::');
+                console.log('::::::::::::::::🚀 end new transaction 🚀::::::::::::::::::');
             }
         }
     }
@@ -65,7 +65,6 @@ class Store {
         let _state = this._state;
         if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
-                //node can not support groupCollapsed
                 console.groupCollapsed && console.groupCollapsed(`store dispatch => '${msg}'`);
                 console.log(`params |> ${JSON.stringify(params || 'no params')}`);
             }
