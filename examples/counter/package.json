@@ -7,7 +7,6 @@
     "test": "jest --verbose",
     "start": "./node_modules/.bin/webpack-dev-server",
     "clean": "rm -rf ./dist",
-    "watch": "./node_modules/.bin/tsc -w",
     "build:dll": "./node_modules/.bin/webpack --config webpack.dll.config.js --progress --color",
     "build": "./node_modules/.bin/webpack --config webpack.production.js --progress --color",
     "build:all": "npm run clean && npm run build:dll && npm run build"
@@ -26,11 +25,12 @@
     "@types/node": "^7.0.5",
     "@types/react": "^15.0.10",
     "@types/react-dom": "^0.14.23",
-    "plume2": "^0.0.0",
+    "plume2": "^0.0.2",
     "preact": "^7.2.0",
     "preact-compat": "^3.13.1"
   },
   "devDependencies": {
+    "awesome-typescript-loader": "^3.0.8",
     "babel-jest": "18.0.0",
     "babel-loader": "6.2.10",
     "babel-plugin-syntax-trailing-function-commas": "^6.20.0",
@@ -46,7 +46,8 @@
     "babel-preset-react": "6.16.0",
     "babel-preset-stage-3": "6.17.0",
     "html-webpack-plugin": "2.24.1",
-    "typescript": "^2.1.6",
+    "ts-loader": "^2.0.1",
+    "typescript": "^2.2.1",
     "webpack": "2.2.0",
     "webpack-dev-server": "1.16.2"
   }

@@ -5,6 +5,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+Object.defineProperty(exports, "__esModule", { value: true });
 const React = require("react");
 const plume2_1 = require("plume2");
 const noop = () => { };
@@ -18,12 +19,11 @@ let Counter = class Counter extends React.Component {
     }
 };
 Counter.defaultProps = {
-    count: 0,
-    increment: noop,
-    decrement: noop,
+    count: plume2_1.storePath('count', 0),
+    increment: plume2_1.storeMethod('increment', () => { }),
+    decrement: plume2_1.storeMethod('decrement', () => { }),
 };
 Counter = __decorate([
     plume2_1.Relax
 ], Counter);
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Counter;

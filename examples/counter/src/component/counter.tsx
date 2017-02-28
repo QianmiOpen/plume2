@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Relax } from 'plume2'
+import { Relax, storePath, storeMethod } from 'plume2'
 const noop = () => { }
 
 type Handler = () => void;
@@ -13,13 +13,13 @@ export default class Counter extends React.Component<any, any> {
   }
 
   static defaultProps = {
-    count: 0,
-    increment: noop,
-    decrement: noop,
+    count: storePath('count', 0),
+    increment: storeMethod('increment', () => { }),
+    decrement: storeMethod('decrement', () => { }),
   };
 
   render() {
-    const {count, increment, decrement} = this.props
+    const { count, increment, decrement } = this.props
 
     return (
       <div>

@@ -20,7 +20,7 @@ export class StoreMethod {
   methodName: string;
   defaultValue: Function;
 
-  constructor(methodName: string, defaultValue: Function) {
+  constructor(methodName: string, defaultValue?: Function) {
     this.methodName = methodName
     this.defaultValue = defaultValue || (() => { })
   }
