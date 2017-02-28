@@ -79,8 +79,8 @@ declare namespace plume2 {
   type TStore = typeof Store
   type Wrapper<IProps> = React.ComponentClass<IProps>;
 
-  export function StoreProvider<IProps>(
+  export function StoreProvider<TFunction extends React.ComponentClass<any>>(
     AppStore: TStore,
     opts?: IOptions
-  ): (Base: Wrapper<IProps>) => Wrapper<IProps>;
+  ): (Base: TFunction) => any;
 }
