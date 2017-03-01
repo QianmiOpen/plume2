@@ -1,6 +1,6 @@
 {
   "name": "plume2",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "a lightweight of flux for mobile web",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
