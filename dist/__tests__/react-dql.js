@@ -47,14 +47,16 @@ const productQL = index_1.QL('productQL', [
 ]);
 let ProductItem = class ProductItem extends React.Component {
     render() {
-        const { id, name } = this.props.product.toJS();
+        const { id, name } = this.props.relaxProps.product.toJS();
         return (React.createElement("div", null,
             React.createElement("div", null, id),
             React.createElement("div", null, name)));
     }
 };
 ProductItem.defaultProps = {
-    index: 0,
+    index: 0
+};
+ProductItem.relaxProps = {
     product: productQL
 };
 ProductItem = __decorate([

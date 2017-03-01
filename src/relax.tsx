@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Map, is, fromJS } from 'immutable'
 import isArray from './util/is-array'
+import isString from './util/is-string'
 import Store from './store'
-import { StorePath, StoreMethod } from './inject'
 import { QueryLang, DynamicQueryLang } from './ql'
 
 type IMap = Map<string, any>;
@@ -18,6 +18,9 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
 
     //拷贝WrapperComponent的defaultProps
     static defaultProps = Wrapper.defaultProps || {};
+    //拷贝WrapperComponent的relaxProps
+    //注入和store关联的数据和方法
+    static relaxProps = Wrapper.relaxProps || {};
 
     //声明上下文依赖
     static contextTypes = {
@@ -40,7 +43,7 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
 
     componentWillMount() {
       //先计算一次relaxProps
-      this.relaxProps = this.computeProps()
+      this.relaxProps = this.computeRelaxProps(this.props)
       this._isMounted = false
 
       if (process.env.NODE_ENV != 'production') {
@@ -70,7 +73,7 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
         return true;
       }
 
-      const newRelaxProps = this.computeProps()
+      const newRelaxProps = this.computeRelaxProps(nextProps)
       if (is(fromJS(this.relaxProps), fromJS(newRelaxProps))) {
         return false
       }
@@ -93,46 +96,41 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     }
 
     render() {
-      return <Wrapper {...this.props} {...this.relaxProps} />
+      return <Wrapper {...this.props} relaxProps={this.relaxProps} />
     }
 
-    computeProps() {
+    computeRelaxProps(props) {
       const relaxProps = {}
-      const defaultProps = Relax.defaultProps
       const dqlMap = {} as { [name: string]: DynamicQueryLang }
       const store: Store = this.context['_plume$Store']
 
-      for (let propName in defaultProps) {
-        //props的属性值
-        const propValue = defaultProps[propName]
+      for (let propName in Relax.relaxProps) {
+        //prop的属性值
+        const propValue = Relax.relaxProps[propName]
 
-        //如果值是StorePath
-        if (propValue instanceof StorePath) {
-          const {defaultValue, path} = propValue as StorePath
-          const state = store._state
-          relaxProps[propName] = (isArray(path)
-            ? state.getIn(path as string[])
-            : state.get(path as string)
-          ) || defaultValue
+        //如果是字符串，注入state        
+        if (isString(propValue)) {
+          relaxProps[propName] = store.state().get(propValue)
         }
-
-        //如果是StoreMethod
-        else if (propValue instanceof StoreMethod) {
-          const {defaultValue, methodName} = propValue as StoreMethod
-          relaxProps[propName] = store[methodName] || defaultValue
-
+        //如果是数组，直接注入state
+        else if (isArray(propValue)) {
+          relaxProps[propName] = store.state().getIn(propValue)
+        }
+        //如果该属性值是函数类型，注入store的method
+        else if (typeof (propValue) === 'function') {
+          const storeMethod = store[propName]
+          relaxProps[propName] = storeMethod || propValue
+          //warning...
           if (process.env.NODE_ENV != 'production') {
-            if (!store[methodName]) {
-              console.warn(`${Relax.displayName} can not find ${methodName} method in store`)
+            if (!storeMethod) {
+              console.warn('store can not find `${propName} method.`')
             }
           }
         }
-
-        //如果是querylang         
+        //如果是querylang
         else if (propValue instanceof QueryLang) {
           relaxProps[propName] = store.bigQuery(propValue)
         }
-
         //是不是dql
         else if (propValue instanceof DynamicQueryLang) {
           if (!this._dql2QL[propName]) {
@@ -151,7 +149,7 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
       //计算dql
       for (let propName in dqlMap) {
         const dql = dqlMap[propName]
-        const lang = dql.withContext(this.props).analyserLang(dql.lang())
+        const lang = dql.withContext(props).analyserLang(dql.lang())
         const ql = this._dql2QL[propName].setLang(lang)
         relaxProps[propName] = store.bigQuery(ql)
       }

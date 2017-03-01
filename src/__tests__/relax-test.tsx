@@ -6,7 +6,6 @@ import { Action } from '../decorator'
 import Actor from '../actor'
 import Relax from '../relax'
 import { QL } from '../ql'
-import { storePath, storeMethod } from '../inject'
 jest.mock('react-dom')
 
 class LoadingActor extends Actor {
@@ -70,24 +69,29 @@ const loadingDQL = QL('loadingDQL', [
 class HelloRelax extends React.Component {
   props: {
     mottFlag: string;
-    loading: boolean;
-    mott: string;
-    loadingQL: boolean;
-    mottQL: { loading: boolean; mott: string };
-    loadingDQL: boolean;
+    relaxProps: {
+      loading: boolean;
+      mott: string;
+      loadingQL: boolean;
+      mottQL: { loading: boolean; mott: string };
+      loadingDQL: boolean;
+    }
   };
 
   static defaultProps = {
-    mottFlag: 'mott',
-    loading: storePath('loading', false),
-    mott: storePath('mott', ''),
+    mottFlag: 'mott'
+  }
+
+  static relaxProps = {
+    loading: 'loading',
+    mott: 'mott',
     loadingQL,
     mottQL,
     loadingDQL
-  }
+  };
 
   render() {
-    const {loading, mott, loadingQL, mottQL, loadingDQL} = this.props
+    const { loading, mott, loadingQL, mottQL, loadingDQL } = this.props.relaxProps
 
     expect(false).toEqual(loadingQL)
 
@@ -110,6 +114,7 @@ describe('relax test suite', () => {
     expect(tree).toMatchSnapshot()
   })
 
+
   it('sync dispatch event', () => {
     @StoreProvider(AppStore)
     class HelloApp extends React.Component {
@@ -120,16 +125,16 @@ describe('relax test suite', () => {
 
     @Relax
     class Hello extends React.Component {
-      props: { mott: string };
+      props: { relaxProps: { mott: string } };
 
-      static defaultProps = {
-        mott: storePath('mott', '')
+      static relaxProps = {
+        mott: 'mott'
       };
 
       render() {
         return (
           <div>
-            <div>{this.props.mott}</div>
+            <div>{this.props.relaxProps.mott}</div>
           </div>
         )
       }
@@ -153,16 +158,16 @@ describe('relax test suite', () => {
 
     @Relax
     class Hello extends React.Component {
-      props: { mott: string };
+      props: { relaxProps: { mott: string } };
 
-      static defaultProps = {
-        mott: storePath('mott', '')
+      static relaxProps = {
+        mott: 'mott'
       };
 
       render() {
         return (
           <div>
-            <div>{this.props.mott}</div>
+            <div>{this.props.relaxProps.mott}</div>
           </div>
         )
       }

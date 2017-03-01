@@ -62,17 +62,22 @@ const productQL = QL('productQL', [
 @Relax
 class ProductItem extends React.Component {
   static defaultProps = {
-    index: 0,
-    product: productQL
+    index: 0
   };
+
+  static relaxProps = {
+    product: productQL
+  }
 
   props: {
     index: 0,
-    product: IMap
+    relaxProps: {
+      product: IMap
+    }
   }
 
   render() {
-    const {id, name} = this.props.product.toJS();
+    const { id, name } = this.props.relaxProps.product.toJS();
     return (
       <div>
         <div>{id}</div>

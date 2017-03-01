@@ -14,7 +14,6 @@ const decorator_1 = require("../decorator");
 const actor_1 = require("../actor");
 const relax_1 = require("../relax");
 const ql_1 = require("../ql");
-const inject_1 = require("../inject");
 jest.mock('react-dom');
 class LoadingActor extends actor_1.default {
     defaultState() {
@@ -69,7 +68,7 @@ const loadingDQL = ql_1.QL('loadingDQL', [
 ]);
 let HelloRelax = class HelloRelax extends React.Component {
     render() {
-        const { loading, mott, loadingQL, mottQL, loadingDQL } = this.props;
+        const { loading, mott, loadingQL, mottQL, loadingDQL } = this.props.relaxProps;
         expect(false).toEqual(loadingQL);
         expect({ loading: false, mott: 'hello world!' })
             .toEqual(mottQL);
@@ -80,9 +79,11 @@ let HelloRelax = class HelloRelax extends React.Component {
     }
 };
 HelloRelax.defaultProps = {
-    mottFlag: 'mott',
-    loading: inject_1.storePath('loading', false),
-    mott: inject_1.storePath('mott', ''),
+    mottFlag: 'mott'
+};
+HelloRelax.relaxProps = {
+    loading: 'loading',
+    mott: 'mott',
     loadingQL,
     mottQL,
     loadingDQL
@@ -107,11 +108,11 @@ describe('relax test suite', () => {
         let Hello = class Hello extends React.Component {
             render() {
                 return (React.createElement("div", null,
-                    React.createElement("div", null, this.props.mott)));
+                    React.createElement("div", null, this.props.relaxProps.mott)));
             }
         };
-        Hello.defaultProps = {
-            mott: inject_1.storePath('mott', '')
+        Hello.relaxProps = {
+            mott: 'mott'
         };
         Hello = __decorate([
             relax_1.default
@@ -135,11 +136,11 @@ describe('relax test suite', () => {
         let Hello = class Hello extends React.Component {
             render() {
                 return (React.createElement("div", null,
-                    React.createElement("div", null, this.props.mott)));
+                    React.createElement("div", null, this.props.relaxProps.mott)));
             }
         };
-        Hello.defaultProps = {
-            mott: inject_1.storePath('mott', '')
+        Hello.relaxProps = {
+            mott: 'mott'
         };
         Hello = __decorate([
             relax_1.default

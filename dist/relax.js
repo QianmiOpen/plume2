@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const React = require("react");
 const immutable_1 = require("immutable");
 const is_array_1 = require("./util/is-array");
-const inject_1 = require("./inject");
+const is_string_1 = require("./util/is-string");
 const ql_1 = require("./ql");
 function RelaxContainer(Wrapper) {
     return _a = class Relax extends React.Component {
@@ -21,7 +21,7 @@ function RelaxContainer(Wrapper) {
             }
             componentWillMount() {
                 //先计算一次relaxProps
-                this.relaxProps = this.computeProps();
+                this.relaxProps = this.computeRelaxProps(this.props);
                 this._isMounted = false;
                 if (process.env.NODE_ENV != 'production') {
                     if (this.context['_plume$Store']._opts.debug) {
@@ -45,7 +45,7 @@ function RelaxContainer(Wrapper) {
                 if (!immutable_1.is(immutable_1.fromJS(nextProps), immutable_1.fromJS(this.props))) {
                     return true;
                 }
-                const newRelaxProps = this.computeProps();
+                const newRelaxProps = this.computeRelaxProps(nextProps);
                 if (immutable_1.is(immutable_1.fromJS(this.relaxProps), immutable_1.fromJS(newRelaxProps))) {
                     return false;
                 }
@@ -63,30 +63,29 @@ function RelaxContainer(Wrapper) {
                 this.context.unsubscribe(this._handleStoreChange);
             }
             render() {
-                return React.createElement(Wrapper, Object.assign({}, this.props, this.relaxProps));
+                return React.createElement(Wrapper, Object.assign({}, this.props, { relaxProps: this.relaxProps }));
             }
-            computeProps() {
+            computeRelaxProps(props) {
                 const relaxProps = {};
-                const defaultProps = Relax.defaultProps;
                 const dqlMap = {};
                 const store = this.context['_plume$Store'];
-                for (let propName in defaultProps) {
-                    //props的属性值
-                    const propValue = defaultProps[propName];
-                    //如果值是StorePath
-                    if (propValue instanceof inject_1.StorePath) {
-                        const { defaultValue, path } = propValue;
-                        const state = store._state;
-                        relaxProps[propName] = (is_array_1.default(path)
-                            ? state.getIn(path)
-                            : state.get(path)) || defaultValue;
+                for (let propName in Relax.relaxProps) {
+                    //prop的属性值
+                    const propValue = Relax.relaxProps[propName];
+                    //如果是字符串，注入state        
+                    if (is_string_1.default(propValue)) {
+                        relaxProps[propName] = store.state().get(propValue);
                     }
-                    else if (propValue instanceof inject_1.StoreMethod) {
-                        const { defaultValue, methodName } = propValue;
-                        relaxProps[propName] = store[methodName] || defaultValue;
+                    else if (is_array_1.default(propValue)) {
+                        relaxProps[propName] = store.state().getIn(propValue);
+                    }
+                    else if (typeof (propValue) === 'function') {
+                        const storeMethod = store[propName];
+                        relaxProps[propName] = storeMethod || propValue;
+                        //warning...
                         if (process.env.NODE_ENV != 'production') {
-                            if (!store[methodName]) {
-                                console.warn(`${Relax.displayName} can not find ${methodName} method in store`);
+                            if (!storeMethod) {
+                                console.warn('store can not find `${propName} method.`');
                             }
                         }
                     }
@@ -106,7 +105,7 @@ function RelaxContainer(Wrapper) {
                 //计算dql
                 for (let propName in dqlMap) {
                     const dql = dqlMap[propName];
-                    const lang = dql.withContext(this.props).analyserLang(dql.lang());
+                    const lang = dql.withContext(props).analyserLang(dql.lang());
                     const ql = this._dql2QL[propName].setLang(lang);
                     relaxProps[propName] = store.bigQuery(ql);
                 }
@@ -117,6 +116,9 @@ function RelaxContainer(Wrapper) {
         _a.displayName = `Relax(${getDisplayName(Wrapper)})`,
         //拷贝WrapperComponent的defaultProps
         _a.defaultProps = Wrapper.defaultProps || {},
+        //拷贝WrapperComponent的relaxProps
+        //注入和store关联的数据和方法
+        _a.relaxProps = Wrapper.relaxProps || {},
         //声明上下文依赖
         _a.contextTypes = {
             _plume$Store: React.PropTypes.object

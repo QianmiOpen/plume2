@@ -14,6 +14,3 @@ const ql_1 = require("./ql");
 exports.QL = ql_1.QL;
 const relax_1 = require("./relax");
 exports.Relax = relax_1.default;
-const inject_1 = require("./inject");
-exports.storePath = inject_1.storePath;
-exports.storeMethod = inject_1.storeMethod;
