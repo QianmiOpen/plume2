@@ -1,27 +1,29 @@
 import * as React from 'react'
-import { Relax, storeMethod } from 'plume2'
+import { Relax } from 'plume2'
 import { valueQL } from '../ql'
 const noop = () => { };
 
 interface HeaderProps {
-  value?: string;
-  submit?: (text: string) => void;
-  changeValue?: (text: string) => void;
+  relaxProps?: {
+    value: string;
+    submit: (text: string) => void;
+    changeValue: (text: string) => void;
+  }
 }
 
 @Relax
 export default class Header extends React.Component<HeaderProps, any> {
-  static defaultProps = {
+  static relaxProps = {
     value: valueQL,
-    submit: storeMethod('submit'),
-    changeValue: storeMethod('changeValue')
+    submit: noop,
+    changeValue: noop
   };
 
   render() {
     return (
       <header className="header" >
         <h1>todos </h1>
-        <input value={this.props.value}
+        <input value={this.props.relaxProps.value}
           className="new-todo"
           onKeyDown={this._handleKeyDown}
           onChange={this._handleChange}
@@ -32,13 +34,13 @@ export default class Header extends React.Component<HeaderProps, any> {
   }
 
   _handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    this.props.changeValue((e.target as any).value);
+    this.props.relaxProps.changeValue((e.target as any).value);
   };
 
 
   _handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13) {
-      this.props.submit((e.target as any).value);
+      this.props.relaxProps.submit((e.target as any).value);
     }
   };
 }

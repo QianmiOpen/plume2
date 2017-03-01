@@ -4,22 +4,25 @@ const noop = () => { }
 
 type Handler = () => void;
 
-interface TProps {
-  second?: number; //injected by store's second
-  start?: Handler; //injected by store's start 
-  reset?: Handler; //injected by store's reset
-}
-
 @Relax
-export default class Timer extends React.Component<TProps, any> {
-  static defaultProps = {
-    second: 0,
+export default class Timer extends React.Component<any, any> {
+  props: {
+    relaxProps?: {
+      second: number;
+      start: Handler;
+      reset: Handler;
+    }
+  };
+
+  static relaxProps = {
+    second: 'second',
     start: noop,
     reset: noop,
   };
 
   render() {
-    const {second, start, reset} = this.props
+    const { second, start, reset } = this.props.relaxProps
+
     return (
       <div>
         <a href={'javascript:;'} onClick={reset}>reset</a>

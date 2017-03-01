@@ -1,30 +1,37 @@
 import * as React from 'react'
-import { Relax, storePath, storeMethod } from 'plume2'
+import { Relax } from 'plume2'
 import { countQL } from '../ql'
 const noop = () => { }
 
 type Handler = () => void;
 
 interface FooterProps {
-  changeFilter?: (text: string) => void;
-  clearCompleted?: Handler;
-  filterStatus?: string;
-  count?: number;
+  relaxProps?: {
+    changeFilter: (text: string) => void;
+    clearCompleted: Handler;
+    filterStatus: string;
+    count: number;
+  }
 }
 
 @Relax
 export default class Footer extends React.Component<FooterProps, any> {
-  static defaultProps = {
-    changeFilter: storeMethod('changeFilter'),
-    clearCompleted: storeMethod('clearCompleted'),
-
+  static relaxProps = {
+    changeFilter: noop,
+    clearCompleted: noop,
     count: countQL,
-    filterStatus: storePath('filterStatus', ''),
+    filterStatus: 'filterStatus'
   };
 
 
   render() {
-    const {changeFilter, filterStatus, count, clearCompleted} = this.props
+    const {
+      changeFilter,
+      filterStatus,
+      count,
+      clearCompleted
+    } = this.props.relaxProps
+
     let countText = ''
 
     if (count > 1) {

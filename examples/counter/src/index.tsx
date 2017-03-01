@@ -4,13 +4,10 @@ import { StoreProvider } from 'plume2'
 import AppStore from './store'
 import Counter from './component/counter'
 
-declare const __DEV__: boolean;
-
 if (__DEV__) {
   require('preact/devtools')
 }
 
-//relax
 @StoreProvider(AppStore, { debug: __DEV__ })
 class CounterApp extends React.Component<any, any> {
   render() {

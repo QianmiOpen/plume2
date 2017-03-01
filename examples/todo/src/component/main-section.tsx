@@ -1,33 +1,35 @@
 //@flow
 import * as React from 'react'
-import { Relax, IMap, storeMethod } from 'plume2'
+import { Relax, IMap } from 'plume2'
 import { List } from 'immutable'
 import { todoQL } from '../ql'
 const noop = () => { }
 
 interface IProps {
-  index?: number;
-  todo?: List<IMap>;
-  toggle?: Function;
-  destroy?: Function;
-  toggleAll?: Function;
+  relaxProps?: {
+    index: number;
+    todo: List<IMap>;
+    toggle: Function;
+    destroy: Function;
+    toggleAll: Function;
+  }
 }
 
 @Relax
 export default class MainSection extends React.Component<IProps, any> {
-  /**
-   * All these props will be auto Dependency Inject by @Relax
-   */
   static defaultProps = {
     index: 0,//假设是父组件传递的属性
+  };
+
+  static relaxProps = {
     todo: todoQL,
-    toggle: storeMethod('toggle'),
-    destroy: storeMethod('destroy'),
-    toggleAll: storeMethod('toggleAll')
+    toggle: noop,
+    destroy: noop,
+    toggleAll: noop
   };
 
   render() {
-    const {toggle, toggleAll, destroy, todo} = this.props
+    const { toggle, toggleAll, destroy, todo } = this.props.relaxProps
 
     return (
       <section className="main">
