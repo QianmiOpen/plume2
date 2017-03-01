@@ -6,8 +6,8 @@ class Actor {
     }
     receive(msg, state, params) {
         this._route = this._route || {};
-        const action = this._route[msg];
-        return action ? action.call(this, state, params) : state;
+        const fn = this._route[msg];
+        return fn ? fn.call(this, state, params) : state;
     }
 }
 exports.default = Actor;

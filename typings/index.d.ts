@@ -1,5 +1,6 @@
 import { Map } from 'immutable'
 import * as React from 'react'
+import * as mitt from 'mitt'
 
 export = plume2
 
@@ -48,13 +49,7 @@ declare namespace plume2 {
     lang: Array<any>
   ): QueryLang;
 
-  interface Emitter {
-    on(type: string, handler: Handler): void;
-    off(type: string, handler: Handler): void;
-    emit(type: string, event?: any): void;
-  }
-
-  export const msg: Emitter;
+  export const msg: mitt.Emitter;
 
   export function Action(msg: string): Function;
 
