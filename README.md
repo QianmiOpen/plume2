@@ -14,11 +14,6 @@ class HelloActor extends Actor {
   defaultState() {
     return {text: 'hello world'}
   }
-
-  @Action
-  change(state, text) {
-    return state.set('text', text)
-  }
 }
 
 class AppStore extends Store {
@@ -34,7 +29,8 @@ class Text extends React.Component {
   };
 
   render() {
-    return <div>{this.props.relaxProps.text}</div>
+    const {text} = this.props.relaxProps
+    return <div>{text}</div>
   }
 }
 
