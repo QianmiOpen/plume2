@@ -11,20 +11,6 @@ declare namespace plume2 {
     debug?: boolean;
   }
 
-  export interface StorePath {
-    path: string | Array<string | number>;
-    defaultValue: any;
-  }
-
-  export function storePath(path: string | Array<string | number>, defaultValue: any): StorePath
-
-  export interface StoreMethod {
-    methodName: string;
-    defaultValue: () => void;
-  }
-
-  export function storeMethod(methodName: string, defaultValue?: () => void): StoreMethod;
-
   export class Actor {
     defaultState(): Object;
   }
