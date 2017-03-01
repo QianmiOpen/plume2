@@ -1,3 +1,12 @@
 {
-  "vsicons.presets.angular": false
+  "vsicons.presets.angular": false,
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.formatOnType": true,
+  "editor.rulers": [
+    80
+  ],
+  "editor.tabCompletion": true,
+  "typescript.tsdk": "./node_modules/typescript/lib"
 }
