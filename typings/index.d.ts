@@ -18,29 +18,19 @@ declare namespace plume2 {
 
   export class Store {
     constructor(props?: IOptions);
-
-    dispatch(msg: string, params?: any): IMap;
-
+    dispatch(msg: string, params?: any);
     transaction(cb: () => void): void;
-
     bindActor(): Array<Actor>;
-
     bigQuery(ql: QueryLang, params: { debug?: boolean }): any;
-
     state(): IMap;
-
     subscribe(cb: Handler): void;
-
     unsubscribe(cb: Handler): void;
   }
 
   export class QueryLang {
     constructor(name: string, lang: Array<any>);
-
     id(): number;
-
     name(): string;
-
     lang(): Array<any>;
   }
 
