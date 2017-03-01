@@ -1,6 +1,6 @@
-import { Store, QL, Actor, Action } from '../index'
-import { QueryLang } from '../ql'
 import { Map, fromJS } from 'immutable'
+import { Actor, Action, Store, QL } from "../src/index";
+import { QueryLang } from "../src/ql";
 
 type TMap = Map<string, any>
 
@@ -10,9 +10,7 @@ class TodoActor extends Actor {
   defaultState() {
     return {
       filter: '',
-      todo: [
-
-      ]
+      todo: []
     }
   }
 
@@ -48,8 +46,8 @@ const countQL = QL('countQL', [
 ])
 
 describe('bigquery test suite', () => {
-  it('initial state', () => {
-    const store = new AppStore({ debug: true })
+  it('countQL', () => {
+    const store = new AppStore()
     let count = store.bigQuery(countQL as QueryLang)
     expect(count).toEqual(0)
 

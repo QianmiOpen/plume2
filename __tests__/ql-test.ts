@@ -1,6 +1,5 @@
-import { QL, QueryLang } from '../ql'
-import Store from '../store'
-import Actor from '../actor'
+import { Actor, Store } from "../src/index";
+import { QL, QueryLang } from "../src/ql";
 
 class LoadingActor extends Actor {
   defaultState() {
@@ -27,8 +26,8 @@ describe('ql test suite', () => {
       (loading) => loading
     ]) as QueryLang
 
-    expect(1).toEqual(helloQL.id())
-    expect('helloQL').toEqual(helloQL.name())
+    expect(helloQL.id()).toEqual(1)
+    expect(helloQL.name()).toEqual('helloQL')
     expect(helloQL.lang()).toMatchSnapshot()
   })
 
@@ -45,10 +44,10 @@ describe('ql test suite', () => {
     const store = new AppStore({})
     const todo = store.bigQuery(todoQL)
 
-    expect({
+    expect(todo).toEqual({
       loading: true,
       text: 'hello plume'
-    }).toEqual(todo)
+    })
   })
 
   it('test complex bigQuery', () => {
@@ -68,15 +67,15 @@ describe('ql test suite', () => {
 
     const store = new AppStore({})
     const loading = store.bigQuery(loadingQL)
-    expect(true).toEqual(loading)
+    expect(loading).toEqual(true)
 
     const todo = store.bigQuery(todoQL)
-    expect({ loading: true, text: 'hello plume' })
-      .toEqual(todo)
+    expect(todo)
+      .toEqual({ loading: true, text: 'hello plume' })
 
     //from cache
     const todoCache = store.bigQuery(todoQL)
-    expect({ loading: true, text: 'hello plume' })
-      .toEqual(todoCache)
+    expect(todoCache)
+      .toEqual({ loading: true, text: 'hello plume' })
   })
 })

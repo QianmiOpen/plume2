@@ -1,11 +1,6 @@
 import * as React from 'react'
 import * as renderer from 'react-test-renderer'
-import StoreProvider from '../store-provder'
-import Store from '../store'
-import { Action } from '../decorator'
-import Actor from '../actor'
-import Relax from '../relax'
-import { QL } from '../ql'
+import { Actor, Action, Store, StoreProvider, QL, Relax } from "../src/index";
 jest.mock('react-dom')
 
 class LoadingActor extends Actor {
@@ -179,6 +174,5 @@ describe('relax test suite', () => {
     const tree = component.toJSON()
     expect(tree).toMatchSnapshot()
   })
-
 })
 

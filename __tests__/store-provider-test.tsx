@@ -1,9 +1,7 @@
 import * as React from 'react'
 import * as renderer from 'react-test-renderer';
-import StoreProvider from '../store-provder'
-import Store from '../store'
-import Actor from '../actor'
-import { Action } from '../decorator'
+import { Actor, Store, StoreProvider } from "../src/index";
+import { Action } from "../src/decorator";
 jest.mock('react-dom')
 
 class HelloActor extends Actor {
@@ -50,7 +48,7 @@ describe('store provider test suite', () => {
     expect(tree).toMatchSnapshot();
   })
 
-  it('store sync dispath change render', () => {
+  it('store dispath change render', () => {
     const component = renderer.create(<Home />)
     const store = window['_store'] as AppStore
     //测试同步渲染

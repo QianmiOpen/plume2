@@ -1,15 +1,7 @@
 import * as React from 'react'
 import * as renderer from 'react-test-renderer'
-
-import {
-  Actor,
-  Store,
-  Relax,
-  QL,
-  StoreProvider
-} from '../index'
-
 import { Map } from 'immutable'
+import { Actor, Store, StoreProvider, QL, Relax } from "../src/index";
 
 jest.mock('react-dom')
 

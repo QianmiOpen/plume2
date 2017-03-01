@@ -1,5 +1,5 @@
-import isArray from '../util/is-array'
-import isString from '../util/is-string'
+import isString from "../src/util/is-string";
+import isArray from "../src/util/is-array";
 
 describe('util test suite', () => {
   it('is Array', () => {

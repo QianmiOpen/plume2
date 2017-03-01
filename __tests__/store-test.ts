@@ -1,7 +1,5 @@
-import Store from '../store'
-import Actor from '../actor'
-import { Action } from '../decorator'
 import { Map } from 'immutable'
+import { Actor, Action, Store } from "../src/index";
 
 type IMap = Map<string, any>;
 
@@ -58,18 +56,18 @@ describe('store test suite', () => {
     const store = new AppStore()
 
     //defautlState
-    expect({
+    expect(store.state().toJS()).toEqual({
       loading: false,
       name: 'plume'
-    }).toEqual(store.state().toJS())
+    })
 
     //actors
-    expect(2).toEqual(store._actors.length)
+    expect(store._actors.length).toEqual(2)
 
     //actor'state
     const actorState = store._actorsState
-    expect([{ name: "plume" }, { loading: false }])
-      .toEqual([actorState[0].toJS(), actorState[1].toJS()])
+    expect([actorState[0].toJS(), actorState[1].toJS()])
+      .toEqual([{ name: "plume" }, { loading: false }])
   })
 
   it('store dispatch', () => {
@@ -80,12 +78,12 @@ describe('store test suite', () => {
     expect(storeState.toJS()).toEqual({ loading: true, name: 'plume++' })
 
     const actorsState = store._actorsState
-    expect([{ name: 'plume++' }, { loading: true }])
-      .toEqual([actorsState[0].toJS(), actorsState[1].toJS()])
+    expect([actorsState[0].toJS(), actorsState[1].toJS()])
+      .toEqual([{ name: 'plume++' }, { loading: true }])
   })
 
   it('store transation disptch', () => {
-    const store = new AppStore({ debug: false })
+    const store = new AppStore()
     store.changeTransation()
     store.subscribe(state => {
       expect(state.toJS()).toEqual({
@@ -98,14 +96,14 @@ describe('store test suite', () => {
   it('store subscribe', () => {
     const store = new AppStore({})
     const _handleStoreChange = (state: IMap) => {
-      expect({ loading: true, name: 'plume++' })
-        .toEqual(store.state())
+      expect(store.state())
+        .toEqual({ loading: true, name: 'plume++' })
     }
 
     store.subscribe(_handleStoreChange)
-    expect(1).toEqual(store._callbacks.length)
+    expect(store._callbacks.length).toEqual(1)
 
     store.unsubscribe(_handleStoreChange)
-    expect(0).toEqual(store._callbacks.length)
+    expect(store._callbacks.length).toEqual(0)
   })
 })

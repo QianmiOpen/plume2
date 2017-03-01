@@ -20,9 +20,10 @@ function RelaxContainer(Wrapper) {
                 context._plume$Store.subscribe(this._handleStoreChange);
             }
             componentWillMount() {
-                //先计算一次relaxProps
-                this.relaxProps = this.computeRelaxProps(this.props);
                 this._isMounted = false;
+                //计算一次relaxProps
+                this.relaxProps = this.computeRelaxProps(this.props);
+                //will drop on production env       
                 if (process.env.NODE_ENV != 'production') {
                     if (this.context['_plume$Store']._opts.debug) {
                         console.groupCollapsed(`${Relax.displayName} will mount 🚀`);
@@ -67,12 +68,13 @@ function RelaxContainer(Wrapper) {
             }
             computeRelaxProps(props) {
                 const relaxProps = {};
+                const staticRelaxProps = Relax.relaxProps;
                 const dqlMap = {};
                 const store = this.context['_plume$Store'];
-                for (let propName in Relax.relaxProps) {
+                for (let propName in staticRelaxProps) {
                     //prop的属性值
-                    const propValue = Relax.relaxProps[propName];
-                    //如果是字符串，注入state        
+                    const propValue = staticRelaxProps[propName];
+                    //如果是字符串，注入store's state
                     if (is_string_1.default(propValue)) {
                         relaxProps[propName] = store.state().get(propValue);
                     }

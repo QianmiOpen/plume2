@@ -42,10 +42,11 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     }
 
     componentWillMount() {
-      //先计算一次relaxProps
-      this.relaxProps = this.computeRelaxProps(this.props)
       this._isMounted = false
+      //计算一次relaxProps
+      this.relaxProps = this.computeRelaxProps(this.props)
 
+      //will drop on production env       
       if (process.env.NODE_ENV != 'production') {
         if (this.context['_plume$Store']._opts.debug) {
           console.groupCollapsed(`${Relax.displayName} will mount 🚀`)
@@ -101,21 +102,24 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
 
     computeRelaxProps(props) {
       const relaxProps = {}
+      const staticRelaxProps = Relax.relaxProps
       const dqlMap = {} as { [name: string]: DynamicQueryLang }
       const store: Store = this.context['_plume$Store']
 
-      for (let propName in Relax.relaxProps) {
+      for (let propName in staticRelaxProps) {
         //prop的属性值
-        const propValue = Relax.relaxProps[propName]
+        const propValue = staticRelaxProps[propName]
 
-        //如果是字符串，注入state        
+        //如果是字符串，注入store's state
         if (isString(propValue)) {
           relaxProps[propName] = store.state().get(propValue)
         }
-        //如果是数组，直接注入state
+
+        //如果是数组，直接注入state's state
         else if (isArray(propValue)) {
           relaxProps[propName] = store.state().getIn(propValue)
         }
+
         //如果该属性值是函数类型，注入store的method
         else if (typeof (propValue) === 'function') {
           const storeMethod = store[propName]
@@ -127,10 +131,12 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
             }
           }
         }
+
         //如果是querylang
         else if (propValue instanceof QueryLang) {
           relaxProps[propName] = store.bigQuery(propValue)
         }
+
         //是不是dql
         else if (propValue instanceof DynamicQueryLang) {
           if (!this._dql2QL[propName]) {
