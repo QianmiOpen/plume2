@@ -27,7 +27,8 @@ function RelaxContainer(Wrapper) {
                 if (process.env.NODE_ENV != 'production') {
                     if (this.context['_plume$Store']._opts.debug) {
                         console.groupCollapsed(`${Relax.displayName} will mount 🚀`);
-                        console.log('props=>', JSON.stringify(this.relaxProps, null, 2));
+                        console.log('props:|>', JSON.stringify(this.props, null, 2));
+                        console.log('relaxProps:|>', JSON.stringify(this.relaxProps, null, 2));
                         console.groupEnd();
                     }
                 }
@@ -42,23 +43,27 @@ function RelaxContainer(Wrapper) {
                 this._isMounted = true;
             }
             shouldComponentUpdate(nextProps) {
-                //如果属性不一致，直接re-render
-                if (!immutable_1.is(immutable_1.fromJS(nextProps), immutable_1.fromJS(this.props))) {
+                // //如果属性不一致，直接re-render
+                // if (!is(fromJS(nextProps), fromJS(this.props))) {
+                //   return true;
+                // }
+                const newRelaxProps = this.computeRelaxProps(nextProps);
+                if (!immutable_1.is(immutable_1.fromJS(this.props), immutable_1.fromJS(nextProps)) ||
+                    !immutable_1.is(immutable_1.fromJS(this.relaxProps), immutable_1.fromJS(nextProps))) {
+                    this.relaxProps = newRelaxProps;
+                    if (process.env.NODE_ENV != 'production') {
+                        if (this.context['_plume$Store']._opts.debug) {
+                            console.groupCollapsed(`${Relax.displayName} will update 🚀`);
+                            console.log('props:|>', JSON.stringify(this.relaxProps, null, 2));
+                            console.log('relaxProps:|>', JSON.stringify(this.relaxProps, null, 2));
+                            console.groupEnd();
+                        }
+                    }
                     return true;
                 }
-                const newRelaxProps = this.computeRelaxProps(nextProps);
-                if (immutable_1.is(immutable_1.fromJS(this.relaxProps), immutable_1.fromJS(newRelaxProps))) {
+                else {
                     return false;
                 }
-                this.relaxProps = newRelaxProps;
-                if (process.env.NODE_ENV != 'production') {
-                    if (this.context['_plume$Store']._opts.debug) {
-                        console.groupCollapsed(`${Relax.displayName} will update 🚀`);
-                        console.log('props=>', JSON.stringify(this.relaxProps, null, 2));
-                        console.groupEnd();
-                    }
-                }
-                return true;
             }
             componentWillUnmount() {
                 this.context.unsubscribe(this._handleStoreChange);

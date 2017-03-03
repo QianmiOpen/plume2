@@ -50,7 +50,8 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
       if (process.env.NODE_ENV != 'production') {
         if (this.context['_plume$Store']._opts.debug) {
           console.groupCollapsed(`${Relax.displayName} will mount 🚀`)
-          console.log('props=>', JSON.stringify(this.relaxProps, null, 2))
+          console.log('props:|>', JSON.stringify(this.props, null, 2))
+          console.log('relaxProps:|>', JSON.stringify(this.relaxProps, null, 2))
           console.groupEnd()
         }
       }
@@ -69,27 +70,30 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     }
 
     shouldComponentUpdate(nextProps) {
-      //如果属性不一致，直接re-render
-      if (!is(fromJS(nextProps), fromJS(this.props))) {
-        return true;
-      }
+      // //如果属性不一致，直接re-render
+      // if (!is(fromJS(nextProps), fromJS(this.props))) {
+      //   return true;
+      // }
 
       const newRelaxProps = this.computeRelaxProps(nextProps)
-      if (is(fromJS(this.relaxProps), fromJS(newRelaxProps))) {
+      if (
+        !is(fromJS(this.props), fromJS(nextProps)) ||
+        !is(fromJS(this.relaxProps), fromJS(nextProps))) {
+        this.relaxProps = newRelaxProps
+
+        if (process.env.NODE_ENV != 'production') {
+          if (this.context['_plume$Store']._opts.debug) {
+            console.groupCollapsed(`${Relax.displayName} will update 🚀`)
+            console.log('props:|>', JSON.stringify(this.relaxProps, null, 2))
+            console.log('relaxProps:|>', JSON.stringify(this.relaxProps, null, 2))
+            console.groupEnd()
+          }
+        }
+
+        return true
+      } else {
         return false
       }
-
-      this.relaxProps = newRelaxProps
-
-      if (process.env.NODE_ENV != 'production') {
-        if (this.context['_plume$Store']._opts.debug) {
-          console.groupCollapsed(`${Relax.displayName} will update 🚀`)
-          console.log('props=>', JSON.stringify(this.relaxProps, null, 2))
-          console.groupEnd()
-        }
-      }
-
-      return true
     }
 
     componentWillUnmount() {
