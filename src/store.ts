@@ -1,3 +1,4 @@
+import * as ReactDOM from 'react-dom'
 import { Map, fromJS } from 'immutable'
 import Actor from './actor'
 import { QueryLang } from './ql'
@@ -8,6 +9,8 @@ type Handler = (state: IMap) => void;
 interface Options {
   debug?: boolean;
 }
+
+const batchedUpdates = ReactDOM.unstable_batchedUpdates || function (cb) { cb() }
 
 export default class Store {
 
@@ -53,7 +56,7 @@ export default class Store {
       this._state = newStoreState
       //如果在dispatch不在transation内，通知UI去re-render
       if (!this._isInTranstion) {
-        this._callbacks.forEach(cb => cb(this._state))
+        this._notifier()
       }
     }
   }
@@ -72,7 +75,7 @@ export default class Store {
     fn()
     //fn前后状态有没有发生变化
     if (currentStoreState != this._state) {
-      this._callbacks.forEach(cb => cb(this._state))
+      this._notifier()
     }
     this._isInTranstion = false
 
@@ -82,6 +85,12 @@ export default class Store {
         console.log('::::::::::::::::🚀 end new transaction 🚀::::::::::::::::::')
       }
     }
+  }
+
+  _notifier() {
+    batchedUpdates(() => {
+      this._callbacks.forEach(cb => cb(this._state))
+    })
   }
 
   _dispatchActor(msg: string, params?: any) {

@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const ReactDOM = require("react-dom");
 const immutable_1 = require("immutable");
 const ql_1 = require("./ql");
 const is_array_1 = require("./util/is-array");
+const batchedUpdates = ReactDOM.unstable_batchedUpdates || function (cb) { cb(); };
 class Store {
     constructor(props) {
         this._opts = props || { debug: false };
@@ -34,7 +36,7 @@ class Store {
             this._state = newStoreState;
             //如果在dispatch不在transation内，通知UI去re-render
             if (!this._isInTranstion) {
-                this._callbacks.forEach(cb => cb(this._state));
+                this._notifier();
             }
         }
     }
@@ -51,7 +53,7 @@ class Store {
         fn();
         //fn前后状态有没有发生变化
         if (currentStoreState != this._state) {
-            this._callbacks.forEach(cb => cb(this._state));
+            this._notifier();
         }
         this._isInTranstion = false;
         //log
@@ -60,6 +62,11 @@ class Store {
                 console.log('::::::::::::::::🚀 end new transaction 🚀::::::::::::::::::');
             }
         }
+    }
+    _notifier() {
+        batchedUpdates(() => {
+            this._callbacks.forEach(cb => cb(this._state));
+        });
     }
     _dispatchActor(msg, params) {
         let _state = this._state;
