@@ -18,7 +18,7 @@ declare namespace plume2 {
 
   export class Store {
     constructor(props?: IOptions);
-    dispatch(msg: string, params?: any);
+    dispatch(msg: string, params?: any): void;
     transaction(cb: () => void): void;
     bindActor(): Array<Actor>;
     bigQuery(ql: QueryLang, params: { debug?: boolean }): any;
