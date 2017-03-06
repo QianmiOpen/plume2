@@ -27,7 +27,6 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
         };
       };
 
-
       constructor(props: Object) {
         super(props)
         this._isMounted = false

@@ -72,7 +72,17 @@ export default class Store {
     this._isInTranstion = true
     //record current state 
     const currentStoreState = this._state
-    fn()
+    try {
+      fn()
+    } catch (err) {
+      this._state = currentStoreState
+      if (process.env.NODE_ENV != 'production') {
+        console.warn('😭, some exception occur in transaction, store state roll back')
+        if (this._opts.debug) {
+          console.trace(err)
+        }
+      }
+    }
     //fn前后状态有没有发生变化
     if (currentStoreState != this._state) {
       this._notifier()
