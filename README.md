@@ -1,6 +1,9 @@
 # plume 🚀🚀
 light weight framework for mobile web
 
+[![NPM](https://nodei.co/npm/plume2.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/plume2)
+
+
 # Getting Started
 
 ```sh
