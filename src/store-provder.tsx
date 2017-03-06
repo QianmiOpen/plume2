@@ -81,7 +81,7 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
           }
         }
 
-        (this as any).setState((preState) => state.toObject())
+        (this as any).setState(state.toObject())
       };
     }
   }

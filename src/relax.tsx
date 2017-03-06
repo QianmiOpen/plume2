@@ -28,6 +28,7 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     };
 
     props: Object;
+    state: Object;
     relaxProps: Object;
     context: Store;
     _dql2QL: { [name: string]: QueryLang };
@@ -37,6 +38,9 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
       super(props)
       this._isMounted = false
       this._dql2QL = {}
+      this.state = {
+        storeState: fromJS({})
+      }
       //提前绑定事件，为了争取父子有序
       context._plume$Store.subscribe(this._handleStoreChange)
     }
@@ -169,7 +173,9 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
 
     _handleStoreChange = (state: IMap) => {
       if (this._isMounted) {
-        (this as any).setState((preState) => state)
+        (this as any).setState({
+          storeState: state
+        })
       }
     }
   }
