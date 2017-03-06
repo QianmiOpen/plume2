@@ -11,11 +11,16 @@ function RelaxContainer(Wrapper) {
                 super(props);
                 this._handleStoreChange = (state) => {
                     if (this._isMounted) {
-                        this.setState((preState) => state);
+                        this.setState({
+                            storeState: state
+                        });
                     }
                 };
                 this._isMounted = false;
                 this._dql2QL = {};
+                this.state = {
+                    storeState: immutable_1.fromJS({})
+                };
                 //提前绑定事件，为了争取父子有序
                 context._plume$Store.subscribe(this._handleStoreChange);
             }
@@ -66,7 +71,7 @@ function RelaxContainer(Wrapper) {
                 }
             }
             componentWillUnmount() {
-                this.context.unsubscribe(this._handleStoreChange);
+                this.context['_plume$Store'].unsubscribe(this._handleStoreChange);
             }
             render() {
                 return React.createElement(Wrapper, Object.assign({}, this.props, { relaxProps: this.relaxProps }));

@@ -44,13 +44,25 @@ class Store {
         //log
         if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
-                console.log('::::::::::::::::🚀 open new transaction 🚀::::::::::::::::::');
+                console.groupCollapsed
+                    && console.groupCollapsed('::::::::::::::::🚀 open new transaction 🚀::::::::::::::::::');
             }
         }
         this._isInTranstion = true;
         //record current state 
         const currentStoreState = this._state;
-        fn();
+        try {
+            fn();
+        }
+        catch (err) {
+            this._state = currentStoreState;
+            if (process.env.NODE_ENV != 'production') {
+                console.warn('😭, some exception occur in transaction, store state roll back');
+                if (this._opts.debug) {
+                    console.trace(err);
+                }
+            }
+        }
         //fn前后状态有没有发生变化
         if (currentStoreState != this._state) {
             this._notifier();
@@ -60,6 +72,7 @@ class Store {
         if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
                 console.log('::::::::::::::::🚀 end new transaction 🚀::::::::::::::::::');
+                console.groupEnd && console.groupEnd();
             }
         }
     }
@@ -73,7 +86,8 @@ class Store {
         if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
                 console.groupCollapsed && console.groupCollapsed(`store dispatch => '${msg}'`);
-                console.log(`params |> ${JSON.stringify(params || 'no params')}`);
+                console.log(`params |>`);
+                console.dir(params || 'no params');
             }
         }
         for (let i = 0, len = this._actors.length; i < len; i++) {

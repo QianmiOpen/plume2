@@ -18,7 +18,7 @@ function StoreProvider(AppStore, opts) {
                                 console.log(`${WrapperComponent.displayName} will update 🚀`);
                             }
                         }
-                        this.setState((preState) => state.toObject());
+                        this.setState(state.toObject());
                     };
                     this._isMounted = false;
                     this.store = new AppStore(opts || { debug: false });
