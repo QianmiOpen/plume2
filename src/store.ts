@@ -65,7 +65,8 @@ export default class Store {
     //log
     if (process.env.NODE_ENV != 'production') {
       if (this._opts.debug) {
-        console.log('::::::::::::::::🚀 open new transaction 🚀::::::::::::::::::')
+        console.groupCollapsed
+          && console.groupCollapsed('::::::::::::::::🚀 open new transaction 🚀::::::::::::::::::')
       }
     }
 
@@ -93,6 +94,7 @@ export default class Store {
     if (process.env.NODE_ENV != 'production') {
       if (this._opts.debug) {
         console.log('::::::::::::::::🚀 end new transaction 🚀::::::::::::::::::')
+        console.groupEnd && console.groupEnd()
       }
     }
   }
@@ -109,7 +111,8 @@ export default class Store {
     if (process.env.NODE_ENV != 'production') {
       if (this._opts.debug) {
         console.groupCollapsed && console.groupCollapsed(`store dispatch => '${msg}'`)
-        console.log(`params |> ${JSON.stringify(params || 'no params')}`)
+        console.log(`params |>`)
+        console.dir(params || 'no params')
       }
     }
 
