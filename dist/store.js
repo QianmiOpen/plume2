@@ -71,7 +71,6 @@ class Store {
         //log
         if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
-                console.log('::::::::::::::::🚀 end new transaction 🚀::::::::::::::::::');
                 console.groupEnd && console.groupEnd();
             }
         }
