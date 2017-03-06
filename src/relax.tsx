@@ -97,7 +97,7 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     }
 
     componentWillUnmount() {
-      this.context.unsubscribe(this._handleStoreChange)
+      (this.context['_plume$Store'] as Store).unsubscribe(this._handleStoreChange)
     }
 
     render() {
