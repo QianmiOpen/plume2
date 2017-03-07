@@ -123,12 +123,10 @@ class Store {
         }
         return _state;
     }
-    bigQuery(ql, params) {
+    bigQuery(ql) {
         if (!(ql instanceof ql_1.QueryLang)) {
             throw new Error('invalid QL');
         }
-        //获取参数
-        const opt = params || { debug: false };
         //数据是否过期,默认否
         let outdate = false;
         const id = ql.id();
@@ -141,9 +139,9 @@ class Store {
         const rxFn = lang.pop();
         //will drop on production env
         if (process.env.NODE_ENV != 'production') {
-            if (opt.debug) {
+            if (this._opts.debug) {
                 console.log(`🔥:tracing: QL(${name})`);
-                console.time('duration');
+                console.time('QL:duration');
             }
         }
         let args = lang.map((elem, index) => {
@@ -154,8 +152,12 @@ class Store {
                     this._cacheQL[id][index] = value;
                 }
                 if (process.env.NODE_ENV != 'production') {
-                    if (opt.debug) {
-                        console.log(`dep:${elem.name()}|>QL, cache:${!outdate} value:${JSON.stringify(value, null, 2)}`);
+                    if (this._opts.debug) {
+                        console.log(`
+              dep:${elem.name()}
+              cache:${!outdate} 
+              value:${JSON.stringify(value, null, 2)}
+            `);
                     }
                 }
                 return value;
@@ -167,8 +169,12 @@ class Store {
                     this._cacheQL[id][index] = value;
                 }
                 if (process.env.NODE_ENV != 'production') {
-                    if (opt.debug) {
-                        console.log(`dep:${elem}|> cache:${!outdate} value:${JSON.stringify(value, null, 2)}`);
+                    if (this._opts.debug) {
+                        console.log(`
+              dep:${elem}|> 
+              cache:${!outdate} 
+              value:${JSON.stringify(value, null, 2)}
+            `);
                     }
                 }
                 return value;
@@ -179,18 +185,25 @@ class Store {
             const result = rxFn.apply(null, args);
             this._cacheQL[id][args.length] = result;
             if (process.env.NODE_ENV != 'production') {
-                if (opt.debug) {
-                    console.log(`QL(${name})|> result: ${JSON.stringify(result, null, 2)}`);
-                    console.timeEnd('duration');
+                if (this._opts.debug) {
+                    console.log(`
+            QL(${name})|> 
+            result: ${JSON.stringify(result, null, 2)}
+          `);
+                    console.timeEnd('QL:duration');
                 }
             }
             return result;
         }
         else {
             if (process.env.NODE_ENV != 'production') {
-                if (opt.debug) {
-                    console.log(`🚀:QL(${name})|> cache: true; result: ${JSON.stringify(this._cacheQL[id][args.length], null, 2)}`);
-                    console.timeEnd('duration');
+                if (this._opts.debug) {
+                    console.log(`
+            🚀:QL(${name})|> 
+            cache: true
+            result: ${JSON.stringify(this._cacheQL[id][args.length], null, 2)}
+          `);
+                    console.timeEnd('QL:duration');
                 }
             }
             //返回cache中最后一个值
