@@ -76,7 +76,7 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
         //will drop on production env
         if (process.env.NODE_ENV != 'production') {
           if (this.store._opts.debug) {
-            console.log(`${WrapperComponent.displayName} will update 🚀`)
+            console.log(`\n${WrapperComponent.displayName} will update 🚀`)
           }
         }
 
