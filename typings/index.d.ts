@@ -5,6 +5,9 @@ import * as mitt from 'mitt'
 export = plume2
 
 declare namespace plume2 {
+  type Dispatch = () => void;
+  type RollBack = () => void;
+
   export type IMap = Map<string, any>
   export type Handler = (state: IMap) => void;
 
@@ -19,7 +22,7 @@ declare namespace plume2 {
   export class Store {
     constructor(props?: IOptions);
     dispatch(msg: string, params?: any): void;
-    transaction(cb: () => void): void;
+    transaction(dispatch: Dispatch, rollBack: RollBack): boolean;
     bindActor(): Array<Actor>;
     bigQuery(ql: QueryLang, params: { debug?: boolean }): any;
     state(): IMap;
