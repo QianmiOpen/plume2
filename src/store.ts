@@ -187,11 +187,7 @@ export default class Store {
 
         if (process.env.NODE_ENV != 'production') {
           if (this._opts.debug) {
-            console.log(`
-              dep:${elem.name()}
-              cache:${!outdate} 
-              value:${JSON.stringify(value, null, 2)}
-            `)
+            console.log(`dep:${elem.name()}, cache:${!outdate},value:${JSON.stringify(value, null, 2)}`)
           }
         }
 
@@ -205,11 +201,7 @@ export default class Store {
 
         if (process.env.NODE_ENV != 'production') {
           if (this._opts.debug) {
-            console.log(`
-              dep:${elem}|> 
-              cache:${!outdate} 
-              value:${JSON.stringify(value, null, 2)}
-            `)
+            console.log(`dep:${elem}, cache:${!outdate}, value:${JSON.stringify(value, null, 2)}`)
           }
         }
 
@@ -224,10 +216,7 @@ export default class Store {
 
       if (process.env.NODE_ENV != 'production') {
         if (this._opts.debug) {
-          console.log(`
-            QL(${name})|> 
-            result: ${JSON.stringify(result, null, 2)}
-          `)
+          console.log(`QL(${name})|>${JSON.stringify(result, null, 2)}`)
           console.timeEnd('QL:duration')
         }
       }
@@ -236,11 +225,7 @@ export default class Store {
     } else {
       if (process.env.NODE_ENV != 'production') {
         if (this._opts.debug) {
-          console.log(`
-            🚀:QL(${name})|> 
-            cache: true
-            result: ${JSON.stringify(this._cacheQL[id][args.length], null, 2)}
-          `)
+          console.log(`🚀:QL(${name}), cache: true, result: ${JSON.stringify(this._cacheQL[id][args.length], null, 2)}`)
           console.timeEnd('QL:duration')
         }
       }
