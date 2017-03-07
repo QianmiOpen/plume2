@@ -74,15 +74,11 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     }
 
     shouldComponentUpdate(nextProps) {
-      // //如果属性不一致，直接re-render
-      // if (!is(fromJS(nextProps), fromJS(this.props))) {
-      //   return true;
-      // }
-
       const newRelaxProps = this.computeRelaxProps(nextProps)
+
       if (
         !is(fromJS(this.props), fromJS(nextProps)) ||
-        !is(fromJS(this.relaxProps), fromJS(nextProps))) {
+        !is(fromJS(this.relaxProps), fromJS(newRelaxProps))) {
         this.relaxProps = newRelaxProps
 
         if (process.env.NODE_ENV != 'production') {
