@@ -72,7 +72,7 @@ export default class Store {
    * @param rollBack 发生rollback之后的自定义逻辑
    * @return 是不是发生了错误，数据回滚
    */
-  transaction(dispatch: () => void, rollBack?: Rollback): boolean {
+  transaction(dispatch: Dispatch, rollBack?: Rollback): boolean {
     //有没有rollback
     let isRollback = false
 
