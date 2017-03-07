@@ -140,7 +140,7 @@ class Store {
         //will drop on production env
         if (process.env.NODE_ENV != 'production') {
             if (this._opts.debug) {
-                console.log(`🔥:tracing: QL(${name})`);
+                console.groupCollapsed && console.groupCollapsed(`🔥:tracing: QL(${name})`);
                 console.time('QL:duration');
             }
         }
@@ -178,8 +178,9 @@ class Store {
             this._cacheQL[id][args.length] = result;
             if (process.env.NODE_ENV != 'production') {
                 if (this._opts.debug) {
-                    console.log(`QL(${name})|>${JSON.stringify(result, null, 2)}`);
+                    console.log(`QL(${name})|> ${JSON.stringify(result, null, 2)}`);
                     console.timeEnd('QL:duration');
+                    console.groupEnd && console.groupEnd();
                 }
             }
             return result;
@@ -189,6 +190,7 @@ class Store {
                 if (this._opts.debug) {
                     console.log(`🚀:QL(${name}), cache: true, result: ${JSON.stringify(this._cacheQL[id][args.length], null, 2)}`);
                     console.timeEnd('QL:duration');
+                    console.groupEnd && console.groupEnd();
                 }
             }
             //返回cache中最后一个值

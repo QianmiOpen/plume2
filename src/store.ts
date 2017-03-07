@@ -172,7 +172,7 @@ export default class Store {
     //will drop on production env
     if (process.env.NODE_ENV != 'production') {
       if (this._opts.debug) {
-        console.log(`🔥:tracing: QL(${name})`)
+        console.groupCollapsed && console.groupCollapsed(`🔥:tracing: QL(${name})`)
         console.time('QL:duration')
       }
     }
@@ -216,8 +216,9 @@ export default class Store {
 
       if (process.env.NODE_ENV != 'production') {
         if (this._opts.debug) {
-          console.log(`QL(${name})|>${JSON.stringify(result, null, 2)}`)
+          console.log(`QL(${name})|> ${JSON.stringify(result, null, 2)}`)
           console.timeEnd('QL:duration')
+          console.groupEnd && console.groupEnd()
         }
       }
 
@@ -227,6 +228,7 @@ export default class Store {
         if (this._opts.debug) {
           console.log(`🚀:QL(${name}), cache: true, result: ${JSON.stringify(this._cacheQL[id][args.length], null, 2)}`)
           console.timeEnd('QL:duration')
+          console.groupEnd && console.groupEnd()
         }
       }
 
