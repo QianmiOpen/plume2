@@ -37,11 +37,26 @@ class AppStore extends Store {
   }
 
   rollBack = () => {
-    this.transaction(() => {
+    const isRollback = this.transaction(() => {
       this.dispatch('loading:end')
       this.dispatch('change', 'hello iflux2')
     })
+
+    expect(isRollback).toEqual(true)
   }
+
+  customRollBack = () => {
+    const currentState = this.state()
+    const isRollback = this.transaction(() => {
+      this.dispatch('loading:end')
+      this.dispatch('change', 'hello iflux2')
+    }, () => {
+      expect(currentState != this.state()).toEqual(true)
+      this._state = currentState
+    })
+
+    expect(isRollback).toEqual(true)
+  };
 
   change = () => {
     this.transaction(() => {
@@ -59,6 +74,13 @@ describe('test store transaction fail rollback', () => {
     const store = new AppStore({})
     const state = store.state()
     store.rollBack()
+    expect(store.state()).toEqual(state)
+  })
+
+  it('test customRollBack', () => {
+    const store = new AppStore({})
+    const state = store.state()
+    store.customRollBack()
     expect(store.state()).toEqual(state)
   })
 

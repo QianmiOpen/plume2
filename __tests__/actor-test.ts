@@ -1,5 +1,5 @@
 import { Map } from 'immutable'
-import { Actor, Action } from "../src/index";
+import { Actor, Action } from "../src/index"
 
 type IMap = Map<string, any>;
 

@@ -4,13 +4,17 @@ import Actor from './actor'
 import { QueryLang } from './ql'
 import isArray from './util/is-array'
 
+type Dispatch = () => void;
+type Rollback = () => void;
 type IMap = Map<string, any>;
 type Handler = (state: IMap) => void;
 interface Options {
   debug?: boolean;
 }
 
-const batchedUpdates = ReactDOM.unstable_batchedUpdates || function (cb) { cb() }
+const batchedUpdates = (
+  ReactDOM.unstable_batchedUpdates || function (cb) { cb() }
+)
 
 export default class Store {
 
@@ -61,7 +65,17 @@ export default class Store {
     }
   }
 
-  transaction(fn: () => void) {
+  /**
+   * 事务控制dispatch
+   *
+   * @param dispatch 要执行的dispatch的正常逻辑
+   * @param rollBack 发生rollback之后的自定义逻辑
+   * @return 是不是发生了错误，数据回滚
+   */
+  transaction(dispatch: () => void, rollBack?: Rollback): boolean {
+    //有没有rollback
+    let isRollback = false
+
     //log
     if (process.env.NODE_ENV != 'production') {
       if (this._opts.debug) {
@@ -74,9 +88,18 @@ export default class Store {
     //record current state 
     const currentStoreState = this._state
     try {
-      fn()
+      dispatch()
     } catch (err) {
-      this._state = currentStoreState
+      //如果提供了rollback的自定义回调函数，
+      //就调用业务级别的rollback
+      //否则就自动回滚到上一次的状态
+      if (rollBack) {
+        rollBack()
+      } else {
+        this._state = currentStoreState
+      }
+      isRollback = true
+
       if (process.env.NODE_ENV != 'production') {
         console.warn('😭, some exception occur in transaction, store state roll back')
         if (this._opts.debug) {
@@ -96,6 +119,8 @@ export default class Store {
         console.groupEnd && console.groupEnd()
       }
     }
+
+    return isRollback
   }
 
   _notifier() {
