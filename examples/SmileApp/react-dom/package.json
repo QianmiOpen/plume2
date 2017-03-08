@@ -1,0 +1,12 @@
+{
+  "name": "react-dom",
+  "version": "1.0.0",
+  "description": "mock react-dom in react-native",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["react-native", "react-dom"],
+  "author": "",
+  "license": "BSD"
+}
