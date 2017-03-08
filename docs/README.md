@@ -6,11 +6,6 @@ class HelloActor extends Actor {
   defaultState() {
     return {text: 'Hello, plume2'}
   }
-
-  @Action('change')
-  change(state, text) {
-    return state.set('text', text)
-  }
 }
 
 class AppStore extends Store {
@@ -19,10 +14,6 @@ class AppStore extends Store {
       new HelloActor
     ]
   }
-
-  change = () => {
-    this.dispatch('change', 'hello world')
-  };
 }
 
 @StoreProvider(AppStore)
