@@ -22,8 +22,7 @@ module.exports = {
       {
         test: /\.tsx?$/,
         include: [
-          path.resolve(__dirname, 'src'),
-          path.resolve(__dirname, 'node_modules/plume2/dist')
+          path.resolve(__dirname, 'src')
         ],
         loader: 'ts-loader'
       }

@@ -3,13 +3,13 @@ var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './build/index.js',
+  entry: './src/index.tsx',
   output: {
     path: './dist',
     filename: 'bundle-[chunkhash].js'
   },
   resolve: {
-    extensions: ['.web.js', '.js', '.json'],
+    extensions: ['.web.js', '.js', '.json', '.ts', '.tsx'],
     alias: {
       react: 'preact-compat',
       'react-dom': 'preact-compat'
@@ -18,13 +18,11 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.tsx?$/,
         include: [
-          path.resolve(__dirname, 'build'),
-          path.resolve(__dirname, 'node_modules/plume2'),
-          path.resolve(__dirname, 'node_modules/preact-compat')
+          path.resolve(__dirname, 'src')
         ],
-        loader: 'babel-loader?cacheDirectory'
+        loader: ['babel-loader?cacheDirectory', 'ts-loader']
       }
     ]
   },

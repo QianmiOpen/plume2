@@ -27,7 +27,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /.js$/, 
+        test: /.js$/,
         include: [
           path.resolve(__dirname, 'node_modules/plume2'),
           path.resolve(__dirname, 'node_modules/preact-compat')

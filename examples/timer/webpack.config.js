@@ -4,14 +4,14 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   devtool: 'cheap-module-source-map',
-  entry: './build/index.js',
+  entry: './src/index.tsx',
   output: {
     path: './build',
     filename: 'bundle.js'
   },
   resolve: {
     modules: ['node_modules', path.resolve(__dirname, 'web_modules')],
-    extensions: ['.web.js', '.js', '.json'],
+    extensions: ['.web.js', '.js', '.json', '.ts', '.tsx'],
     alias: {
       react: 'preact-compat',
       'react-dom': 'preact-compat'
@@ -20,22 +20,21 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /\.js/, 
+        test: /\.tsx?$/,
         include: [
-          path.resolve(__dirname, 'build'),
-          path.resolve(__dirname, 'node_modules/plume2/dist')
+          path.resolve(__dirname, 'src')
         ],
-        loader: 'babel-loader?cacheDirectory'
+        loader: 'ts-loader'
       }
     ]
   },
   plugins: [
-     new webpack.DefinePlugin({
+    new webpack.DefinePlugin({
       __DEV__: true
     }),
     new HtmlWebpackPlugin({
       dev: true,
-      favicon:'./favicon.ico',
+      favicon: './favicon.ico',
       filename: 'index.html',
       template: './index.ejs'
     })
