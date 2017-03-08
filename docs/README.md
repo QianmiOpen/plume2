@@ -1,6 +1,6 @@
 # Hello, plume2.
 ```javascript
-import {Actor, Action, Store, StoreProvider, Relax} from 'plume2'
+import {Actor, Store, StoreProvider, Relax} from 'plume2'
 
 class HelloActor extends Actor {
   defaultState() {
