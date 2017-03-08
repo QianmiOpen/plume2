@@ -1,14 +1,6 @@
 # Hello, plume2.
-```typescript
-import {
-  Actor, 
-  Action, 
-  IMap, 
-  IOptions,
-  Store, 
-  StoreProvider, 
-  Relax
-} from 'plume2'
+```javascript
+import {Actor, Action, Store, StoreProvider, Relax} from 'plume2'
 
 class HelloActor extends Actor {
   defaultState() {
@@ -16,7 +8,7 @@ class HelloActor extends Actor {
   }
 
   @Action('change')
-  change(state: IMap, text: string) {
+  change(state, text) {
     return state.set('text', text)
   }
 }
@@ -34,19 +26,14 @@ class AppStore extends Store {
 }
 
 @StoreProvider(AppStore)
-class HelloApp extends React.Component<any, any> {
+class HelloApp extends React.Component {
   render() {
     return <Text/>
   }
 }
 
-class Text extends React.Component<any, any> {
-  props: {
-    relaxProps?: {
-      text: string;
-    }
-  };
-
+@Relax
+class Text extends React.Component {
   static relaxProps = {
     text: 'text'
   }
