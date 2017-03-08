@@ -16,13 +16,6 @@ class AppStore extends Store {
   }
 }
 
-@StoreProvider(AppStore)
-class HelloApp extends React.Component {
-  render() {
-    return <Text/>
-  }
-}
-
 @Relax
 class Text extends React.Component {
   static relaxProps = {
@@ -32,6 +25,13 @@ class Text extends React.Component {
   render() {
     const {text} = this.props.relaxProps
     return <div>{text}</div>
+  }
+}
+
+@StoreProvider(AppStore)
+class HelloApp extends React.Component {
+  render() {
+    return <Text/>
   }
 }
 
