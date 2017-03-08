@@ -61,11 +61,13 @@ dispatch
 
 
 # QL/DQL
+```js
 const helloQL = QL('helloQL', [
   loading,
   text,
   (loading, text) => ({loading, text})
 ])
+```
 
 # Log
 
