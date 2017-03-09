@@ -132,13 +132,13 @@ class HelloActor extends Actor {
 
 ## Store
 
-> 什么是Store?
+__什么是Store?__
 
 Store, 我们的数据状态容器中心，管理着整个app的数据的生命周期。
 
 我们坚守单根数据源的思想(single data source)，store中保持着完整的业务以及UI的状态
 
-> Store的主要职责有哪些?
+__Store的主要职责有哪些?__
 
 1. 聚合actor
 2. 分派actor(单分派、事务分派)
@@ -199,7 +199,7 @@ __Show me code!__
 
 Store public-API
 
-```js
+```text
 
 /**
  * 绑定需要聚合的Actor
@@ -239,6 +239,43 @@ unsubscribe(cb: Handler): void;
 
 
 ## StoreProvider
+
+StoreProvider容器组件衔接我们的React组件和AppStore。向React组件提供数据源。
+
+在StoreProvider中的主要任务是:
+
+1. 初始化我们的AppStore 
+2. 将AppStore的对象绑定到React组件的上下文 
+3. Relay就是通过上下文取的store对象
+4. 监听Store的state变化
+
+__友情提示:我们还提供了debug模式😁__
+
+__开启debug模式__，我们就可以对数据进行全链路跟踪
+
+跟踪store的dispatch，actor的处理，relax对QL的计算等
+
+__code__
+
+```js
+ import React, {Component} from 'react';
+ import {StoreProvider} from 'iflux2'
+ import AppStore from './store'
+
+ //enable debug
+ @StoreProvider(AppStore, {debug: true})
+ class ShoppingCart extends Component {
+   render() {
+     return (
+       <Scene>
+         <HeaderContainer/>
+         <ShoppingListContainer/>
+         <BottomToolBarContainer/>
+       </Scene>
+     )
+   }
+ }
+```
 
 ## Relax
 
