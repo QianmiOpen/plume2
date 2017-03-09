@@ -403,6 +403,8 @@ const helloql = QL('helloDQL', [
 
 ## quickly debug
 
+![store](https://raw.githubusercontent.com/hufeng/plume2/master/docs/screenshot/plume2.png)
+
 ## more examples
 
 [counter](https://github.com/hufeng/plume2/tree/master/examples/counter)
