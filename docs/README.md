@@ -397,11 +397,13 @@ const helloql = QL('helloDQL', [
 
 ## Log
 
-![log](https://raw.githubusercontent.com/hufeng/plume2/master/docs/screenshot/2.png)
+![log](https://raw.githubusercontent.com/hufeng/plume2/master/docs/screenshot/1.png)
 
 ![reat](https://raw.githubusercontent.com/hufeng/plume2/master/docs/screenshot/react.png)
 
 ## quickly debug
+
+![store](https://raw.githubusercontent.com/hufeng/plume2/master/docs/screenshot/plume2.png)
 
 ## more examples
 
