@@ -132,10 +132,110 @@ class HelloActor extends Actor {
 
 ## Store
 
-bindActor
-transaction
-bigQuery
-dispatch
+> 什么是Store?
+
+Store, 我们的数据状态容器中心，管理着整个app的数据的生命周期。
+
+我们坚守单根数据源的思想(single data source)，store中保持着完整的业务以及UI的状态
+
+> Store的主要职责有哪些?
+
+1. 聚合actor
+2. 分派actor(单分派、事务分派)
+3. 通过bigQuery计算我们的查询语言(QL/DQL)
+4. 响应页面的事件(ActionCreator)
+
+__Show me code!__
+
+```js
+ import {Store} from 'plume2'
+ import LoadingActor from 'loading-actor'
+ import UserActor from 'user-actor'
+ import TodoActor from 'todo-actor'
+
+ class AppStore extends Store {
+   /**
+    * 聚合Actor
+    * 通过reduce 各个actor的defaultState,聚合出store的state作为source data.
+    */
+   bindActor() {
+     return [
+       new LoadingActor,
+       new UserActor,
+       new TodoActor
+     ]
+   }
+
+   //;;;;;;;;;;;;;响应页面事件的逻辑处理;;;;;;;;;;;;;;
+   update = () => {
+     //将计算的任务分派的到actor
+     //然后根据actor的返回值，重新聚合新的store的state
+     //该为单分派，当dispatch结束，store的state发生改变的时候，
+     //UI容器组件(StoreProvider, Relax)会收到通知重新re-render UI
+     this.dispatch('update')
+   };
+
+   save = () => {
+      //事务分派
+      //很多场景下，计算应该是原子类型的,我们想一组dispatch结束才通知UI去re—render
+      //这个时候我们就可以开启事务控制
+      //transaction, 会返回值来判断在dispatch过程中有没有发生错误
+      //如果发生错误，数据会自动回滚到上一次的状态，避免脏数据
+      //我们也可以指定，自定义的回滚处理
+      //this.transaction(()=> {/*正常逻辑*/}, () => {/*自定义的回滚函数*/})
+      this.transaction(() => {
+        this.dispatch('loading:end')
+        
+        //这个地方可以得到上一次的dispatch之后的结果
+        //如：
+        const loading = this.state().get('loading')
+
+        this.dispatch('init:user', {id: 1, name: 'plume2'})
+        this.dispatch('save')
+      })
+   };
+ }
+```
+
+Store public-API
+
+```js
+
+/**
+ * 绑定需要聚合的Actor
+ */
+bindActor(): Array<Actor>
+
+/**
+ * 事务控制dispatch
+ * dispatch: 正常逻辑
+ * rollBack： 自定义回滚逻辑，默认是自动回滚到上一次状态
+ * 返回是否发生回滚
+ */
+transaction(dispatch: Dispatch, rollBack: RollBack): boolean;
+
+/**
+ *计算QL
+ */
+bigQuery(ql: QueryLang): any;
+
+
+/*
+ * 当前store聚合的状态
+ */
+state(): IMap;
+
+/**
+ * 定义store状态更新通知
+ */
+subscribe(cb: Handler): void;
+
+/**
+ * 取消订阅
+ */
+unsubscribe(cb: Handler): void;
+
+```
 
 
 ## StoreProvider
