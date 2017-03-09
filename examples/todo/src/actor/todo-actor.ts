@@ -38,4 +38,9 @@ export default class TodoActor extends Actor {
   clear(state: IMap) {
     return state.update('todo', todo => todo.filter(item => !item.get('done')))
   }
+
+  @Action('init')
+  init(state: IMap, { todo }) {
+    return state.set('todo', fromJS(todo))
+  }
 }
