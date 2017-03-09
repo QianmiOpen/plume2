@@ -156,7 +156,8 @@ __Show me code!__
  class AppStore extends Store {
    /**
     * 聚合Actor
-    * 通过reduce 各个actor的defaultState,聚合出store的state作为source data.
+    * 通过reduce 各个actor的defaultState
+    * 聚合出store的state作为source data.
     */
    bindActor() {
      return [
@@ -279,6 +280,44 @@ __code__
 
 ## Relax
 
+> 致敬Reley, 更希望我们小伙伴可以relax
+
+Relax是plume2中非常重要的容器组件，类似Spring容器的依赖注入一样
+
+核心功能会根据子组件的relaxProps中声明的数据，
+
+通过智能计算属性的值，然后作为this.props.relaxProps透传给子组件
+
+以此来解决React的props层层透传的verbose的问题。
+
+__计算的规则:__
+1. store的state的值，直接给出值得immutable的路径，
+如： count: 'count', todoText: ['todo', 1, 'text']
+
+2. store的method,直接和method同名的就ok
+如： destroy: noop
+
+```js
+@Relax
+export default class Footer extends React.Component{
+  static relaxProps = {
+    changeFilter: noop,
+    clearCompleted: noop,
+    count: countQL,
+    filterStatus: 'filterStatus'
+  };
+
+  render() {
+    const {
+      changeFilter,
+      clearCompleted,
+      count,
+      filterStatus
+    } = this.props.relaxProps
+    //...
+  }
+}
+```
 
 ## QL/DQL
 ```js
