@@ -1,5 +1,6 @@
 /**
  * Actor, Like Erlang actor or Scala actor
+ * A single computed unit.
  */
 import { Map } from 'immutable'
 
