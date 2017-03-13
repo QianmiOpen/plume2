@@ -1,6 +1,3 @@
-/**
- * @Action
- */
 export function Action(msg: string): Function {
   return function (
     target: any,
@@ -12,7 +9,7 @@ export function Action(msg: string): Function {
     if (process.env.NODE_ENV != 'production') {
       if (target._route[msg]) {
         const actorName = target.constructor.name
-        console.warn(`😎${actorName} was existed @Action('${msg}'), Please review your code.`)
+        console.warn(`😎${actorName} had @Action('${msg}'), Please review your code.`)
       }
     }
 
