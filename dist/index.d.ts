@@ -22,7 +22,7 @@ declare namespace plume2 {
   export class Store {
     constructor(props?: IOptions);
     dispatch(msg: string, params?: any): void;
-    transaction(dispatch: Dispatch, rollBack: RollBack): boolean;
+    transaction(dispatch: Dispatch, rollBack?: RollBack): boolean;
     bindActor(): Array<Actor>;
     bigQuery(ql: QueryLang, params: { debug?: boolean }): any;
     state(): IMap;
