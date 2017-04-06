@@ -53,13 +53,13 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
         this._isMounted = true
       }
 
-      componentWillUpdate() {
-        super.componentWillUpdate && super.componentWillUpdate()
+      componentWillUpdate(nextProps, nextState, nextContext) {
+        super.componentWillUpdate && super.componentWillUpdate(nextProps, nextState, nextContext)
         this._isMounted = false
       }
 
-      componentDidUpdate() {
-        super.componentDidUpdate && super.componentDidUpdate()
+      componentDidUpdate(prevProps, prevState, prevContext) {
+        super.componentDidUpdate && super.componentDidUpdate(prevProps, prevState, prevContext)
         this._isMounted = true
       }
 
