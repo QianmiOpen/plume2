@@ -378,7 +378,7 @@ const userQL = QL('userQL', [
   //query lang 支持嵌套
   loadingQL,
   ['user', 'id'],
-  (id, loading) => ({id, loading})
+  (loading, id) => ({id, loading})
 ])
 ```
 
