@@ -73,10 +73,11 @@ function RelaxContainer(Wrapper) {
                 return React.createElement(Wrapper, Object.assign({}, this.props, { relaxProps: this.relaxProps }));
             }
             computeRelaxProps(props) {
+                //dev check
                 if (process.env.NODE_ENV != 'production') {
                     if (!Wrapper.relaxProps) {
                         console.warn(`${Relax.displayName} could not find any static relaxProps!!!😅`);
-                        return;
+                        return {};
                     }
                 }
                 const relaxProps = {};

@@ -105,10 +105,11 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     }
 
     computeRelaxProps(props) {
+      //dev check
       if (process.env.NODE_ENV != 'production') {
         if (!Wrapper.relaxProps) {
           console.warn(`${Relax.displayName} could not find any static relaxProps!!!😅`)
-          return
+          return {}
         }
       }
 
