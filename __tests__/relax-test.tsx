@@ -109,7 +109,6 @@ describe('relax test suite', () => {
     expect(tree).toMatchSnapshot()
   })
 
-
   it('sync dispatch event', () => {
     @StoreProvider(AppStore)
     class HelloApp extends React.Component {
@@ -173,6 +172,26 @@ describe('relax test suite', () => {
     store.dispatch('change', 'hello plume')
     const tree = component.toJSON()
     expect(tree).toMatchSnapshot()
+  })
+
+  it('relax-props warnning', () => {
+    @StoreProvider(AppStore)
+    class WarnApp extends React.Component {
+      render() {
+        return <RelaxTest />
+      }
+    }
+
+    @Relax
+    class RelaxTest extends React.Component {
+      render() {
+        return (
+          <div></div>
+        )
+      }
+    }
+
+    renderer.create(<WarnApp />).toJSON()
   })
 })
 

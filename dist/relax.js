@@ -31,10 +31,10 @@ function RelaxContainer(Wrapper) {
                 //will drop on production env       
                 if (process.env.NODE_ENV != 'production') {
                     if (this.context['_plume$Store']._opts.debug) {
-                        console.groupCollapsed(`${Relax.displayName} will mount 🚀`);
+                        console.groupCollapsed && console.groupCollapsed(`${Relax.displayName} will mount 🚀`);
                         console.log('props:|>', JSON.stringify(this.props, null, 2));
                         console.log('relaxProps:|>', JSON.stringify(this.relaxProps, null, 2));
-                        console.groupEnd();
+                        console.groupEnd && console.groupEnd();
                     }
                 }
             }
@@ -54,10 +54,10 @@ function RelaxContainer(Wrapper) {
                     this.relaxProps = newRelaxProps;
                     if (process.env.NODE_ENV != 'production') {
                         if (this.context['_plume$Store']._opts.debug) {
-                            console.groupCollapsed(`${Relax.displayName} will update 🚀`);
+                            console.groupCollapsed && console.groupCollapsed(`${Relax.displayName} will update 🚀`);
                             console.log('props:|>', JSON.stringify(this.relaxProps, null, 2));
                             console.log('relaxProps:|>', JSON.stringify(this.relaxProps, null, 2));
-                            console.groupEnd();
+                            console.groupEnd && console.groupEnd();
                         }
                     }
                     return true;
@@ -73,6 +73,12 @@ function RelaxContainer(Wrapper) {
                 return React.createElement(Wrapper, Object.assign({}, this.props, { relaxProps: this.relaxProps }));
             }
             computeRelaxProps(props) {
+                if (process.env.NODE_ENV != 'production') {
+                    if (!Wrapper.relaxProps) {
+                        console.warn(`${Relax.displayName} could not find any static relaxProps!!!😅`);
+                        return;
+                    }
+                }
                 const relaxProps = {};
                 const staticRelaxProps = Relax.relaxProps;
                 const dqlMap = {};
@@ -93,7 +99,7 @@ function RelaxContainer(Wrapper) {
                         //warning...
                         if (process.env.NODE_ENV != 'production') {
                             if (!storeMethod) {
-                                console.warn('store can not find `${propName} method.`');
+                                console.warn(`store can not find '${propName}' method.`);
                             }
                         }
                     }
