@@ -2639,9 +2639,9 @@ pkg-dir@^1.0.0:
   dependencies:
     find-up "^1.0.0"
 
-plume2@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/plume2/-/plume2-0.1.1.tgz#576ff1b073b17de021d477b7a678dcb5e01a3c41"
+plume2@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/plume2/-/plume2-0.1.3.tgz#36cdfdce69faf85c537f33cc0c1d922d8121ec07"
   dependencies:
     immutable "^3.8.1"
     mitt "^1.1.0"

@@ -2838,9 +2838,9 @@ plist@1.2.0, plist@^1.2.0:
     xmlbuilder "4.0.0"
     xmldom "0.1.x"
 
-plume2@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/plume2/-/plume2-0.0.6.tgz#2ef1d0a97364e8860e63bd0a369d5f356c7ecc27"
+plume2@0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/plume2/-/plume2-0.1.3.tgz#36cdfdce69faf85c537f33cc0c1d922d8121ec07"
   dependencies:
     immutable "^3.8.1"
     mitt "^1.1.0"
