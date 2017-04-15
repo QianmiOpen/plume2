@@ -106,4 +106,28 @@ describe('store test suite', () => {
     store.unsubscribe(_handleStoreChange)
     expect(store._callbacks.length).toEqual(0)
   })
+
+  it('dispatch false', () => {
+    class LoadingActor extends Actor {
+      defaultState() {
+        return { loading: true }
+      }
+    }
+
+    class AppStore extends Store {
+      bindActor() {
+        return [
+          new LoadingActor
+        ]
+      }
+
+      @Action('loading:end')
+      end(state: IMap, status: boolean) {
+        return state.set('loading', status)
+      }
+    }
+
+    const store = new AppStore({ debug: true })
+    store.dispatch('loading:end', false)
+  })
 })

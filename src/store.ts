@@ -136,7 +136,8 @@ export default class Store {
       if (this._opts.debug) {
         console.groupCollapsed && console.groupCollapsed(`store dispatch => '${msg}'`)
         console.log(`params |>`)
-        console.dir(params || 'no params')
+        //fixed, 当前params为false的时候，显示的no params
+        console.dir(typeof (params) === 'undefined' ? 'no params' : params)
       }
     }
 
