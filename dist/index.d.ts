@@ -24,7 +24,7 @@ declare namespace plume2 {
     dispatch(msg: string, params?: any): void;
     transaction(dispatch: Dispatch, rollBack?: RollBack): boolean;
     bindActor(): Array<Actor>;
-    bigQuery(ql: QueryLang, params: { debug?: boolean }): any;
+    bigQuery(ql: QueryLang): any;
     state(): IMap;
     subscribe(cb: Handler): void;
     unsubscribe(cb: Handler): void;
