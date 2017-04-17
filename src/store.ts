@@ -136,7 +136,7 @@ export default class Store {
       if (this._opts.debug) {
         console.groupCollapsed && console.groupCollapsed(`store dispatch => '${msg}'`)
         console.log(`params |>`)
-        console.dir(params || 'no params')
+        console.dir && console.dir(params || 'no params')
       }
     }
 
