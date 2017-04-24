@@ -1,6 +1,6 @@
 {
   "name": "plume2",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "a lightweight of flux for mobile web",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -50,7 +50,7 @@
   "homepage": "https://github.com/hufeng/plume#readme",
   "dependencies": {
     "immutable": "^3.8.1",
-    "mitt": "^1.1.1"
+    "mitt": "^1.1.2"
   },
   "devDependencies": {
     "@types/jest": "^19.2.2",
