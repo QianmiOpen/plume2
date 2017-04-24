@@ -78,4 +78,16 @@ describe('ql test suite', () => {
     expect(todoCache)
       .toEqual({ loading: true, text: 'hello plume' })
   })
+
+  it('when path value is undefined', () => {
+    const testQL = QL('testQL', [
+      'a',
+      a => 10
+    ])
+
+    const store = new AppStore()
+
+    const result = store.bigQuery(testQL as QueryLang)
+    expect(result).toEqual(10)
+  })
 })

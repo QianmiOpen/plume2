@@ -220,7 +220,9 @@ export default class Store {
         return value
       } else {
         const value = isArray(elem) ? this._state.getIn(elem) : this._state.get(elem)
-        if (value != this._cacheQL[id][index]) {
+
+        if (this._cacheQL[id].length == 0
+          || value != this._cacheQL[id][index]) {
           outdate = true
           this._cacheQL[id][index] = value
         }
