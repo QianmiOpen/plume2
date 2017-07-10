@@ -1,77 +1,72 @@
-import * as React from 'react'
-import { Relax } from 'plume2'
-import { countQL } from '../ql'
-const noop = () => { }
+import * as React from 'react';
+import { Relax } from 'plume2';
+import { countQL } from '../ql';
+import * as mutation from '../mutation';
 
-type Handler = () => void;
-
-interface FooterProps {
+interface IFootProps {
   relaxProps?: {
-    changeFilter: (text: string) => void;
-    clearCompleted: Handler;
-    filterStatus: string;
     count: number;
-  }
+    filterStatus: string;
+  };
 }
 
 @Relax
-export default class Footer extends React.Component<FooterProps, any> {
+export default class Footer extends React.Component<IFootProps, any> {
   static relaxProps = {
-    changeFilter: noop,
-    clearCompleted: noop,
     count: countQL,
     filterStatus: 'filterStatus'
   };
 
-
   render() {
-    const {
-      changeFilter,
-      filterStatus,
-      count,
-      clearCompleted
-    } = this.props.relaxProps
-
-    let countText = ''
-
-    if (count > 1) {
-      countText = `${count} items left`
-    } else if (count === 1) {
-      countText = '1 item left'
-    }
+    const { count, filterStatus } = this.props.relaxProps;
+    let countText = this._getCountText(count);
 
     return (
-      <footer className="footer" >
-        <span className="todo-count" >{countText}</span>
-        <ul className="filters" >
+      <footer className="footer">
+        <span className="todo-count">
+          {countText}
+        </span>
+        <ul className="filters">
           <li>
-            <a href="javascript:;"
-              className={"" === filterStatus ? 'selected' : ''}
-              onClick={() => changeFilter('')}>
+            <a
+              href="javascript:;"
+              className={'' === filterStatus ? 'selected' : ''}
+              onClick={() => mutation.changeFilter('')}
+            >
               All
             </a>
           </li>
-          < li >
-            <a href="javascript:;"
-              className={"active" === filterStatus ? 'selected' : ''}
-              onClick={() => changeFilter('active')}>
+          <li>
+            <a
+              href="javascript:;"
+              className={'active' === filterStatus ? 'selected' : ''}
+              onClick={() => mutation.changeFilter('active')}
+            >
               Active
             </a>
           </li>
-          <li >
-            <a href="javacript:;"
+          <li>
+            <a
+              href="javacript:;"
               className={'completed' === filterStatus ? 'selected' : ''}
-              onClick={() => changeFilter('completed')}>
+              onClick={() => mutation.changeFilter('completed')}
+            >
               Completed
             </a>
           </li>
         </ul>
-        <button
-          className="clear-completed"
-          onClick={clearCompleted} >
+        <button className="clear-completed" onClick={mutation.clearCompleted}>
           Clear completed
         </button>
       </footer>
     );
+  }
+
+  _getCountText(count: number) {
+    if (count > 1) {
+      return `${count} items left`;
+    } else if (count === 1) {
+      return '1 item left';
+    }
   }
 }

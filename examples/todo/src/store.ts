@@ -1,45 +1,22 @@
-import { Store, IOptions } from 'plume2'
-import TextActor from './actor/text-actor'
-import FilterActor from './actor/filter-actor'
-import TodoActor from './actor/todo-actor'
+import { Store, IOptions } from 'plume2';
+import TextActor from './actor/text-actor';
+import FilterActor from './actor/filter-actor';
+import TodoActor from './actor/todo-actor';
+import * as mutation from './mutation';
 
 export default class AppStore extends Store {
+  mutation: typeof mutation;
+
   constructor(props: IOptions) {
-    super(props)
+    super(props);
     if (__DEV__) {
-      (window as any)._store = this
+      (window as any)._store = this;
     }
+    mutation.bindStore(this);
+    this.mutation = mutation;
   }
 
   bindActor() {
-    return [
-      new TextActor,
-      new FilterActor,
-      new TodoActor
-    ]
+    return [new TextActor(), new FilterActor(), new TodoActor()];
   }
-
-  changeValue = (text: string) => {
-    this.dispatch('change:text', text)
-  };
-
-  submit = (text: string) => {
-    this.dispatch('submit', text)
-  };
-
-  toggleAll = (checked: boolean) => {
-    this.dispatch('toggleAll', checked)
-  };
-
-  toggle = (index: number) => {
-    this.dispatch('toggle', index)
-  }
-
-  changeFilter = (filter: string) => {
-    this.dispatch('change:filter', filter)
-  };
-
-  destroy = (index: number) => this.dispatch('destroy', index)
-
-  clearCompleted = () => this.dispatch('clearCompleted')
 }
