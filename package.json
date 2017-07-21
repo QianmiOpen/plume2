@@ -15,32 +15,15 @@
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/examples/"
-    ]
+    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "testPathIgnorePatterns": ["/node_modules/", "/examples/"]
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hufeng/plume.git"
   },
-  "keywords": [
-    "preact",
-    "immutable",
-    "flux",
-    "mobile"
-  ],
-  "files": [
-    "package.json",
-    "dist",
-    "README.md",
-    "typings"
-  ],
+  "keywords": ["preact", "immutable", "flux", "mobile"],
+  "files": ["package.json", "dist", "README.md", "typings"],
   "author": "hufeng",
   "license": "ISC",
   "bugs": {
