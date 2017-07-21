@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ql test suite ql init 1`] = `
+exports[`ql test suite init ql state 1`] = `
 Array [
   "loading",
   [Function],

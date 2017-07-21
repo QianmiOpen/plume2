@@ -1,4 +1,4 @@
-import msg from "../src/msg";
+import msg from '../src/msg';
 
 describe('msg test suite', () => {
   it('msg emit', () => {
@@ -6,8 +6,8 @@ describe('msg test suite', () => {
     msg.on('foo', e => {
       expect(e).toEqual({
         name: 'plume'
-      })
-    })
-    msg.emit('foo', { name: 'plume' })
-  })
-})
+      });
+    });
+    msg.emit('foo', { name: 'plume' });
+  });
+});

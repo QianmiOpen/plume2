@@ -3,25 +3,9 @@ import { Map, is, fromJS } from 'immutable';
 import { isArray, isString } from './type';
 import Store from './store';
 import { QueryLang, DynamicQueryLang } from './ql';
+import { IMap, IRelaxContext, IRelaxComponent } from './typing';
 
-type IMap = Map<string, any>;
-
-export interface RelaxContext {
-  _plume$Store: Store;
-}
-
-export interface IRelaxProps {
-  relaxProps?: Object;
-  [name: string]: any;
-}
-
-export interface IRelaxComponent extends React.ComponentClass<IRelaxProps> {
-  relaxProps?: Object;
-}
-
-export default function RelaxContainer(
-  Wrapper: IRelaxComponent
-): React.ComponentClass {
+export default function RelaxContainer(Wrapper: IRelaxComponent): any {
   return class Relax extends React.Component {
     //displayName
     static displayName = `Relax(${getDisplayName(Wrapper)})`;
@@ -42,7 +26,7 @@ export default function RelaxContainer(
     _dql2QL: { [name: string]: QueryLang };
     _isMounted: boolean;
 
-    constructor(props: Object, context: RelaxContext) {
+    constructor(props: Object, context: IRelaxContext<Store>) {
       super(props);
       this._isMounted = false;
       this._dql2QL = {};

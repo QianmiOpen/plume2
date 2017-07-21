@@ -1,14 +1,10 @@
 import React from 'react';
 import { Map } from 'immutable';
 import Store from './store';
-
+import { IMap, IOptions } from './typing';
 export type TStore = typeof Store;
-export type IMap = Map<string, any>;
-export type Options = {
-  debug?: boolean;
-};
 
-export default function StoreProvider(AppStore: TStore, opts?: Options) {
+export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
   /**
    * 获取组件的displayName便于react-devtools的调试
    * @param WrappedComponent 
@@ -16,7 +12,7 @@ export default function StoreProvider(AppStore: TStore, opts?: Options) {
   const getDisplayName = WrappedComponent =>
     WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
-  return function wrapper(Base: React.ComponentClass): React.ComponentClass {
+  return function wrapper(Base: React.ComponentClass): any {
     return class WrapperComponent extends Base {
       _isMounted: boolean;
       store: Store;

@@ -1,3 +1,13 @@
+/**
+ * 消息中心
+ * usage
+ *  import {msg} from 'plume2'
+ *
+ *  msg.on('hello', (param) => console.log(param))
+ *  msg.emit('hello', 'hello')
+ */
 import * as mitt from 'mitt';
 
-export default new ((mitt as any).default || mitt)();
+const msg: mitt.Emitter = new ((mitt as any).default || mitt)();
+
+export default msg;

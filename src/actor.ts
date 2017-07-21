@@ -1,12 +1,7 @@
-import { Map } from 'immutable';
-
-export type IMap = Map<string, any>;
-export type Route = {
-  [name: string]: (state: IMap, params?: any) => IMap;
-};
+import { IMap, TRoute } from './typing';
 
 export default class Actor {
-  _route: Route;
+  private _route: TRoute;
 
   defaultState(): Object {
     return {};

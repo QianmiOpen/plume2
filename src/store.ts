@@ -3,15 +3,17 @@ import { Map, fromJS } from 'immutable';
 import Actor from './actor';
 import { QueryLang } from './ql';
 import { isArray } from './type';
+import { IOptions, IMap } from './typing';
 
-export type Dispatch = () => void;
-export type Rollback = () => void;
-export type IMap = Map<string, any>;
-export type Handler = (state: IMap) => void;
-export interface Options {
-  debug?: boolean;
-}
+export type TDispatch = () => void;
+export type TRollback = () => void;
+export type TSubscribeHandler = (state: IMap) => void;
 
+/**
+ * 是不是可以批量处理
+ * ReactDOM'sunstable_batchedUpdates 可以很酷的解决父子组件级联渲染的问题
+ * 可惜Preact不支持，只能靠Immutable的不可变这个特性来挡着了
+ */
 const batchedUpdates =
   ReactDOM.unstable_batchedUpdates ||
   function(cb) {
@@ -20,14 +22,14 @@ const batchedUpdates =
 
 export default class Store {
   _state: IMap;
-  _callbacks: Array<Handler>;
+  _callbacks: Array<TSubscribeHandler>;
   _actors: Array<Actor>;
   _actorsState: Array<IMap>;
   _cacheQL: { [name: string]: Array<any> };
-  _opts: Options;
+  _opts: IOptions;
   _isInTranstion: boolean;
 
-  constructor(props?: Options) {
+  constructor(props?: IOptions) {
     this._opts = props || { debug: false };
     this._state = fromJS({});
     this._actorsState = [];
@@ -73,7 +75,7 @@ export default class Store {
    * @param rollBack 发生rollback之后的自定义逻辑
    * @return 是不是发生了错误，数据回滚
    */
-  transaction(dispatch: Dispatch, rollBack?: Rollback): boolean {
+  transaction(dispatch: TDispatch, rollBack?: TRollback): boolean {
     //有没有rollback
     let isRollback = false;
 
@@ -149,7 +151,7 @@ export default class Store {
     }
 
     for (let i = 0, len = this._actors.length; i < len; i++) {
-      let actor = this._actors[i];
+      let actor = this._actors[i] as any;
       const fn = (actor._route || {})[msg];
       //如果actor没有处理msg的方法，直接跳过
       if (!fn) {
@@ -301,7 +303,7 @@ export default class Store {
     return this._state;
   }
 
-  subscribe(cb: Handler) {
+  subscribe(cb: TSubscribeHandler) {
     if (typeof cb != 'function' || this._callbacks.indexOf(cb) != -1) {
       return;
     }
@@ -309,7 +311,7 @@ export default class Store {
     this._callbacks.push(cb);
   }
 
-  unsubscribe(cb: Handler) {
+  unsubscribe(cb: TSubscribeHandler) {
     const index = this._callbacks.indexOf(cb);
     if (typeof cb != 'function' || index == -1) {
       return;
