@@ -1,17 +1,27 @@
-import * as React from 'react'
-import { Map, is, fromJS } from 'immutable'
-import isArray from './util/is-array'
-import isString from './util/is-string'
-import Store from './store'
-import { QueryLang, DynamicQueryLang } from './ql'
+import React from 'react';
+import { Map, is, fromJS } from 'immutable';
+import { isArray, isString } from './type';
+import Store from './store';
+import { QueryLang, DynamicQueryLang } from './ql';
 
 type IMap = Map<string, any>;
 
-interface RelaxContext {
-  _plume$Store: Store
+export interface RelaxContext {
+  _plume$Store: Store;
 }
 
-export default function RelaxContainer(Wrapper: React.Component): React.Component {
+export interface IRelaxProps {
+  relaxProps?: Object;
+  [name: string]: any;
+}
+
+export interface IRelaxComponent extends React.ComponentClass<IRelaxProps> {
+  relaxProps?: Object;
+}
+
+export default function RelaxContainer(
+  Wrapper: IRelaxComponent
+): React.ComponentClass {
   return class Relax extends React.Component {
     //displayName
     static displayName = `Relax(${getDisplayName(Wrapper)})`;
@@ -23,9 +33,7 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     static relaxProps = Wrapper.relaxProps || {};
 
     //声明上下文依赖
-    static contextTypes = {
-      _plume$Store: React.PropTypes.object
-    };
+    static contextTypes = { _plume$Store: React.PropTypes.object };
 
     props: Object;
     state: Object;
@@ -35,122 +43,125 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
     _isMounted: boolean;
 
     constructor(props: Object, context: RelaxContext) {
-      super(props)
-      this._isMounted = false
-      this._dql2QL = {}
-      this.state = {
-        storeState: fromJS({})
-      }
+      super(props);
+      this._isMounted = false;
+      this._dql2QL = {};
+      this.state = { storeState: fromJS({}) };
       //提前绑定事件，为了争取父子有序
-      context._plume$Store.subscribe(this._handleStoreChange)
+      context._plume$Store.subscribe(this._handleStoreChange);
     }
 
     componentWillMount() {
-      this._isMounted = false
+      this._isMounted = false;
       //计算一次relaxProps
-      this.relaxProps = this.computeRelaxProps(this.props)
+      this.relaxProps = this.computeRelaxProps(this.props);
 
-      //will drop on production env       
+      //will drop on production env
       if (process.env.NODE_ENV != 'production') {
         if (this.context['_plume$Store']._opts.debug) {
-          console.groupCollapsed && console.groupCollapsed(`${Relax.displayName} will mount 🚀`)
-          console.log('props:|>', JSON.stringify(this.props, null, 2))
-          console.log('relaxProps:|>', JSON.stringify(this.relaxProps, null, 2))
-          console.groupEnd && console.groupEnd()
+          console.groupCollapsed &&
+            console.groupCollapsed(`${Relax.displayName} will mount 🚀`);
+          console.log('props:|>', JSON.stringify(this.props, null, 2));
+          console.log(
+            'relaxProps:|>',
+            JSON.stringify(this.relaxProps, null, 2)
+          );
+          console.groupEnd && console.groupEnd();
         }
       }
     }
 
     componentDidMount() {
-      this._isMounted = true
+      this._isMounted = true;
     }
 
     componentWillUpdate() {
-      this._isMounted = false
+      this._isMounted = false;
     }
 
     componentDidUpdate() {
-      this._isMounted = true
+      this._isMounted = true;
     }
 
     shouldComponentUpdate(nextProps) {
-      const newRelaxProps = this.computeRelaxProps(nextProps)
+      const newRelaxProps = this.computeRelaxProps(nextProps);
 
       if (
         !is(fromJS(this.props), fromJS(nextProps)) ||
-        !is(fromJS(this.relaxProps), fromJS(newRelaxProps))) {
-        this.relaxProps = newRelaxProps
+        !is(fromJS(this.relaxProps), fromJS(newRelaxProps))
+      ) {
+        this.relaxProps = newRelaxProps;
 
         if (process.env.NODE_ENV != 'production') {
           if (this.context['_plume$Store']._opts.debug) {
-            console.groupCollapsed && console.groupCollapsed(`${Relax.displayName} will update 🚀`)
-            console.log('props:|>', JSON.stringify(this.relaxProps, null, 2))
-            console.log('relaxProps:|>', JSON.stringify(this.relaxProps, null, 2))
-            console.groupEnd && console.groupEnd()
+            console.groupCollapsed &&
+              console.groupCollapsed(`${Relax.displayName} will update 🚀`);
+            console.log('props:|>', JSON.stringify(this.relaxProps, null, 2));
+            console.log(
+              'relaxProps:|>',
+              JSON.stringify(this.relaxProps, null, 2)
+            );
+            console.groupEnd && console.groupEnd();
           }
         }
 
-        return true
+        return true;
       } else {
-        return false
+        return false;
       }
     }
 
     componentWillUnmount() {
-      (this.context['_plume$Store'] as Store).unsubscribe(this._handleStoreChange)
+      (this.context['_plume$Store'] as Store).unsubscribe(
+        this._handleStoreChange
+      );
     }
 
     render() {
-      return <Wrapper {...this.props} relaxProps={this.relaxProps} />
+      return <Wrapper {...this.props} relaxProps={this.relaxProps} />;
     }
 
     computeRelaxProps(props) {
       //dev check
       if (process.env.NODE_ENV != 'production') {
         if (!Wrapper.relaxProps) {
-          console.warn(`${Relax.displayName} could not find any static relaxProps!!!😅`)
-          return {}
+          console.warn(
+            `${Relax.displayName} could not find any static relaxProps!!!😅`
+          );
+          return {};
         }
       }
 
-      const relaxProps = {}
-      const staticRelaxProps = Relax.relaxProps
-      const dqlMap = {} as { [name: string]: DynamicQueryLang }
-      const store: Store = this.context['_plume$Store']
+      const relaxProps = {};
+      const staticRelaxProps = Relax.relaxProps;
+      const dqlMap = {} as { [name: string]: DynamicQueryLang };
+      const store: Store = this.context['_plume$Store'];
 
       for (let propName in staticRelaxProps) {
         //prop的属性值
-        const propValue = staticRelaxProps[propName]
+        const propValue = staticRelaxProps[propName];
 
         //如果是字符串，注入store's state
         if (isString(propValue)) {
-          relaxProps[propName] = store.state().get(propValue)
-        }
-
-        //如果是数组，直接注入state's state
-        else if (isArray(propValue)) {
-          relaxProps[propName] = store.state().getIn(propValue)
-        }
-
-        //如果该属性值是函数类型，注入store的method
-        else if (typeof (propValue) === 'function') {
-          const storeMethod = store[propName]
-          relaxProps[propName] = storeMethod || propValue
+          relaxProps[propName] = store.state().get(propValue);
+        } else if (isArray(propValue)) {
+          //如果是数组，直接注入state's state
+          relaxProps[propName] = store.state().getIn(propValue);
+        } else if (typeof propValue === 'function') {
+          //如果该属性值是函数类型，注入store的method
+          const storeMethod = store[propName];
+          relaxProps[propName] = storeMethod || propValue;
           //warning...
           if (process.env.NODE_ENV != 'production') {
             if (!storeMethod) {
-              console.warn(`store can not find '${propName}' method.`)
+              console.warn(`store can not find '${propName}' method.`);
             }
           }
-        }
-
-        //如果是querylang
-        else if (propValue instanceof QueryLang) {
-          relaxProps[propName] = store.bigQuery(propValue)
-        }
-
-        //是不是dql
-        else if (propValue instanceof DynamicQueryLang) {
+        } else if (propValue instanceof QueryLang) {
+          //如果是querylang
+          relaxProps[propName] = store.bigQuery(propValue);
+        } else if (propValue instanceof DynamicQueryLang) {
+          //是不是dql
           if (!this._dql2QL[propName]) {
             //根据DynamicQueryLang保存一份QL
             //先用DQL的lang来填充QL
@@ -158,37 +169,37 @@ export default function RelaxContainer(Wrapper: React.Component): React.Componen
             this._dql2QL[propName] = new QueryLang(
               propValue.name(),
               propValue.lang()
-            )
+            );
           }
-          dqlMap[propName] = propValue
+          dqlMap[propName] = propValue;
         }
       }
 
       //计算dql
       for (let propName in dqlMap) {
-        const dql = dqlMap[propName]
-        const lang = dql.withContext(props).analyserLang(dql.lang())
-        const ql = this._dql2QL[propName].setLang(lang)
-        relaxProps[propName] = store.bigQuery(ql)
+        const dql = dqlMap[propName];
+        const lang = dql.withContext(props).analyserLang(dql.lang());
+        const ql = this._dql2QL[propName].setLang(lang);
+        relaxProps[propName] = store.bigQuery(ql);
       }
 
-      return relaxProps
+      return relaxProps;
     }
 
     _handleStoreChange = (state: IMap) => {
       if (this._isMounted) {
         (this as any).setState({
           storeState: state
-        })
+        });
       }
-    }
-  }
+    };
+  };
 
   function _isNotValidValue(v: any) {
-    return (typeof (v) != 'undefined' && v != null)
+    return typeof v != 'undefined' && v != null;
   }
 
   function getDisplayName(WrappedComponent) {
-    return WrappedComponent.displayName || WrappedComponent.name || 'Component'
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component';
   }
 }

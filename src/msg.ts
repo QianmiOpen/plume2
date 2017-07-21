@@ -1,3 +1,3 @@
-import * as mitt from 'mitt'
+import * as mitt from 'mitt';
 
-export default new ((mitt as any).default || mitt)()
+export default new ((mitt as any).default || mitt)();
