@@ -5,43 +5,25 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "jest --verbose",
-    "coverage": "jest --coverage",
-    "compile": "./node_modules/.bin/tsc",
-    "watch": "./node_modules/.bin/tsc --watch",
-    "types": "cp ./typings/index.d.ts ./dist",
-    "build": "npm run compile && npm run types"
+    "test": "npx jest --verbose",
+    "coverage": "npx jest --coverage",
+    "build": "npm run clean && npm run compile",
+    "clean": "rm -rf ./dist && rm -rf ./typings"
   },
   "jest": {
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/examples/"
-    ]
+    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "testPathIgnorePatterns": ["/node_modules/", "/examples/"]
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hufeng/plume.git"
   },
-  "keywords": [
-    "preact",
-    "immutable",
-    "flux",
-    "mobile"
-  ],
-  "files": [
-    "package.json",
-    "dist",
-    "README.md"
-  ],
+  "keywords": ["preact", "immutable", "flux", "mobile"],
+  "files": ["package.json", "dist", "README.md"],
   "author": "hufeng",
   "license": "ISC",
   "bugs": {
@@ -49,20 +31,22 @@
   },
   "homepage": "https://github.com/hufeng/plume#readme",
   "dependencies": {
+    "@types/jest": "^20.0.4",
+    "@types/node": "^8.0.14",
+    "@types/react": "^15.0.38",
+    "@types/react-dom": "^15.5.1",
     "immutable": "^3.8.1",
     "mitt": "^1.1.2"
   },
   "devDependencies": {
-    "@types/jest": "^19.2.2",
-    "@types/node": "^7.0.12",
-    "babel-jest": "^19.0.0",
+    "babel-jest": "^20.0.3",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "jest": "^19.0.2",
-    "react": "15.4.2",
-    "react-dom": "15.4.2",
-    "react-test-renderer": "15.4.2",
-    "ts-jest": "^19.0.9",
-    "typescript": "^2.2.2"
+    "jest": "^20.0.4",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-test-renderer": "^15.6.1",
+    "ts-jest": "^20.0.7",
+    "typescript": "^2.4.2"
   }
 }
