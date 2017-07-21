@@ -6,7 +6,7 @@ module.exports = {
   devtool: 'cheap-module-source-map',
   entry: './src/index.tsx',
   output: {
-    path: './build',
+    path: path.resolve(__dirname, './build'),
     filename: 'bundle.js'
   },
   resolve: {
@@ -18,12 +18,10 @@ module.exports = {
     }
   },
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.tsx?$/,
-        include: [
-          path.resolve(__dirname, 'src')
-        ],
+        include: [path.resolve(__dirname, 'src')],
         loader: 'ts-loader'
       }
     ]
@@ -43,4 +41,4 @@ module.exports = {
     host: '0.0.0.0',
     port: 3000
   }
-}
+};
