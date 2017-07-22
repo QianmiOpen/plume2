@@ -3,12 +3,12 @@
   "version": "0.1.6",
   "description": "a lightweight of flux for mobile web",
   "main": "./dist/index.js",
-  "types": "./typings/index.d.ts",
+  "types": "./dist/typings/index.d.ts",
   "scripts": {
     "test": "npx jest --verbose",
     "coverage": "npx jest --coverage",
-    "build": "npm run clean && npm run compile",
-    "clean": "rm -rf ./dist && rm -rf ./typings"
+    "build": "npm run clean && npx tsc",
+    "clean": "rm -rf ./dist"
   },
   "jest": {
     "transform": {
