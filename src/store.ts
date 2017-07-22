@@ -21,13 +21,13 @@ const batchedUpdates =
   };
 
 export default class Store {
-  _state: IMap;
-  _callbacks: Array<TSubscribeHandler>;
-  _actors: Array<Actor>;
-  _actorsState: Array<IMap>;
-  _cacheQL: { [name: string]: Array<any> };
-  _opts: IOptions;
-  _isInTranstion: boolean;
+  private _state: IMap;
+  private _callbacks: Array<TSubscribeHandler>;
+  private _actors: Array<Actor>;
+  private _actorsState: Array<IMap>;
+  private _cacheQL: { [name: string]: Array<any> };
+  private _opts: IOptions;
+  private _isInTranstion: boolean;
 
   constructor(props?: IOptions) {
     this._opts = props || { debug: false };
@@ -42,17 +42,6 @@ export default class Store {
 
   bindActor(): Array<Actor> {
     return [];
-  }
-
-  reduceActorState() {
-    this._state = this._state.withMutations(state => {
-      for (let actor of this._actors) {
-        let initState = fromJS(actor.defaultState());
-        this._actorsState.push(initState);
-        state = state.merge(initState);
-      }
-      return state;
-    });
   }
 
   dispatch(msg: string, params?: any) {
@@ -130,13 +119,24 @@ export default class Store {
     return isRollback;
   }
 
-  _notifier() {
+  private reduceActorState() {
+    this._state = this._state.withMutations(state => {
+      for (let actor of this._actors) {
+        let initState = fromJS(actor.defaultState());
+        this._actorsState.push(initState);
+        state = state.merge(initState);
+      }
+      return state;
+    });
+  }
+
+  private _notifier() {
     batchedUpdates(() => {
       this._callbacks.forEach(cb => cb(this._state));
     });
   }
 
-  _dispatchActor(msg: string, params?: any) {
+  private _dispatchActor(msg: string, params?: any) {
     let _state = this._state;
 
     if (process.env.NODE_ENV != 'production') {

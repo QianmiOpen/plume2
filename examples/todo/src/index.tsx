@@ -1,6 +1,4 @@
-'use strict;';
-
-import * as React from 'react';
+import React from 'react';
 import { render } from 'react-dom';
 
 import { StoreProvider } from 'plume2';
@@ -19,7 +17,7 @@ if (__DEV__) {
 
 //debug: true, it will show good logs
 @StoreProvider(AppStore, { debug: __DEV__ })
-export default class TodoApp extends React.Component<any, any> {
+export default class TodoApp extends React.Component {
   render() {
     return (
       <section className="todoapp">

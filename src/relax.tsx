@@ -23,8 +23,9 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     state: Object;
     relaxProps: Object;
     context: Store;
-    _dql2QL: { [name: string]: QueryLang };
-    _isMounted: boolean;
+
+    private _dql2QL: { [name: string]: QueryLang };
+    private _isMounted: boolean;
 
     constructor(props: Object, context: IRelaxContext<Store>) {
       super(props);

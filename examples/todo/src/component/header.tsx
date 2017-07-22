@@ -1,16 +1,16 @@
-import * as React from 'react';
+import React from 'react';
 import { Relax } from 'plume2';
 import { valueQL } from '../ql';
-import * as mutation from '../mutation';
-
-interface IHeaderProps {
-  relaxProps?: {
-    value: string;
-  };
-}
+import * as m from '../mutation';
 
 @Relax
-export default class Header extends React.Component<IHeaderProps, any> {
+export default class Header extends React.Component {
+  props: {
+    relaxProps?: {
+      value: string;
+    };
+  };
+
   static relaxProps = {
     value: valueQL
   };
@@ -32,12 +32,12 @@ export default class Header extends React.Component<IHeaderProps, any> {
   }
 
   _handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    mutation.changeValue((e.target as any).value);
+    m.changeValue((e.target as any).value);
   };
 
   _handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13) {
-      mutation.submit((e.target as any).value);
+      m.submit((e.target as any).value);
     }
   };
 }

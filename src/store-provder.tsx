@@ -14,20 +14,16 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
 
   return function wrapper(Base: React.ComponentClass): any {
     return class WrapperComponent extends Base {
-      _isMounted: boolean;
       store: Store;
       state: Object;
+      private _isMounted: boolean;
 
       static displayName = `StoreProvider(${getDisplayName(Base)})`;
 
-      static childContextTypes = {
-        _plume$Store: React.PropTypes.object
-      };
+      static childContextTypes = { _plume$Store: React.PropTypes.object };
 
       getChildContext: Function = (): Object => {
-        return {
-          _plume$Store: this.store
-        };
+        return { _plume$Store: this.store };
       };
 
       constructor(props: Object) {
@@ -36,10 +32,7 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
         this.store = new AppStore(opts || { debug: false });
 
         const superState = super.state || {};
-        this.state = {
-          ...superState,
-          ...this.store.state().toObject()
-        };
+        this.state = { ...superState, ...this.store.state().toObject() };
 
         this.store.subscribe(this._handleStoreChange);
       }
@@ -50,7 +43,7 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
 
         //will drop on production env
         if (process.env.NODE_ENV != 'production') {
-          if (this.store._opts.debug) {
+          if ((this.store as any)._opts.debug) {
             console.log(`${WrapperComponent.displayName} will mount 🚀`);
           }
         }
@@ -85,7 +78,7 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
       _handleStoreChange = (state: IMap) => {
         //will drop on production env
         if (process.env.NODE_ENV != 'production') {
-          if (this.store._opts.debug) {
+          if ((this.store as any)._opts.debug) {
             console.log(`\n${WrapperComponent.displayName} will update 🚀`);
           }
         }

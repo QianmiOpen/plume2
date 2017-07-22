@@ -1,17 +1,17 @@
-import * as React from 'react';
+import React from 'react';
 import { Relax } from 'plume2';
 import { countQL } from '../ql';
 import * as mutation from '../mutation';
 
-interface IFootProps {
-  relaxProps?: {
-    count: number;
-    filterStatus: string;
-  };
-}
-
 @Relax
-export default class Footer extends React.Component<IFootProps, any> {
+export default class Footer extends React.Component {
+  props: {
+    relaxProps?: {
+      count: number;
+      filterStatus: string;
+    };
+  };
+
   static relaxProps = {
     count: countQL,
     filterStatus: 'filterStatus'
@@ -19,7 +19,7 @@ export default class Footer extends React.Component<IFootProps, any> {
 
   render() {
     const { count, filterStatus } = this.props.relaxProps;
-    let countText = this._getCountText(count);
+    const countText = this._getCountText(count);
 
     return (
       <footer className="footer">
