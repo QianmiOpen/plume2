@@ -2,10 +2,7 @@
  * @providesModule uikit
  */
 
-import noop from './noop'
-import Loading from './loaing'
+import noop from './noop';
+import Loading from './loaing';
 
-export {
-  noop,
-  Loading
-}
+export { noop, Loading };

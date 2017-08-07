@@ -6,8 +6,7 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
     "watch": "./node_modules/.bin/tsc -w",
-    "compile": "./node_modules/.bin/tsc",
-    "postinstall": "npm install ./react-dom"
+    "compile": "./node_modules/.bin/tsc"
   },
   "dependencies": {
     "@types/react": "^15.0.14",
@@ -19,6 +18,7 @@
   "devDependencies": {
     "babel-jest": "19.0.0",
     "babel-preset-react-native": "1.9.1",
+    "babel-plugin-transform-rn-react-dom": "^1.0.0",
     "jest": "19.0.2",
     "react-test-renderer": "~15.4.1",
     "typescript": "^2.2.1"

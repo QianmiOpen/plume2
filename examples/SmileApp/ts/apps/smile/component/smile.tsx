@@ -1,7 +1,7 @@
-import * as React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { Relax } from 'plume2'
-import { Loading, noop } from 'uikit'
+import React from 'react';
+import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
+import { Relax } from 'plume2';
+import { Loading, noop } from 'uikit';
 
 @Relax
 export default class Smile extends React.Component<any, any> {
@@ -10,20 +10,20 @@ export default class Smile extends React.Component<any, any> {
       loading: boolean;
       count: number;
       increment: () => void;
-    }
+    };
   };
 
   static relaxProps = {
     count: 'count',
     loading: 'loading',
-    increment: noop,
+    increment: noop
   };
 
   render() {
-    const { count, loading, increment } = this.props.relaxProps
+    const { count, loading, increment } = this.props.relaxProps;
     //如果是loading，显示loading
     if (loading) {
-      return <Loading />
+      return <Loading />;
     }
 
     return (
@@ -32,7 +32,7 @@ export default class Smile extends React.Component<any, any> {
           {`你一抹微笑如茉莉:) 😁${count}`}
         </Text>
       </View>
-    )
+    );
   }
 }
 
@@ -41,9 +41,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-  } as React.ViewStyle,
+  } as ViewStyle,
   text: {
     fontSize: 16,
     fontWeight: 'bold'
-  } as React.TextStyle
-})
+  } as TextStyle
+});

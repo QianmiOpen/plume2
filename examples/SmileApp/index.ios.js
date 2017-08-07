@@ -5,9 +5,7 @@
  */
 
 import React, { Component } from 'react';
-import {
-  AppRegistry
-} from 'react-native';
-import SmileApp from './js/apps/smile'
+import { AppRegistry } from 'react-native';
+import SmileApp from './js/apps/smile';
 
 AppRegistry.registerComponent('SmileApp', () => SmileApp);
