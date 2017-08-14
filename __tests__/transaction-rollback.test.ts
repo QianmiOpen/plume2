@@ -1,7 +1,5 @@
-import { Store, Actor, Action } from '../src/index';
 import { Map } from 'immutable';
-
-type IMap = Map<string, any>;
+import { Store, Actor, Action, IMap } from '../src/index';
 
 class HelloActor extends Actor {
   defaultState() {
@@ -49,7 +47,7 @@ class AppStore extends Store {
       },
       () => {
         expect(currentState != this.state()).toEqual(true);
-        this._state = currentState;
+        this.setState(currentState);
       }
     );
 

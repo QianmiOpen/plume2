@@ -1,7 +1,7 @@
 import { Map } from 'immutable';
-import { Actor, Action } from '../src/index';
-import { IMap } from '../src/typing';
+import { Actor, Action, IMap } from '../src/index';
 
+//////////////////init state/////////////////////////
 class HelloActor extends Actor {
   defaultState() {
     return {
@@ -15,6 +15,7 @@ class HelloActor extends Actor {
   }
 }
 
+///////////////////////test suite/////////////////////
 describe('actor test suite', () => {
   it('default state', () => {
     const helloActor = new HelloActor();

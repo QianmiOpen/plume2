@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom';
 import { Map, fromJS } from 'immutable';
 import Actor from './actor';
 import { QueryLang } from './ql';
-import { isArray } from './type';
+import { isArray, isString } from './type';
 import { IOptions, IMap } from './typing';
 
 export type TDispatch = () => void;
@@ -11,7 +11,7 @@ export type TSubscribeHandler = (state: IMap) => void;
 
 /**
  * 是不是可以批量处理
- * ReactDOM'sunstable_batchedUpdates 可以很酷的解决父子组件级联渲染的问题
+ * ReactDOM'sunstable_batchedUpdates可以很酷的解决父子组件级联渲染的问题
  * 可惜Preact不支持，只能靠Immutable的不可变这个特性来挡着了
  */
 const batchedUpdates =
@@ -20,15 +20,31 @@ const batchedUpdates =
     cb();
   };
 
+/**
+ * Store状态容器
+ * 整个应用中心的状态管理 控制整个应用的状态控制
+ */
+
 export default class Store {
-  private _state: IMap;
-  private _callbacks: Array<TSubscribeHandler>;
-  private _actors: Array<Actor>;
-  private _actorsState: Array<IMap>;
-  private _cacheQL: { [name: string]: Array<any> };
+  //store的配置项
   private _opts: IOptions;
+  //当前store的聚合状态
+  private _state: IMap;
+  //保存当前store的状态变化的监听的handler
+  private _callbacks: Array<TSubscribeHandler>;
+  //当前绑定的actor
+  private _actors: Array<Actor>;
+  //每个actor中自己独有的状态
+  private _actorsState: Array<IMap>;
+  //Querlang查询的缓存
+  private _cacheQL: { [name: string]: Array<any> };
+  //判断当前的dispatch是不是在事务中
   private _isInTranstion: boolean;
 
+  /**
+   * init
+   * @param props 
+   */
   constructor(props?: IOptions) {
     this._opts = props || { debug: false };
     this._state = fromJS({});
@@ -40,10 +56,19 @@ export default class Store {
     this.reduceActorState();
   }
 
+  /**
+   * 绑定Actor
+   */
   bindActor(): Array<Actor> {
     return [];
   }
 
+  /**
+   * store分发事件协同actor
+   *
+   * @param msg 事件名称
+   * @param params  参数
+   */
   dispatch(msg: string, params?: any) {
     const newStoreState = this._dispatchActor(msg, params);
 
@@ -153,6 +178,7 @@ export default class Store {
     for (let i = 0, len = this._actors.length; i < len; i++) {
       let actor = this._actors[i] as any;
       const fn = (actor._route || {})[msg];
+
       //如果actor没有处理msg的方法，直接跳过
       if (!fn) {
         //log
@@ -191,10 +217,24 @@ export default class Store {
     return _state;
   }
 
-  bigQuery(ql: QueryLang): any {
+  /**
+   * 计算querylang
+   * @param ql querylang
+   */
+  bigQuery(ql: QueryLang | string | Array<string | number>): any {
+    //如果当前的查询参数是字符串，直接获取状态对应的路径参数
+    if (isString(ql)) {
+      return this._state.get(ql as string);
+    }
+
+    if (isArray(ql)) {
+      return this._state.getIn(ql as Array<any>);
+    }
+
     if (!(ql instanceof QueryLang)) {
       throw new Error('invalid QL');
     }
+
     //数据是否过期,默认否
     let outdate = false;
     const id = ql.id();
@@ -299,10 +339,25 @@ export default class Store {
     }
   }
 
+  /**
+   * 获取store容器的数据状态
+   */
   state() {
     return this._state;
   }
 
+  /**
+   * 设置store数据容器的状态，一般用于rollback之后的状态恢复
+   * @param state 设置store的状态
+   */
+  setState(state) {
+    this._state = state;
+  }
+
+  /**
+   * 定义store发生的数据变化
+   * @param cb 回调函数
+   */
   subscribe(cb: TSubscribeHandler) {
     if (typeof cb != 'function' || this._callbacks.indexOf(cb) != -1) {
       return;
@@ -311,6 +366,10 @@ export default class Store {
     this._callbacks.push(cb);
   }
 
+  /**
+   * 取消store发生数据变化的订阅
+   * @param cb 回调函数
+   */
   unsubscribe(cb: TSubscribeHandler) {
     const index = this._callbacks.indexOf(cb);
     if (typeof cb != 'function' || index == -1) {
@@ -320,12 +379,20 @@ export default class Store {
     this._callbacks.splice(index, 1);
   }
 
+  //=============================help method==========================
+
+  /**
+   * 打印store中的数据状态
+   */
   pprint() {
     if (process.env.NODE_ENV != 'production') {
       console.log(JSON.stringify(this._state, null, 2));
     }
   }
 
+  /**
+   * 打印store中的数据状态是从哪些Actor中聚合
+   */
   pprintActor() {
     if (process.env.NODE_ENV != 'production') {
       const stateObj = {};

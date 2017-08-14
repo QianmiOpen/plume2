@@ -126,12 +126,12 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
         //prop的属性值
         const propValue = staticRelaxProps[propName];
 
-        //如果是字符串，注入store's state
-        if (isString(propValue)) {
-          relaxProps[propName] = store.state().get(propValue);
-        } else if (isArray(propValue)) {
-          //如果是数组，直接注入state's state
-          relaxProps[propName] = store.state().getIn(propValue);
+        if (
+          isString(propValue) ||
+          isArray(propValue) ||
+          propValue instanceof QueryLang
+        ) {
+          relaxProps[propName] = store.bigQuery(propValue);
         } else if (typeof propValue === 'function') {
           //如果该属性值是函数类型，注入store的method
           const storeMethod = store[propName];
@@ -142,9 +142,6 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
               console.warn(`store can not find '${propName}' method.`);
             }
           }
-        } else if (propValue instanceof QueryLang) {
-          //如果是querylang
-          relaxProps[propName] = store.bigQuery(propValue);
         } else if (propValue instanceof DynamicQueryLang) {
           //是不是dql
           if (!this._dql2QL[propName]) {

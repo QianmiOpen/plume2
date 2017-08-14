@@ -1,6 +1,5 @@
 import { Map } from 'immutable';
-import { Actor, Action, Store } from '../src/index';
-import { IMap } from '../src/typing';
+import { Actor, Action, Store, IMap } from '../src/index';
 
 class HelloActor extends Actor {
   defaultState() {
@@ -31,7 +30,11 @@ class LoadingActor extends Actor {
 
 class AppStore extends Store {
   bindActor() {
-    return [new HelloActor(), new LoadingActor()];
+    return [
+      //binding actor
+      new HelloActor(),
+      new LoadingActor()
+    ];
   }
 
   change = () => {
@@ -49,7 +52,7 @@ class AppStore extends Store {
 
 describe('store test suite', () => {
   it('default state', () => {
-    const store = new AppStore();
+    const store = new AppStore() as any;
 
     //defautlState
     expect(store.state().toJS()).toEqual({
@@ -69,7 +72,7 @@ describe('store test suite', () => {
   });
 
   it('store dispatch', () => {
-    const store = new AppStore({ debug: false });
+    const store = new AppStore() as any;
     store.change();
 
     const storeState = store.state();
@@ -94,7 +97,7 @@ describe('store test suite', () => {
   });
 
   it('store subscribe', () => {
-    const store = new AppStore({});
+    const store = new AppStore({}) as any;
     const _handleStoreChange = (state: IMap) => {
       expect(store.state()).toEqual({ loading: true, name: 'plume++' });
     };

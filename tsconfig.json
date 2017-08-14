@@ -8,6 +8,8 @@
     "rootDir": "./src",
     "outDir": "./dist",
     "declaration": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
     "declarationDir": "./dist/typings",
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,

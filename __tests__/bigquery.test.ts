@@ -1,7 +1,6 @@
 import { Map, fromJS } from 'immutable';
-import { Actor, Action, Store, QL } from '../src/index';
+import { Actor, Action, Store, QL, IMap } from '../src/index';
 import { QueryLang } from '../src/ql';
-import { IMap } from '../src/typing';
 
 let uuid = 0;
 
@@ -37,24 +36,22 @@ class AppStore extends Store {
   };
 }
 
+////////////////////////QueryLang///////////////////////////
 const todoQL = QL('todoQL', [
   'todo',
   'filter',
-
-  /**
-   * 过滤数据
-   */
+  //过滤数据
   (todo, filter) => todo
 ]);
 
 const countQL = QL('countQL', [
   todoQL,
 
-  /**
-   * 支持nested
-   */
+  //支持nested
   todo => todo.count()
 ]);
+
+////////////////////////Test suite///////////////////////////
 
 describe('bigquery test suite', () => {
   it('countQL', () => {
@@ -65,5 +62,15 @@ describe('bigquery test suite', () => {
     store.add('hello');
     count = store.bigQuery(countQL as QueryLang);
     expect(count).toEqual(1);
+
+    const filter = store.bigQuery('filter');
+    expect(filter).toEqual('');
+
+    const first = store.bigQuery(['todo', 0]);
+    expect(first.toJS()).toEqual({
+      id: 1,
+      text: 'hello',
+      done: false
+    });
   });
 });
