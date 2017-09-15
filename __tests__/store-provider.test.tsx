@@ -34,11 +34,7 @@ class Home extends React.Component {
   state: { name: string };
 
   render() {
-    return (
-      <div>
-        {this.state.name}
-      </div>
-    );
+    return <div>{this.state.name}</div>;
   }
 }
 
@@ -53,6 +49,30 @@ describe('store provider test suite', () => {
     const store = window['_store'] as AppStore;
     store.change();
     const tree = component.toJSON();
+    expect(tree).toMatchSnapshot();
+  });
+
+  it('merge store state', () => {
+    @StoreProvider(AppStore)
+    class StateApp extends React.Component {
+      constructor(props) {
+        super(props);
+        this.state = {
+          text: 'merge store test'
+        };
+      }
+
+      render() {
+        expect(this.state).toEqual({
+          text: 'merge store test',
+          name: 'plume'
+        });
+
+        return <div />;
+      }
+    }
+
+    const tree = renderer.create(<StateApp />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

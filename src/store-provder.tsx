@@ -31,8 +31,7 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
         this._isMounted = false;
         this.store = new AppStore(opts || { debug: false });
 
-        const superState = super.state || {};
-        this.state = { ...superState, ...this.store.state().toObject() };
+        this.state = { ...this.state, ...this.store.state().toObject() };
 
         this.store.subscribe(this._handleStoreChange);
       }
