@@ -41,6 +41,10 @@
   version "8.0.14"
   resolved "http://registry.npm.taobao.org/@types/node/download/@types/node-8.0.14.tgz#4a19dc6bb61d16c01cbadc7b30ac23518fff176b"
 
+"@types/prop-types@^15.5.1":
+  version "15.5.1"
+  resolved "http://registry.npm.taobao.org/@types/prop-types/download/@types/prop-types-15.5.1.tgz#1ecf52621299e65b855374337fb11fd2d1066fc1"
+
 "@types/react-dom@^15.5.1":
   version "15.5.1"
   resolved "http://registry.npm.taobao.org/@types/react-dom/download/@types/react-dom-15.5.1.tgz#f3c3e14c682785923c7d64583537df319442dec1"

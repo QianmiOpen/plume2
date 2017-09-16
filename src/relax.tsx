@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as PropTypes from 'prop-types';
 import { Map, is, fromJS } from 'immutable';
 import { isArray, isString } from './type';
 import Store from './store';
@@ -17,7 +18,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     static relaxProps = Wrapper.relaxProps || {};
 
     //声明上下文依赖
-    static contextTypes = { _plume$Store: React.PropTypes.object };
+    static contextTypes = { _plume$Store: PropTypes.object };
 
     props: Object;
     state: Object;

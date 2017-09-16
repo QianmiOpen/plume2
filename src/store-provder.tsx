@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Map } from 'immutable';
+import * as PropTypes from 'prop-types';
 import Store from './store';
 import { IMap, IOptions } from './typing';
+
 export type TStore = typeof Store;
 
 export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
@@ -20,7 +22,7 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
 
       static displayName = `StoreProvider(${getDisplayName(Base)})`;
 
-      static childContextTypes = { _plume$Store: React.PropTypes.object };
+      static childContextTypes = { _plume$Store: PropTypes.object };
 
       getChildContext: Function = (): Object => {
         return { _plume$Store: this.store };
