@@ -16,32 +16,15 @@
     },
     "notify": true,
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/examples/"
-    ]
+    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "testPathIgnorePatterns": ["/node_modules/", "/examples/"]
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hufeng/plume.git"
   },
-  "keywords": [
-    "preact",
-    "immutable",
-    "flux",
-    "mobile"
-  ],
-  "files": [
-    "package.json",
-    "dist",
-    "README.md",
-    "typings"
-  ],
+  "keywords": ["preact", "immutable", "flux", "mobile"],
+  "files": ["package.json", "dist", "README.md", "typings"],
   "author": "hufeng",
   "license": "ISC",
   "bugs": {
@@ -49,15 +32,15 @@
   },
   "homepage": "https://github.com/hufeng/plume#readme",
   "dependencies": {
-    "@types/jest": "^20.0.4",
-    "@types/node": "^8.0.14",
-    "@types/react": "^15.0.38",
-    "@types/react-dom": "^15.5.1",
     "immutable": "^3.8.1",
     "mitt": "^1.1.2",
     "prop-types": "^15.5.10"
   },
   "devDependencies": {
+    "@types/jest": "^20.0.4",
+    "@types/node": "^8.0.14",
+    "@types/react": "^15.0.38",
+    "@types/react-dom": "^15.5.1",
     "@types/prop-types": "^15.5.1",
     "babel-jest": "^20.0.3",
     "babel-preset-env": "^1.6.0",
