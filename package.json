@@ -24,7 +24,7 @@
     "url": "git+https://github.com/hufeng/plume.git"
   },
   "keywords": ["preact", "immutable", "flux", "mobile"],
-  "files": ["package.json", "dist", "README.md", "typings"],
+  "files": ["package.json", "dist", "README.md"],
   "author": "hufeng",
   "license": "ISC",
   "bugs": {

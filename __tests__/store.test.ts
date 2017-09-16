@@ -114,12 +114,6 @@ describe('store test suite', () => {
       defaultState() {
         return { loading: true };
       }
-    }
-
-    class AppStore extends Store {
-      bindActor() {
-        return [new LoadingActor()];
-      }
 
       @Action('loading:end')
       end(state: IMap, status: boolean) {
@@ -127,7 +121,17 @@ describe('store test suite', () => {
       }
     }
 
+    class AppStore extends Store {
+      bindActor() {
+        return [new LoadingActor()];
+      }
+    }
+
     const store = new AppStore({ debug: true });
     store.dispatch('loading:end', false);
+
+    expect(store.state().toJS()).toEqual({
+      loading: false
+    });
   });
 });

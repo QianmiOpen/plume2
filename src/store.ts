@@ -168,10 +168,15 @@ export default class Store {
       if (this._opts.debug) {
         console.groupCollapsed &&
           console.groupCollapsed(`store dispatch => '${msg}'`);
-        console.log(`params |>`);
-        //fixed, 当前params为false的时候，显示的no params
-        console.dir &&
-          console.dir(typeof params === 'undefined' ? 'no params' : params);
+        //如果参数存在
+        if (typeof params !== 'undefined') {
+          if (typeof params === 'object') {
+            console.log(`params|>`);
+            console.dir && console.dir(params);
+          } else {
+            console.log(`params|> ${params}`);
+          }
+        }
       }
     }
 
