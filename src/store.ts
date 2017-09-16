@@ -1,4 +1,4 @@
-import ReactDOM from 'react-dom';
+import * as ReactDOM from 'react-dom';
 import { Map, fromJS } from 'immutable';
 import Actor from './actor';
 import { QueryLang } from './ql';

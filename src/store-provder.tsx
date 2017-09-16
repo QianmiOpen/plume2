@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Map } from 'immutable';
 import Store from './store';
 import { IMap, IOptions } from './typing';

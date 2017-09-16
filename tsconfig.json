@@ -11,8 +11,6 @@
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "declarationDir": "./dist/typings",
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },

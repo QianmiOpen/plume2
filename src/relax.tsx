@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import { Map, is, fromJS } from 'immutable';
 import { isArray, isString } from './type';
 import Store from './store';

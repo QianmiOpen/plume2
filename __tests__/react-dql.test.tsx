@@ -1,5 +1,5 @@
-import React from 'react';
-import renderer from 'react-test-renderer';
+import * as React from 'react';
+import * as renderer from 'react-test-renderer';
 import { Map } from 'immutable';
 import { Actor, Store, StoreProvider, QL, Relax } from '../src/index';
 import { IMap } from '../src/typing';
@@ -70,12 +70,8 @@ class ProductItem extends React.Component {
     const { id, name } = this.props.relaxProps.product.toJS();
     return (
       <div>
-        <div>
-          {id}
-        </div>
-        <div>
-          {name}
-        </div>
+        <div>{id}</div>
+        <div>{name}</div>
       </div>
     );
   }
