@@ -2587,12 +2587,13 @@ pkg-dir@^2.0.0:
   dependencies:
     find-up "^2.1.0"
 
-plume2@0.1.6:
-  version "0.1.6"
-  resolved "http://registry.npm.taobao.org/plume2/download/plume2-0.1.6.tgz#dfa74a50dac30b6d4c447b35383a466963f82a93"
+plume2@0.2.0:
+  version "0.2.0"
+  resolved "http://registry.npm.taobao.org/plume2/download/plume2-0.2.0.tgz#d373863363c78fd1604f5f2d9cc703ad4042608a"
   dependencies:
     immutable "^3.8.1"
     mitt "^1.1.2"
+    prop-types "^15.5.10"
 
 portfinder@^1.0.9:
   version "1.0.13"
@@ -2659,7 +2660,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.5.8:
+prop-types@^15.5.10, prop-types@^15.5.8:
   version "15.5.10"
   resolved "http://registry.npm.taobao.org/prop-types/download/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
   dependencies:

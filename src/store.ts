@@ -256,7 +256,7 @@ export default class Store {
       if (this._opts.debug) {
         console.groupCollapsed &&
           console.groupCollapsed(`🔥:tracing: QL(${name})`);
-        console.time('QL:duration');
+        console.time && console.time('QL:duration');
       }
     }
 
@@ -318,7 +318,7 @@ export default class Store {
       if (process.env.NODE_ENV != 'production') {
         if (this._opts.debug) {
           console.log(`QL(${name})|> ${JSON.stringify(result, null, 2)}`);
-          console.timeEnd('QL:duration');
+          console.time && console.timeEnd('QL:duration');
           console.groupEnd && console.groupEnd();
         }
       }
@@ -334,7 +334,7 @@ export default class Store {
               2
             )}`
           );
-          console.timeEnd('QL:duration');
+          console.time && console.timeEnd('QL:duration');
           console.groupEnd && console.groupEnd();
         }
       }
