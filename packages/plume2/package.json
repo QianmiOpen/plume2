@@ -1,0 +1,28 @@
+{
+  "name": "plume2",
+  "version": "0.2.1",
+  "description": "a lightweight of flux for mobile web",
+  "main": "./dist/index.js",
+  "types": "./dist/typings/index.d.ts",
+  "scripts": {
+    "build": "rm -rf ./dist && tsc",
+    "clean": "rm -rf ./dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hufeng/plume.git"
+  },
+  "keywords": ["preact", "immutable", "flux", "mobile"],
+  "files": ["package.json", "dist", "README.md"],
+  "author": "hufeng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hufeng/plume/issues"
+  },
+  "homepage": "https://github.com/hufeng/plume#readme",
+  "dependencies": {
+    "immutable": "^3.8.1",
+    "mitt": "^1.1.2",
+    "prop-types": "^15.5.10"
+  }
+}

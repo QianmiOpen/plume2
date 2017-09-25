@@ -5,14 +5,9 @@
     "jsx": "react",
     "noImplicitAny": false,
     "sourceMap": false,
-    "rootDir": "./src",
-    "outDir": "./dist",
     "declaration": true,
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "declarationDir": "./dist/typings",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
   },
-  "exclude": ["node_modules", "examples/**", "__tests__", "dist"]
+  "exclude": ["node_modules", "examples/**"]
 }
