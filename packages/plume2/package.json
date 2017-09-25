@@ -5,15 +5,15 @@
   "main": "./dist/index.js",
   "types": "./dist/typings/index.d.ts",
   "scripts": {
-    "build": "rm -rf ./dist && tsc",
-    "clean": "rm -rf ./dist"
+    "build": "npm run clean && tsc && tsc -p tsconfig-es6.json",
+    "clean": "rm -rf ./dist && rm -rf ./es6"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hufeng/plume.git"
   },
   "keywords": ["preact", "immutable", "flux", "mobile"],
-  "files": ["package.json", "dist", "README.md"],
+  "files": ["package.json", "dist", "README.md", "es6"],
   "author": "hufeng",
   "license": "ISC",
   "bugs": {

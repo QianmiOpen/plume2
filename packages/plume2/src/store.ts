@@ -402,7 +402,7 @@ export default class Store {
     if (process.env.NODE_ENV != 'production') {
       const stateObj = {};
       this._actors.forEach((actor, index) => {
-        const name = actor.constructor.name;
+        const name = (actor.constructor as any).name;
         stateObj[name] = this._actorsState[index].toJS();
       });
       console.log(JSON.stringify(stateObj, null, 2));
