@@ -1,12 +1,11 @@
 {
   "extends": "../../tsconfig",
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2015",
     "declaration": true,
     "rootDir": "./src",
-    "outDir": "./dist",
-    "skipLibCheck": true,
-    "declarationDir": "./dist/typings"
+    "outDir": "./es6",
+    "declarationDir": "./es6/typings"
   },
   "exclude": ["src/__tests__/**"]
 }
