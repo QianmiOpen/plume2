@@ -1,4 +1,4 @@
-import msg from '../src/msg';
+import msg from '../msg';
 
 describe('msg test suite', () => {
   it('msg emit', () => {

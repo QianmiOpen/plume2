@@ -1,5 +1,5 @@
-import { Actor, Store, QL } from '../src/index';
-import { DynamicQueryLang, QueryLang } from '../src/ql';
+import { Actor, Store, QL } from '../index';
+import { DynamicQueryLang, QueryLang } from '../ql';
 
 class LoadingActor extends Actor {
   defaultState() {

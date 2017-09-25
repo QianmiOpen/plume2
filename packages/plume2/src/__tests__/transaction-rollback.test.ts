@@ -1,5 +1,5 @@
 import { Map } from 'immutable';
-import { Store, Actor, Action, IMap } from '../src/index';
+import { Store, Actor, Action, IMap } from '../index';
 
 class HelloActor extends Actor {
   defaultState() {

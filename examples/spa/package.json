@@ -9,8 +9,10 @@
     "clean": "rm -rf ./dist",
     "compile": "./node_modules/.bin/tsc && cp -R ./src/css ./build/",
     "watch": "./node_modules/.bin/tsc -w",
-    "build:dll": "./node_modules/.bin/webpack --config webpack.dll.config.js --progress --color",
-    "build": "./node_modules/.bin/webpack --config webpack.production.js --progress --color",
+    "build:dll":
+      "./node_modules/.bin/webpack --config webpack.dll.config.js --progress --color",
+    "build":
+      "./node_modules/.bin/webpack --config webpack.production.js --progress --color",
     "build:all": "npm run clean && npm run build:dll && npm run build"
   },
   "keywords": ["plume2", "starter"],
@@ -24,7 +26,7 @@
     "@types/node": "^7.0.5",
     "@types/react": "^15.0.10",
     "@types/react-dom": "^0.14.23",
-    "plume2": "^0.1.6",
+    "plume2": "*",
     "preact": "^7.2.0",
     "preact-compat": "^3.13.1",
     "react-router-dom": "^4.0.0"

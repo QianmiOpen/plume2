@@ -1,4 +1,4 @@
-import { isArray, isString } from '../src/type';
+import { isArray, isString } from '../type';
 
 describe('util test suite', () => {
   it('is Array', () => {

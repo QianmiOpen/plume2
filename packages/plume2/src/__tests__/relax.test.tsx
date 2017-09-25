@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as renderer from 'react-test-renderer';
-import { Actor, Action, Store, StoreProvider, QL, Relax } from '../src/index';
+import { Actor, Action, Store, StoreProvider, QL, Relax } from '../index';
 
 //===============Actor=========================
 class LoadingActor extends Actor {
@@ -107,12 +107,8 @@ class HelloRelax extends React.Component {
 
     return (
       <div>
-        <div>
-          {loading}
-        </div>
-        <div>
-          {mott}
-        </div>
+        <div>{loading}</div>
+        <div>{mott}</div>
       </div>
     );
   }
@@ -143,9 +139,7 @@ describe('relax test suite', () => {
       render() {
         return (
           <div>
-            <div>
-              {this.props.relaxProps.mott}
-            </div>
+            <div>{this.props.relaxProps.mott}</div>
           </div>
         );
       }

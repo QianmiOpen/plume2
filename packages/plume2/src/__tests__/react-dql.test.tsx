@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as renderer from 'react-test-renderer';
 import { Map } from 'immutable';
-import { Actor, Store, StoreProvider, QL, Relax } from '../src/index';
-import { IMap } from '../src/typing';
+import { Actor, Store, StoreProvider, QL, Relax } from '../index';
+import { IMap } from '../typing';
 
 class ProductActor extends Actor {
   defaultState() {

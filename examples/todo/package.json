@@ -9,14 +9,13 @@
     "clean": "rm -rf ./dist",
     "compile": "./node_modules/.bin/tsc && cp -R ./src/css ./build/",
     "watch": "./node_modules/.bin/tsc -w",
-    "build:dll": "./node_modules/.bin/webpack --config webpack.dll.config.js --progress --color",
-    "build": "./node_modules/.bin/webpack --config webpack.production.js --progress --color",
+    "build:dll":
+      "./node_modules/.bin/webpack --config webpack.dll.config.js --progress --color",
+    "build":
+      "./node_modules/.bin/webpack --config webpack.production.js --progress --color",
     "build:all": "npm run clean && npm run build:dll && npm run build"
   },
-  "keywords": [
-    "plume2",
-    "starter"
-  ],
+  "keywords": ["plume2", "starter"],
   "repository": {
     "type": "git",
     "url": "https://github.com/hufeng/plume2-starter.git"
@@ -27,7 +26,7 @@
     "@types/node": "^8.0.14",
     "@types/react": "^15.0.38",
     "@types/react-dom": "^15.5.1",
-    "plume2": "0.1.6",
+    "plume2": "*",
     "preact": "^8.2.1",
     "preact-compat": "^3.16.0"
   },
