@@ -106,7 +106,11 @@ Reactive and Predictable state container  for React or ReactNative.
 # Getting Started
 
 ```sh
-yarn add plume2 或者 npm install plume2
+# add dependencies
+yarn add plume2 # npm install plume2
+
+# web
+yarn add react react-dom # yarn add preact preact-compat
 ```
 
 # quick demo
