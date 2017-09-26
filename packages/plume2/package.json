@@ -15,7 +15,7 @@
   "keywords": ["preact", "immutable", "flux", "mobile"],
   "files": ["package.json", "dist", "README.md", "es6"],
   "author": "hufeng",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/hufeng/plume/issues"
   },
