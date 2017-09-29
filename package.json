@@ -33,10 +33,5 @@
     "react-test-renderer": "^15.6.1",
     "ts-jest": "^20.0.7",
     "typescript": "^2.4.2"
-  },
-  "version": "1.0.0",
-  "main": "./lib/index.js",
-  "repository": "https://github.com/hufeng/plume2.git",
-  "author": "hufeng <hufeng@qianmi.com>",
-  "license": "MIT"
+  }
 }
