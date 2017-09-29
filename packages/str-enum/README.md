@@ -45,3 +45,8 @@ const Action2 = StrEnum({
   JPEG: 'image/jpeg'
 })
 ```
+
+## how to use?
+```sh
+npm install str-enum # yarn install str-enum
+```
