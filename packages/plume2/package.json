@@ -23,6 +23,7 @@
   "dependencies": {
     "immutable": "^3.8.1",
     "mitt": "^1.1.2",
+    "str-enum": "^1.0.0",
     "prop-types": "^15.5.10"
   }
 }
