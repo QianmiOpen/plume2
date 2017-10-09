@@ -1,14 +1,13 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { Relax } from 'plume2'
-
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { Relax } from 'plume2';
 
 @Relax
 export default class Hello extends React.Component<any, any> {
   props: {
     relaxProps?: {
       text: string;
-    }
+    };
   };
 
   static relaxProps = {
@@ -16,13 +15,13 @@ export default class Hello extends React.Component<any, any> {
   };
 
   render() {
-    const { text } = this.props.relaxProps
+    const { text } = this.props.relaxProps;
 
     return (
       <div>
         {text}
-        <Link to='/like'>Like</Link>
+        <Link to="/like">Like</Link>
       </div>
-    )
+    );
   }
 }

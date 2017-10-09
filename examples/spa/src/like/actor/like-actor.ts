@@ -1,12 +1,13 @@
-import { Actor, Action, IMap } from 'plume2'
+import { Actor, Action, IMap } from 'plume2';
+import actionCreator from '../action-creator';
 
 export default class LikeActor extends Actor {
   defaultState() {
-    return { like: 0 }
+    return { like: 0 };
   }
 
-  @Action('inc')
+  @Action(actionCreator.INCREMENT)
   inc(state: IMap) {
-    return state.update('like', like => like + 1)
+    return state.update('like', like => like + 1);
   }
 }
