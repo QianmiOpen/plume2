@@ -2,6 +2,7 @@
  * Mutations
  */
 import Store from './store';
+import actionCreator from './action-creator';
 
 let store: Store;
 
@@ -18,7 +19,7 @@ export const bindStore = (appStore: Store) => {
  * @param text 
  */
 export const changeValue = (text: string) =>
-  store.dispatch('change:text', text);
+  store.dispatch(actionCreator.CHANGE_TEXT, text);
 
 /**
  * 提交
@@ -26,14 +27,14 @@ export const changeValue = (text: string) =>
  */
 export const submit = (text: string) =>
   //submit
-  store.dispatch('submit', text);
+  store.dispatch(actionCreator.SUMBIT_TEXT, text);
 
 /**
  * toggleAll
  * @param checked 
  */
 export const toggleAll = (checked: boolean) =>
-  store.dispatch('toggleAll', checked);
+  store.dispatch(actionCreator.TOGGLE_ALL, checked);
 
 /**
  * toggle
@@ -41,14 +42,14 @@ export const toggleAll = (checked: boolean) =>
  */
 export const toggle = (index: number) =>
   //dispatch
-  store.dispatch('toggle', index);
+  store.dispatch(actionCreator.TOGGLE, index);
 
 /**
  * 改变过滤条件
  * @param filter 
  */
 export const changeFilter = (filter: string) =>
-  store.dispatch('change:filter', filter);
+  store.dispatch(actionCreator.CHANGE_FILTER, filter);
 
 /**
  * 删除
@@ -56,11 +57,11 @@ export const changeFilter = (filter: string) =>
  */
 export const destroy = (index: number) =>
   //delete
-  this.dispatch('destroy', index);
+  store.dispatch(actionCreator.DESTROY, index);
 
 /**
  * 清除所有的已经完成
  */
 export const clearCompleted = () =>
   //clean
-  this.dispatch('clearCompleted');
+  store.dispatch(actionCreator.CLEAN_COMPLETED);

@@ -29,7 +29,7 @@ export default class MainSection extends React.Component {
         />
         <label htmlFor="toggle-all">Mark all as complete</label>
         <ul className="todo-list">
-          {todo.toArray().map((v, k) =>
+          {todo.toArray().map((v, k) => (
             <li key={v.get('id')}>
               <div className="view">
                 <input
@@ -38,13 +38,11 @@ export default class MainSection extends React.Component {
                   checked={v.get('done')}
                   onChange={() => m.toggle(k)}
                 />
-                <label>
-                  {v.get('text')}
-                </label>
+                <label>{v.get('text')}</label>
                 <button className="destroy" onClick={() => m.destroy(k)} />
               </div>
             </li>
-          )}
+          ))}
         </ul>
       </section>
     );

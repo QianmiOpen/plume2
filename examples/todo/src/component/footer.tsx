@@ -1,7 +1,7 @@
 import React from 'react';
 import { Relax } from 'plume2';
 import { countQL } from '../ql';
-import * as mutation from '../mutation';
+import * as m from '../mutation';
 
 @Relax
 export default class Footer extends React.Component {
@@ -23,15 +23,13 @@ export default class Footer extends React.Component {
 
     return (
       <footer className="footer">
-        <span className="todo-count">
-          {countText}
-        </span>
+        <span className="todo-count">{countText}</span>
         <ul className="filters">
           <li>
             <a
               href="javascript:;"
               className={'' === filterStatus ? 'selected' : ''}
-              onClick={() => mutation.changeFilter('')}
+              onClick={() => m.changeFilter('')}
             >
               All
             </a>
@@ -40,7 +38,7 @@ export default class Footer extends React.Component {
             <a
               href="javascript:;"
               className={'active' === filterStatus ? 'selected' : ''}
-              onClick={() => mutation.changeFilter('active')}
+              onClick={() => m.changeFilter('active')}
             >
               Active
             </a>
@@ -49,13 +47,13 @@ export default class Footer extends React.Component {
             <a
               href="javacript:;"
               className={'completed' === filterStatus ? 'selected' : ''}
-              onClick={() => mutation.changeFilter('completed')}
+              onClick={() => m.changeFilter('completed')}
             >
               Completed
             </a>
           </li>
         </ul>
-        <button className="clear-completed" onClick={mutation.clearCompleted}>
+        <button className="clear-completed" onClick={m.clearCompleted}>
           Clear completed
         </button>
       </footer>

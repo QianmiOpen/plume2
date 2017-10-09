@@ -1,5 +1,6 @@
 import { Actor, Action, IMap } from 'plume2';
 import { fromJS } from 'immutable';
+import actionCreator from '../action-creator';
 
 let uuid = 0;
 
@@ -10,7 +11,7 @@ export default class TodoActor extends Actor {
     };
   }
 
-  @Action('submit')
+  @Action(actionCreator.SUMBIT_TEXT)
   add(state: IMap, text: string) {
     return state.update('todo', todo =>
       todo.push(
@@ -23,29 +24,29 @@ export default class TodoActor extends Actor {
     );
   }
 
-  @Action('destroy')
+  @Action(actionCreator.DESTROY)
   destroy(state: IMap, index: number) {
     return state.deleteIn(['todo', index]);
   }
 
-  @Action('toggle')
+  @Action(actionCreator.TOGGLE)
   toggle(state: IMap, index: number) {
     return state.updateIn(['todo', index, 'done'], done => !done);
   }
 
-  @Action('toggleAll')
+  @Action(actionCreator.TOGGLE_ALL)
   toggleAll(state: IMap, checked: boolean) {
     return state.update('todo', todo =>
       todo.map(item => item.set('done', checked))
     );
   }
 
-  @Action('clearCompleted')
+  @Action(actionCreator.CLEAN_COMPLETED)
   clear(state: IMap) {
     return state.update('todo', todo => todo.filter(item => !item.get('done')));
   }
 
-  @Action('init')
+  @Action(actionCreator.INIT)
   init(state: IMap, { todo }) {
     return state.set('todo', fromJS(todo));
   }
