@@ -2,18 +2,18 @@
   "name": "plume2",
   "version": "0.2.1",
   "description": "a lightweight of flux for mobile web",
-  "main": "./dist/index.js",
-  "types": "./dist/typings/index.d.ts",
+  "main": "./es6/index.js",
+  "types": "./es6/typings/index.d.ts",
   "scripts": {
     "build": "npm run clean && tsc && tsc -p tsconfig-es6.json",
-    "clean": "rm -rf ./dist && rm -rf ./es6"
+    "clean": "rm -rf ./es5 && rm -rf ./es6"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hufeng/plume.git"
   },
   "keywords": ["preact", "immutable", "flux", "mobile"],
-  "files": ["package.json", "dist", "README.md", "es6"],
+  "files": ["package.json", "es5", "README.md", "es6"],
   "author": "hufeng",
   "license": "MIT",
   "bugs": {

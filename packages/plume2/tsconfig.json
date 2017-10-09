@@ -4,9 +4,9 @@
     "target": "es5",
     "declaration": true,
     "rootDir": "./src",
-    "outDir": "./dist",
+    "outDir": "./es5",
     "skipLibCheck": true,
-    "declarationDir": "./dist/typings"
+    "declarationDir": "./es5/typings"
   },
   "exclude": ["src/__tests__/**"]
 }

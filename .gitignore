@@ -4,6 +4,7 @@ logs
 npm-debug.log*
 
 es6
+es5
 
 # Runtime data
 pids
