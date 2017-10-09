@@ -5,7 +5,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
   entry: './src/index.tsx',
   output: {
-    path: './dist',
+    path: path.resolve(__dirname, './dist'),
     filename: 'bundle-[chunkhash].js'
   },
   resolve: {
@@ -19,9 +19,7 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        include: [
-          path.resolve(__dirname, 'src'),
-        ],
+        include: [path.resolve(__dirname, 'src')],
         loader: ['babel-loader?cacheDirectory', 'ts-loader']
       }
     ]
@@ -30,7 +28,7 @@ module.exports = {
     new webpack.DefinePlugin({
       __DEV__: false,
       'process.env': {
-        'NODE_ENV': JSON.stringify('production')
+        NODE_ENV: JSON.stringify('production')
       }
     }),
     new webpack.DllReferencePlugin({

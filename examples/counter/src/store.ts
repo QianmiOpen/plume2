@@ -1,4 +1,5 @@
 import { Store } from 'plume2';
+import actionCreator from './action-creator';
 import CounterActor from './actor/counter-actor';
 
 export default class AppStore extends Store {
@@ -7,10 +8,10 @@ export default class AppStore extends Store {
   }
 
   increment = () => {
-    this.dispatch('increment');
+    this.dispatch(actionCreator.INCREMENT);
   };
 
   decrement = () => {
-    this.dispatch('decrement');
+    this.dispatch(actionCreator.DECREMENT);
   };
 }

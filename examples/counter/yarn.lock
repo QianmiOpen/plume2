@@ -518,6 +518,12 @@ babel-plugin-transform-regenerator@^6.22.0:
   dependencies:
     regenerator-transform "0.9.11"
 
+babel-plugin-transform-runtime@^6.23.0:
+  version "6.23.0"
+  resolved "http://registry.npm.taobao.org/babel-plugin-transform-runtime/download/babel-plugin-transform-runtime-6.23.0.tgz#88490d446502ea9b8e7efb0fe09ec4d99479b1ee"
+  dependencies:
+    babel-runtime "^6.22.0"
+
 babel-plugin-transform-strict-mode@^6.24.1:
   version "6.24.1"
   resolved "http://registry.npm.taobao.org/babel-plugin-transform-strict-mode/download/babel-plugin-transform-strict-mode-6.24.1.tgz#d5faf7aa578a65bbe591cf5edae04a0c67020758"
@@ -2587,13 +2593,14 @@ pkg-dir@^2.0.0:
   dependencies:
     find-up "^2.1.0"
 
-plume2@0.2.0:
-  version "0.2.0"
-  resolved "http://registry.npm.taobao.org/plume2/download/plume2-0.2.0.tgz#d373863363c78fd1604f5f2d9cc703ad4042608a"
+plume2@*:
+  version "0.2.2"
+  resolved "http://registry.npm.taobao.org/plume2/download/plume2-0.2.2.tgz#5baaff9b960f0961ba421878d85ddfc72524ccd9"
   dependencies:
     immutable "^3.8.1"
     mitt "^1.1.2"
     prop-types "^15.5.10"
+    str-enum "^1.0.0"
 
 portfinder@^1.0.9:
   version "1.0.13"
@@ -3100,6 +3107,10 @@ standalone-react-addons-pure-render-mixin@^0.1.1:
 "statuses@>= 1.3.0 < 2", statuses@~1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.3.0.tgz#8e55758cb20e7682c1f4fce8dcab30bf01d1e07a"
+
+str-enum@^1.0.0:
+  version "1.0.0"
+  resolved "http://registry.npm.taobao.org/str-enum/download/str-enum-1.0.0.tgz#71a76ce6da6fa7ab96039d616cc70725869ebe79"
 
 stream-browserify@^2.0.1:
   version "2.0.1"
