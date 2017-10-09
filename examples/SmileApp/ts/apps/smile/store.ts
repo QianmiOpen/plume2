@@ -2,6 +2,7 @@ import { Store, IOptions } from 'plume2';
 import CountActor from './actor/count-actor';
 import LoadingActor from './actor/loading-actor';
 import { fetchCount } from './webapi';
+import { context } from './mutation';
 
 export default class AppStore extends Store {
   constructor(props: IOptions) {
@@ -9,6 +10,7 @@ export default class AppStore extends Store {
     if (__DEV__) {
       window['_store'] = this;
     }
+    context(this);
   }
 
   bindActor() {
@@ -19,18 +21,4 @@ export default class AppStore extends Store {
       new LoadingActor()
     ];
   }
-
-  init = async () => {
-    const { res, err } = await fetchCount();
-    const count = err ? 1 : res;
-
-    this.transaction(() => {
-      this.dispatch('loading:end');
-      this.dispatch('init', count);
-    });
-  };
-
-  increment = () => {
-    this.dispatch('increment');
-  };
 }

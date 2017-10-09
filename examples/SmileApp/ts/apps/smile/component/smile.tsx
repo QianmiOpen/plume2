@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
 import { Relax } from 'plume2';
 import { Loading, noop } from 'uikit';
+import { Scene, Text } from './styled';
+import * as m from '../mutation';
 
 @Relax
 export default class Smile extends React.Component<any, any> {
@@ -9,41 +10,25 @@ export default class Smile extends React.Component<any, any> {
     relaxProps?: {
       loading: boolean;
       count: number;
-      increment: () => void;
     };
   };
 
   static relaxProps = {
     count: 'count',
-    loading: 'loading',
-    increment: noop
+    loading: 'loading'
   };
 
   render() {
-    const { count, loading, increment } = this.props.relaxProps;
+    const { count, loading } = this.props.relaxProps;
     //如果是loading，显示loading
     if (loading) {
       return <Loading />;
     }
 
     return (
-      <View style={styles.container}>
-        <Text style={styles.text} onPress={increment}>
-          {`你一抹微笑如茉莉:) 😁${count}`}
-        </Text>
-      </View>
+      <Scene>
+        <Text onPress={m.onIncrement}>{`你一抹微笑如茉莉:) 😁${count}`}</Text>
+      </Scene>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  } as ViewStyle,
-  text: {
-    fontSize: 16,
-    fontWeight: 'bold'
-  } as TextStyle
-});

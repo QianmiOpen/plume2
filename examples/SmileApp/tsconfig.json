@@ -9,8 +9,10 @@
     "baseUrl": "./ts",
     "rootDir": "./ts",
     "outDir": "js",
+    "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "plugins": [{ "name": "typescript-styled-plugin" }]
   },
   "exclude": [
     "js",
