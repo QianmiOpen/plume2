@@ -4,10 +4,10 @@ exports[`relax dql initialize 1`] = `
 <div>
   <div>
     <div>
-      1
+      2
     </div>
     <div>
-      p1
+      p2
     </div>
   </div>
   <div>
@@ -20,26 +20,26 @@ exports[`relax dql initialize 1`] = `
   </div>
   <div>
     <div>
-      3
+      2
     </div>
     <div>
-      p3
-    </div>
-  </div>
-  <div>
-    <div>
-      4
-    </div>
-    <div>
-      p4
+      p2
     </div>
   </div>
   <div>
     <div>
-      5
+      2
     </div>
     <div>
-      p5
+      p2
+    </div>
+  </div>
+  <div>
+    <div>
+      2
+    </div>
+    <div>
+      p2
     </div>
   </div>
 </div>

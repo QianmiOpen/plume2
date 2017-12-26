@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as renderer from 'react-test-renderer';
 import { Actor, Action, Store, StoreProvider, QL, Relax } from '../index';
+import { PQL } from '../pql';
 
 //===============Actor=========================
 class LoadingActor extends Actor {
@@ -35,37 +36,22 @@ class AppStore extends Store {
 }
 
 //========================UI======================
-@StoreProvider(AppStore, { debug: false })
+@StoreProvider(AppStore, { debug: true })
 class HelloApp extends React.Component {
   render() {
     return <HelloRelax />;
   }
 }
 
-const loadingQL = QL('loadingQL', [
-  'loading',
-  /**
-   * 
-   */
-  loading => loading
-]);
+const loadingQL = QL('loadingQL', ['loading', loading => loading]);
 
 const mottQL = QL('mottQL', [
   loadingQL,
   'mott',
-  /**
-   * 
-   */
   (loading, mott) => ({ loading, mott })
 ]);
 
-const loadingDQL = QL('loadingDQL', [
-  '$mottFlag',
-  /**
-   * 
-   */
-  loading => loading
-]);
+const loadingPQL = PQL(mottFlag => QL('loadingPQL', [mottFlag, mott => mott]));
 
 @Relax
 class HelloRelax extends React.Component {
@@ -76,12 +62,8 @@ class HelloRelax extends React.Component {
       mott: string;
       loadingQL: boolean;
       mottQL: { loading: boolean; mott: string };
-      loadingDQL: boolean;
+      loadingPQL: (mott: string) => string;
     };
-  };
-
-  static defaultProps = {
-    mottFlag: 'mott'
   };
 
   static relaxProps = {
@@ -89,7 +71,7 @@ class HelloRelax extends React.Component {
     mott: 'mott',
     loadingQL,
     mottQL,
-    loadingDQL
+    loadingPQL
   };
 
   render() {
@@ -98,12 +80,12 @@ class HelloRelax extends React.Component {
       mott,
       loadingQL,
       mottQL,
-      loadingDQL
+      loadingPQL
     } = this.props.relaxProps;
 
     expect(false).toEqual(loadingQL);
     expect({ loading: false, mott: 'hello world!' }).toEqual(mottQL);
-    expect('hello world!').toEqual(loadingDQL);
+    expect('hello world!').toEqual(loadingPQL('mott'));
 
     return (
       <div>

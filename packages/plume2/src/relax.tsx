@@ -3,8 +3,9 @@ import * as PropTypes from 'prop-types';
 import { Map, is, fromJS } from 'immutable';
 import { isArray, isString } from './type';
 import Store from './store';
-import { QueryLang, DynamicQueryLang } from './ql';
+import { QueryLang } from './ql';
 import { IMap, IRelaxContext, IRelaxComponent } from './typing';
+import { PartialQueryLang } from './pql';
 
 export default function RelaxContainer(Wrapper: IRelaxComponent): any {
   return class Relax extends React.Component {
@@ -23,7 +24,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     props: Object;
     state: Object;
     relaxProps: Object;
-    context: Store;
+    context: { _plume$Store: Store };
 
     private _dql2QL: { [name: string]: QueryLang };
     private _isMounted: boolean;
@@ -44,7 +45,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
 
       //will drop on production env
       if (process.env.NODE_ENV != 'production') {
-        if (this.context['_plume$Store']._opts.debug) {
+        if ((this.context['_plume$Store'] as any)._opts.debug) {
           console.groupCollapsed &&
             console.groupCollapsed(`${Relax.displayName} will mount 🚀`);
           console.log('props:|>', JSON.stringify(this.props, null, 2));
@@ -79,7 +80,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
         this.relaxProps = newRelaxProps;
 
         if (process.env.NODE_ENV != 'production') {
-          if (this.context['_plume$Store']._opts.debug) {
+          if ((this.context['_plume$Store'] as any)._opts.debug) {
             console.groupCollapsed &&
               console.groupCollapsed(`${Relax.displayName} will update 🚀`);
             console.log('props:|>', JSON.stringify(this.relaxProps, null, 2));
@@ -98,9 +99,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     }
 
     componentWillUnmount() {
-      (this.context['_plume$Store'] as Store).unsubscribe(
-        this._handleStoreChange
-      );
+      this.context['_plume$Store'].unsubscribe(this._handleStoreChange);
     }
 
     render() {
@@ -120,7 +119,6 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
 
       const relaxProps = {};
       const staticRelaxProps = Relax.relaxProps;
-      const dqlMap = {} as { [name: string]: DynamicQueryLang };
       const store: Store = this.context['_plume$Store'];
 
       for (let propName in staticRelaxProps) {
@@ -143,27 +141,11 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
               console.warn(`store can not find '${propName}' method.`);
             }
           }
-        } else if (propValue instanceof DynamicQueryLang) {
-          //是不是dql
-          if (!this._dql2QL[propName]) {
-            //根据DynamicQueryLang保存一份QL
-            //先用DQL的lang来填充QL
-            //后面会根据Dynamic的动态的计算lang
-            this._dql2QL[propName] = new QueryLang(
-              propValue.name(),
-              propValue.lang()
-            );
-          }
-          dqlMap[propName] = propValue;
+        } else if (propValue instanceof PartialQueryLang) {
+          relaxProps[propName] = propValue.partialQL(
+            this.context._plume$Store.bigQuery
+          );
         }
-      }
-
-      //计算dql
-      for (let propName in dqlMap) {
-        const dql = dqlMap[propName];
-        const lang = dql.withContext(props).analyserLang(dql.lang());
-        const ql = this._dql2QL[propName].setLang(lang);
-        relaxProps[propName] = store.bigQuery(ql);
       }
 
       return relaxProps;

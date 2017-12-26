@@ -43,7 +43,7 @@ export default class Store {
 
   /**
    * init
-   * @param props 
+   * @param props
    */
   constructor(props?: IOptions) {
     this._opts = props || { debug: false };
@@ -226,7 +226,7 @@ export default class Store {
    * 计算querylang
    * @param ql querylang
    */
-  bigQuery(ql: QueryLang | string | Array<string | number>): any {
+  bigQuery = (ql: QueryLang | string | Array<string | number>): any => {
     //如果当前的查询参数是字符串，直接获取状态对应的路径参数
     if (isString(ql)) {
       return this._state.get(ql as string);
@@ -342,7 +342,7 @@ export default class Store {
       //返回cache中最后一个值
       return this._cacheQL[id][args.length];
     }
-  }
+  };
 
   /**
    * 获取store容器的数据状态

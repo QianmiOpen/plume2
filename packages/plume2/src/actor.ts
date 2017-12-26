@@ -14,9 +14,9 @@ export default class Actor {
 
   /**
    * 接收store分派的任务
-   * @param msg 
-   * @param state 
-   * @param params 
+   * @param msg
+   * @param state
+   * @param params
    */
   receive(msg: string, state: IMap, params?: any): IMap {
     this._route = this._route || {};

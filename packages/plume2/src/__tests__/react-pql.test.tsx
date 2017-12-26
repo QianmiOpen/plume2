@@ -3,6 +3,7 @@ import * as renderer from 'react-test-renderer';
 import { Map } from 'immutable';
 import { Actor, Store, StoreProvider, QL, Relax } from '../index';
 import { IMap } from '../typing';
+import { PQL } from '../pql';
 
 class ProductActor extends Actor {
   defaultState() {
@@ -34,40 +35,30 @@ class ProductApp extends React.Component {
     return (
       <div>
         {products.map((p, index) => {
-          return <ProductItem index={index} key={p.get('id')} />;
+          return <ProductItem key={p.get('id')} />;
         })}
       </div>
     );
   }
 }
 
-const productQL = QL('productQL', [
-  ['products', '$index'],
-  /**
-   * 
-   */
-  p => p
-]);
+const productPQL = PQL(index => QL('productQL', [['products', index], p => p]));
 
 @Relax
 class ProductItem extends React.Component {
-  static defaultProps = {
-    index: 0
-  };
-
   static relaxProps = {
-    product: productQL
+    productByIndex: productPQL
   };
 
   props: {
-    index: boolean;
     relaxProps?: {
-      product: IMap;
+      productByIndex: (index: number) => IMap;
     };
   };
 
   render() {
-    const { id, name } = this.props.relaxProps.product.toJS();
+    const { productByIndex } = this.props.relaxProps;
+    const { id, name } = productByIndex(1).toJS();
     return (
       <div>
         <div>{id}</div>
