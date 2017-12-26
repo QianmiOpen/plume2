@@ -5,7 +5,10 @@
   "workspaces": ["packages/*"],
   "scripts": {
     "test": "npx jest --verbose",
-    "coverage": "npx jest --coverage"
+    "coverage": "npx jest --coverage",
+    "build:plume2":
+      "npm run clean:plume2 && tsc -p packages/plume2/tsconfig.json && tsc -p packages/plume2/tsconfig-es6.json",
+    "clean:plume2": "rm -rf packages/plume2/es5 && rm -rf packages/plume2/es6"
   },
   "jest": {
     "transform": {

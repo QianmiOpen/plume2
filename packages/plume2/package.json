@@ -5,7 +5,6 @@
   "main": "./es6/index.js",
   "types": "./es6/typings/index.d.ts",
   "scripts": {
-    "build": "npm run clean && tsc && tsc -p tsconfig-es6.json",
     "clean": "rm -rf ./es5 && rm -rf ./es6"
   },
   "repository": {

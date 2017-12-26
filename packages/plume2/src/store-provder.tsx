@@ -9,7 +9,7 @@ export type TStore = typeof Store;
 export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
   /**
    * 获取组件的displayName便于react-devtools的调试
-   * @param WrappedComponent 
+   * @param WrappedComponent
    */
   const getDisplayName = WrappedComponent =>
     WrappedComponent.displayName || WrappedComponent.name || 'Component';
@@ -63,6 +63,23 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
       componentDidMount() {
         super.componentDidMount && super.componentDidMount();
         this._isMounted = true;
+
+        /**
+         *优化
+         * 不需要每次在Store的构造函数中去
+         * if (__DEV__) {window['store'] = this;}
+         * 1. 需要额外的去写构造函数
+         * 2. 不同的App会覆盖window['store']
+         */
+        if (process.env.NODE_ENV != 'production') {
+          if ((this.store as any)._opts.debug) {
+            const displayName = getDisplayName(Base);
+            window['_plume2App'] = window['_plume2App'] || {};
+            window['_plume2App'][displayName] = {
+              store: this.store
+            };
+          }
+        }
       }
 
       componentWillUpdate(nextProps, nextState, nextContext) {
@@ -80,6 +97,13 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
       componentWillUnmount() {
         super.componentWillUnmount && super.componentWillUnmount();
         this.store.unsubscribe(this._handleStoreChange);
+
+        if (process.env.NODE_ENV != 'production') {
+          if ((this.store as any)._opts.debug) {
+            const displayName = getDisplayName(Base);
+            delete window['_plume2App'][displayName];
+          }
+        }
       }
 
       render() {
