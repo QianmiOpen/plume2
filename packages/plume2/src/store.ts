@@ -39,12 +39,14 @@ export default class Store {
     const actionCreator = this.bindActionCreator();
     if (actionCreator != null) {
       (actionCreator as any)._bindStore(this);
+      this._actionCreator = actionCreator;
     }
     this._actors = this.bindActor();
     this.reduceActorState();
   }
 
   private _route: { [key: string]: Function };
+  private _actionCreator: ActionCreator;
   //store的配置项
   private _opts: IOptions;
   //当前store的聚合状态

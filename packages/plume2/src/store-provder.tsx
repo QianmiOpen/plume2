@@ -74,7 +74,10 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
           if ((this.store as any)._opts.debug) {
             const displayName = getDisplayName(Base);
             window['_plume2App'] = window['_plume2App'] || {};
-            window['_plume2App'][displayName] = { store: this.store };
+            window['_plume2App'][displayName] = {
+              store: this.store,
+              actionCreator: (this.store as any)._actionCreator
+            };
           }
         }
       }
