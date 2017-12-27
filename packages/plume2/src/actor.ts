@@ -6,6 +6,10 @@
 import { IMap, TRoute } from './typing';
 
 export default class Actor {
+  constructor() {
+    this._route = this._route || {};
+  }
+
   defaultState(): Object {
     return {};
   }
