@@ -25,6 +25,11 @@ export class PartialQueryLang {
 
   private _lang: (...args: any[]) => QueryLang;
 
+  /**
+   * 绑定bigQuery
+   * 允许嵌套QL不允许嵌套PQL
+   * @param bigQuery
+   */
   partialQL(bigQuery: Function) {
     return (...args: any[]) => {
       return bigQuery(this._lang(...args));

@@ -4,6 +4,7 @@ import Actor from './actor';
 import { QueryLang } from './ql';
 import { isArray, isString } from './type';
 import { IOptions, IMap } from './typing';
+import ActionCreator from './action-creator';
 
 export type TDispatch = () => void;
 export type TRollback = () => void;
@@ -26,6 +27,24 @@ const batchedUpdates =
  */
 
 export default class Store {
+  constructor(props?: IOptions) {
+    this._opts = props || { debug: false };
+    this._state = fromJS({});
+    this._actorsState = [];
+    this._callbacks = [];
+    this._cacheQL = {};
+    this._isInTranstion = false;
+
+    this._route = this._route || {};
+    const actionCreator = this.bindActionCreator();
+    if (actionCreator != null) {
+      (actionCreator as any)._bindStore(this);
+    }
+    this._actors = this.bindActor();
+    this.reduceActorState();
+  }
+
+  private _route: { [key: string]: Function };
   //store的配置项
   private _opts: IOptions;
   //当前store的聚合状态
@@ -42,26 +61,27 @@ export default class Store {
   private _isInTranstion: boolean;
 
   /**
-   * init
-   * @param props
-   */
-  constructor(props?: IOptions) {
-    this._opts = props || { debug: false };
-    this._state = fromJS({});
-    this._actorsState = [];
-    this._callbacks = [];
-    this._cacheQL = {};
-    this._isInTranstion = false;
-    this._actors = this.bindActor();
-    this.reduceActorState();
-  }
-
-  /**
    * 绑定Actor
    */
   bindActor(): Array<Actor> {
     return [];
   }
+
+  bindActionCreator() {
+    return null;
+  }
+
+  /**
+   * 接收ActionCreator分派的任务
+   * @param msg
+   * @param state
+   * @param params
+   */
+  receive = (msg: string, params?: any) => {
+    this._route = this._route || {};
+    const fn = this._route[msg];
+    fn.call(this, params);
+  };
 
   /**
    * store分发事件协同actor

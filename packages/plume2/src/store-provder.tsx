@@ -6,22 +6,17 @@ import { IMap, IOptions } from './typing';
 
 export type TStore = typeof Store;
 
+/**
+ * 获取组件的displayName便于react-devtools的调试
+ * @param WrappedComponent
+ */
+const getDisplayName = WrappedComponent =>
+  WrappedComponent.displayName || WrappedComponent.name || 'Component';
+
 export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
-  /**
-   * 获取组件的displayName便于react-devtools的调试
-   * @param WrappedComponent
-   */
-  const getDisplayName = WrappedComponent =>
-    WrappedComponent.displayName || WrappedComponent.name || 'Component';
-
-  return function wrapper(Base: React.ComponentClass): any {
+  return function wrapper(Base: React.ComponentClass) {
     return class WrapperComponent extends Base {
-      store: Store;
-      state: Object;
-      private _isMounted: boolean;
-
       static displayName = `StoreProvider(${getDisplayName(Base)})`;
-
       static childContextTypes = { _plume$Store: PropTypes.object };
 
       getChildContext: Function = (): Object => {
@@ -37,6 +32,10 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
 
         this.store.subscribe(this._handleStoreChange);
       }
+
+      store: Store;
+      state: Object;
+      _isMounted: boolean;
 
       componentWillMount() {
         super.componentWillMount && super.componentWillMount();
@@ -75,9 +74,7 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
           if ((this.store as any)._opts.debug) {
             const displayName = getDisplayName(Base);
             window['_plume2App'] = window['_plume2App'] || {};
-            window['_plume2App'][displayName] = {
-              store: this.store
-            };
+            window['_plume2App'][displayName] = { store: this.store };
           }
         }
       }

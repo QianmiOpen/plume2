@@ -28,9 +28,7 @@ export default class Counter extends React.Component {
         <a href="javascript:;" onClick={decrement}>
           decrement
         </a>
-        <span>
-          {count}
-        </span>
+        <span>{count}</span>
         <a href="javascript:;" onClick={increment}>
           increment
         </a>

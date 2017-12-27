@@ -1,19 +1,18 @@
 import { isArray, isString } from './type';
-
 export type Lang = Array<any>;
 
 let uuid = 0;
 
 export class QueryLang {
-  private _id: number;
-  private _name: string;
-  private _lang: Lang;
-
   constructor(name: string, lang: Lang) {
     this._id = ++uuid;
     this._name = name;
     this._lang = lang;
   }
+
+  private _id: number;
+  private _name: string;
+  private _lang: Lang;
 
   id() {
     return this._id;

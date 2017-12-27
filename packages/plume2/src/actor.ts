@@ -6,11 +6,11 @@
 import { IMap, TRoute } from './typing';
 
 export default class Actor {
-  private _route: TRoute;
-
   defaultState(): Object {
     return {};
   }
+
+  private _route: TRoute;
 
   /**
    * 接收store分派的任务

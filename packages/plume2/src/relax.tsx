@@ -17,7 +17,6 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     //拷贝WrapperComponent的relaxProps
     //注入和store关联的数据和方法
     static relaxProps = Wrapper.relaxProps || {};
-
     //声明上下文依赖
     static contextTypes = { _plume$Store: PropTypes.object };
 
