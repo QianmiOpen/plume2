@@ -75,7 +75,7 @@ export default class Store {
   /**
    * 绑定ActionCreator
    */
-  bindActionCreator() {
+  bindActionCreator(): ActionHandler {
     return null;
   }
 
