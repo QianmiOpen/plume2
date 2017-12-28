@@ -2,7 +2,8 @@ import React from 'react';
 import { Relax } from 'plume2';
 import { Loading, noop } from 'uikit';
 import { Scene, Text } from './styled';
-import * as m from '../mutation';
+import actionType from '../action-type';
+import actionCreator from '../action-creator';
 
 @Relax
 export default class Smile extends React.Component<any, any> {
@@ -27,7 +28,9 @@ export default class Smile extends React.Component<any, any> {
 
     return (
       <Scene>
-        <Text onPress={m.onIncrement}>{`你一抹微笑如茉莉:) 😁${count}`}</Text>
+        <Text
+          onPress={() => actionCreator.fire(actionType.INCREMENT)}
+        >{`你一抹微笑如茉莉:) 😁${count}`}</Text>
       </Scene>
     );
   }

@@ -12,7 +12,11 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "plugins": [{ "name": "typescript-styled-plugin" }]
+    "plugins": [
+      {
+        "name": "typescript-styled-plugin"
+      }
+    ]
   },
   "exclude": [
     "js",

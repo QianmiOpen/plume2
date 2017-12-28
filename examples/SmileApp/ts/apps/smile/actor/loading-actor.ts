@@ -1,12 +1,12 @@
 import { Actor, Action, IMap } from 'plume2';
-import actionCreator from '../action-creator';
+import actionType from '../action-type';
 
 export default class LoadingActor extends Actor {
   defaultState() {
     return { loading: true };
   }
 
-  @Action(actionCreator.LOADING_END)
+  @Action(actionType.LOADING_END)
   loadingEnd(state: IMap) {
     return state.set('loading', false);
   }

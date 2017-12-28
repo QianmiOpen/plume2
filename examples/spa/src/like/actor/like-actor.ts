@@ -1,5 +1,5 @@
 import { Actor, Action, IMap } from 'plume2';
-import actionCreator from '../action-creator';
+import actionCreator from '../action-type';
 
 export default class LikeActor extends Actor {
   defaultState() {

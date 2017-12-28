@@ -1,3 +1,4 @@
 import { ActionCreator } from 'plume2';
 
-export default ActionCreator('INCREMENT', 'DECREMENT');
+const actionCreator = ActionCreator();
+export default actionCreator;

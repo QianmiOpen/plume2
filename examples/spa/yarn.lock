@@ -2691,9 +2691,9 @@ pkg-dir@^1.0.0:
   dependencies:
     find-up "^1.0.0"
 
-plume2@*:
-  version "0.2.2"
-  resolved "http://registry.npm.taobao.org/plume2/download/plume2-0.2.2.tgz#5baaff9b960f0961ba421878d85ddfc72524ccd9"
+plume2@0.3.2:
+  version "0.3.2"
+  resolved "http://registry.npm.taobao.org/plume2/download/plume2-0.3.2.tgz#d1cb5de53ca0267b4b860375c4655f6a3a0feb6e"
   dependencies:
     immutable "^3.8.1"
     mitt "^1.1.2"
