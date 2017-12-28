@@ -1,7 +1,7 @@
-import ActionCreator from '../action-type';
+import actionType from '../action-type';
 
 it('test arguments', () => {
-  const Actions = ActionCreator('ADD_TODO', 'DELETE_TODO');
+  const Actions = actionType('ADD_TODO', 'DELETE_TODO');
   expect(Actions).toEqual({
     ADD_TODO: 'ADD_TODO',
     DELETE_TODO: 'DELETE_TODO'
@@ -9,7 +9,7 @@ it('test arguments', () => {
 });
 
 it('test object arguments', () => {
-  const Actions = ActionCreator({
+  const Actions = actionType({
     PDF: 'application/pdf',
     Text: 'text/plain',
     JPEG: 'image/jpeg'

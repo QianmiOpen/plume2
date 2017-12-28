@@ -35,7 +35,7 @@ class HelloActor extends Actor {
   }
 }
 
-const actionCreator = new ActionCreator();
+const actionCreator = ActionCreator();
 
 actionCreator.create(actionType.INIT, (store, value: number) => {
   expect(value).toEqual(0);
@@ -77,7 +77,7 @@ describe('test action creator', () => {
   });
 
   it('test store method', () => {
-    const actionCreator = new ActionCreator();
+    const actionCreator = ActionCreator();
 
     class AppStore extends Store {
       bindActor() {

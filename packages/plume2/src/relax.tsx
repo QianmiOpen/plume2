@@ -136,6 +136,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
           relaxProps[propName] = storeMethod || propValue;
           //warning...
           if (process.env.NODE_ENV != 'production') {
+            console.warn('Please use ActionCreator fire event.');
             if (!storeMethod) {
               console.warn(`store can not find '${propName}' method.`);
             }
