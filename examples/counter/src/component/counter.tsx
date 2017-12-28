@@ -1,35 +1,36 @@
 import React from 'react';
 import { Relax } from 'plume2';
-const noop = () => {};
-
-type Handler = () => void;
+import actionType from '../action-type';
+import actionCreator from '../action-creator';
 
 @Relax
 export default class Counter extends React.Component {
   props: {
     relaxProps?: {
       count: number;
-      increment: Handler;
-      decrement: Handler;
     };
   };
 
   static relaxProps = {
-    count: 'count',
-    increment: noop,
-    decrement: noop
+    count: 'count'
   };
 
   render() {
-    const { count, increment, decrement } = this.props.relaxProps;
+    const { count } = this.props.relaxProps;
 
     return (
       <div>
-        <a href="javascript:;" onClick={decrement}>
+        <a
+          href="javascript:;"
+          onClick={() => actionCreator.fire(actionType.INCREMENT)}
+        >
           decrement
         </a>
         <span>{count}</span>
-        <a href="javascript:;" onClick={increment}>
+        <a
+          href="javascript:;"
+          onClick={() => actionCreator.fire(actionType.DECREMENT)}
+        >
           increment
         </a>
       </div>

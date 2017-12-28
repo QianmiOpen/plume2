@@ -1,3 +1,13 @@
 import { ActionCreator } from 'plume2';
+import actionType from './action-type';
 
-export default ActionCreator('INCREMENT', 'DECREMENT');
+const actionCreator = ActionCreator();
+export default actionCreator;
+
+actionCreator.create(actionType.INCREMENT, store =>
+  store.dispatch(actionType.INCREMENT)
+);
+
+actionCreator.create(actionType.DECREMENT, store =>
+  store.dispatch(actionType.DECREMENT)
+);

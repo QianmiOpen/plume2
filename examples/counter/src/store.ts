@@ -1,17 +1,14 @@
 import { Store } from 'plume2';
-import actionCreator from './action-creator';
+import actionType from './action-type';
 import CounterActor from './actor/counter-actor';
+import actionCreator from './action-creator';
 
 export default class AppStore extends Store {
   bindActor() {
     return [new CounterActor()];
   }
 
-  increment = () => {
-    this.dispatch(actionCreator.INCREMENT);
-  };
-
-  decrement = () => {
-    this.dispatch(actionCreator.DECREMENT);
-  };
+  bindActionCreator() {
+    return actionCreator;
+  }
 }

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Relax } from 'plume2';
 import { countQL } from '../ql';
-import * as m from '../mutation';
+import actionType from '../action-type';
+import actionCreator from '../action-creator';
 
 @Relax
 export default class Footer extends React.Component {
@@ -29,7 +30,7 @@ export default class Footer extends React.Component {
             <a
               href="javascript:;"
               className={'' === filterStatus ? 'selected' : ''}
-              onClick={() => m.changeFilter('')}
+              onClick={() => actionCreator.fire(actionType.CHANGE_FILTER, '')}
             >
               All
             </a>
@@ -38,7 +39,9 @@ export default class Footer extends React.Component {
             <a
               href="javascript:;"
               className={'active' === filterStatus ? 'selected' : ''}
-              onClick={() => m.changeFilter('active')}
+              onClick={() =>
+                actionCreator.fire(actionType.CHANGE_FILTER, 'active')
+              }
             >
               Active
             </a>
@@ -47,13 +50,18 @@ export default class Footer extends React.Component {
             <a
               href="javacript:;"
               className={'completed' === filterStatus ? 'selected' : ''}
-              onClick={() => m.changeFilter('completed')}
+              onClick={() =>
+                actionCreator.fire(actionType.CHANGE_FILTER, 'completed')
+              }
             >
               Completed
             </a>
           </li>
         </ul>
-        <button className="clear-completed" onClick={m.clearCompleted}>
+        <button
+          className="clear-completed"
+          onClick={() => actionCreator.fire(actionType.CLEAN_COMPLETED)}
+        >
           Clear completed
         </button>
       </footer>

@@ -2,7 +2,8 @@ import React from 'react';
 import { Relax, IMap } from 'plume2';
 import { List } from 'immutable';
 import { todoQL } from '../ql';
-import * as m from '../mutation';
+import actionType from '../action-type';
+import actionCreator from '../action-creator';
 
 @Relax
 export default class MainSection extends React.Component {
@@ -25,7 +26,9 @@ export default class MainSection extends React.Component {
         <input
           className="toggle-all"
           type="checkbox"
-          onChange={e => m.toggleAll(e.target.checked)}
+          onChange={e =>
+            actionCreator.fire(actionType.TOGGLE_ALL, e.target.checked)
+          }
         />
         <label htmlFor="toggle-all">Mark all as complete</label>
         <ul className="todo-list">
@@ -36,10 +39,13 @@ export default class MainSection extends React.Component {
                   className="toggle"
                   type="checkbox"
                   checked={v.get('done')}
-                  onChange={() => m.toggle(k)}
+                  onChange={() => actionCreator.fire(actionType.TOGGLE, k)}
                 />
                 <label>{v.get('text')}</label>
-                <button className="destroy" onClick={() => m.destroy(k)} />
+                <button
+                  className="destroy"
+                  onClick={() => actionCreator.fire(actionType.DESTROY, k)}
+                />
               </div>
             </li>
           ))}

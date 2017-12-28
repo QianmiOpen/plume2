@@ -1,7 +1,8 @@
 import React from 'react';
 import { Relax } from 'plume2';
 import { valueQL } from '../ql';
-import * as m from '../mutation';
+import actionType from '../action-type';
+import actionCreator from '../action-creator';
 
 @Relax
 export default class Header extends React.Component {
@@ -32,12 +33,12 @@ export default class Header extends React.Component {
   }
 
   _handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    m.changeValue((e.target as any).value);
+    actionCreator.fire(actionType.CHANGE_TEXT, (e.target as any).value);
   };
 
   _handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13) {
-      m.submit((e.target as any).value);
+      actionCreator.fire(actionType.SUMBIT_TEXT, (e.target as any).value);
     }
   };
 }
