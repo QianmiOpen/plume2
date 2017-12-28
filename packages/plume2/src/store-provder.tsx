@@ -14,7 +14,7 @@ const getDisplayName = WrappedComponent =>
   WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
 export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
-  return function wrapper(Base: React.ComponentClass) {
+  return function wrapper(Base: React.ComponentClass): any {
     return class WrapperComponent extends Base {
       static displayName = `StoreProvider(${getDisplayName(Base)})`;
       static childContextTypes = { _plume$Store: PropTypes.object };
