@@ -4,7 +4,7 @@ import Actor from './actor';
 import { QueryLang } from './ql';
 import { isArray, isString } from './type';
 import { IOptions, IMap } from './typing';
-import ActionCreator from './action-creator';
+import { ActionHandler } from './action-creator';
 
 export type TDispatch = () => void;
 export type TRollback = () => void;
@@ -35,18 +35,21 @@ export default class Store {
     this._cacheQL = {};
     this._isInTranstion = false;
 
+    //初始化route
     this._route = this._route || {};
+    //绑定store
     const actionCreator = this.bindActionCreator();
     if (actionCreator != null) {
       (actionCreator as any)._bindStore(this);
       this._actionCreator = actionCreator;
     }
+
     this._actors = this.bindActor();
     this.reduceActorState();
   }
 
   private _route: { [key: string]: Function };
-  private _actionCreator: ActionCreator;
+  private _actionCreator: ActionHandler;
   //store的配置项
   private _opts: IOptions;
   //当前store的聚合状态
@@ -69,6 +72,9 @@ export default class Store {
     return [];
   }
 
+  /**
+   * 绑定ActionCreator
+   */
   bindActionCreator() {
     return null;
   }
@@ -80,7 +86,7 @@ export default class Store {
    * @param params
    */
   receive = (msg: string, params?: any) => {
-    this._route = this._route || {};
+    this._route = this._route;
     const fn = this._route[msg];
     fn.call(this, params);
   };
@@ -204,7 +210,7 @@ export default class Store {
 
     for (let i = 0, len = this._actors.length; i < len; i++) {
       let actor = this._actors[i] as any;
-      const fn = (actor._route || {})[msg];
+      const fn = actor._route[msg];
 
       //如果actor没有处理msg的方法，直接跳过
       if (!fn) {
@@ -371,6 +377,13 @@ export default class Store {
    */
   state() {
     return this._state;
+  }
+
+  /**
+   *获取数据的快捷方式
+   */
+  get(path: string | Array<string | number>) {
+    return this.bigQuery(path);
   }
 
   /**

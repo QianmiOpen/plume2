@@ -4,9 +4,6 @@
   "description": "a lightweight of flux for mobile web",
   "main": "./es6/index.js",
   "types": "./es6/typings/index.d.ts",
-  "scripts": {
-    "clean": "rm -rf ./es5 && rm -rf ./es6"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hufeng/plume.git"

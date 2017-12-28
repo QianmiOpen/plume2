@@ -13,6 +13,7 @@ export class ActionHandler {
     this._route = {};
     this._store = null;
   }
+
   //当前绑定的store
   private _store: Store;
   //当前的msg和actionHandler的映射
