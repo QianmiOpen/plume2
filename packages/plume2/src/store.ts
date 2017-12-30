@@ -37,19 +37,13 @@ export default class Store {
 
     //初始化route
     this._route = this._route || {};
-    //绑定store
-    const actionCreator = this.bindActionCreator();
-    if (actionCreator != null) {
-      (actionCreator as any)._bindStore(this);
-      this._actionCreator = actionCreator;
-    }
-
     this._actors = this.bindActor();
+    this._initActionCreator();
     this.reduceActorState();
   }
 
   private _route: { [key: string]: Function };
-  private _actionCreator: ActionHandler;
+  private _actionCreator: ActionHandler | Array<ActionHandler>;
   //store的配置项
   private _opts: IOptions;
   //当前store的聚合状态
@@ -75,7 +69,7 @@ export default class Store {
   /**
    * 绑定ActionCreator
    */
-  bindActionCreator(): ActionHandler {
+  bindActionCreator(): ActionHandler | Array<ActionHandler> {
     return null;
   }
 
@@ -170,6 +164,21 @@ export default class Store {
     }
 
     return isRollback;
+  }
+
+  private _initActionCreator() {
+    //actionCreator绑定store
+    const actionCreator = this.bindActionCreator();
+    if (actionCreator != null) {
+      if (isArray(actionCreator)) {
+        (actionCreator as Array<ActionHandler>).forEach((creator: any) =>
+          creator._bindStore(this)
+        );
+      } else {
+        (actionCreator as any)._bindStore(this);
+      }
+      this._actionCreator = actionCreator;
+    }
   }
 
   private reduceActorState() {

@@ -96,4 +96,32 @@ describe('test action creator', () => {
 
     actionCreator.fire(actionType.LOADING_START);
   });
+
+  it('test multiple actionCreator', () => {
+    const actionCreator1 = ActionCreator();
+    actionCreator1.create('test', (store, str: string) => {
+      expect(str).toEqual('test');
+    });
+
+    const actionCreator2 = ActionCreator();
+    actionCreator2.create('test', (store, str: string) => {
+      expect(str).toEqual('test');
+    });
+
+    class AppStore extends Store {
+      bindActor() {
+        return [new LoadingActor(), new HelloActor()];
+      }
+
+      bindActionCreator() {
+        return [actionCreator1, actionCreator2];
+      }
+    }
+
+    const app = new AppStore();
+    expect((app as any)._actionCreator.length).toEqual(2);
+
+    actionCreator1.fire('test', 'test');
+    actionCreator1.fire('test', 'test');
+  });
 });
