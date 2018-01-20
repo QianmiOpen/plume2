@@ -175,3 +175,51 @@ plume2 git/master
     14	胡锋    8.5%
      1	blsery  0.6%
 ```
+
+## document
+
+[plume2](https://hufeng.github.io/plume2/)
+
+FAQ
+
+1. TypeError: Class constructor Store can not be invoked without 'new'?
+
+默认我们的 plume2 发布的模块级别是 es6，为了让我们调试方便，没有编译到 es5 的 level。这样在和 webpack 的配合的时候，webpack 一般在配置 babel-loader 的时候，会忽略 node_modules
+这样会导致我们业务代码编译级别是 es5,plume2 是 es6，就会报这个错误。
+
+解决，我们现在发布也是带了 es5 的模块，只不过默认的仍然是 es6.你可以直接用
+
+```js
+import {Store ...}  from 'plume2/es5'
+```
+
+当然这并不是最好的解决方案
+
+还是通过 babel 和 webpack 配置来解决问题比较好,比如：
+
+```javascript
+{
+  test: /\.js$/,
+  include: [
+    path.resolve(__dirname, 'node_modules/plume2'),
+  ],
+  loader: 'babel-loader'
+}
+```
+
+2. ReactNative can not find react-dom module
+
+这是什么原因呢？因为我们的 store 模块依赖了 react-dom，在 react-native 的环境是没有 react-dom 这个模块，所以请使用我们的一个自定义的 babel 插件来解决问题。
+
+```sh
+yarn add babel-plugin-transform-rn-react-dom
+```
+
+```js
+//.babelrc
+{
+  "plugins": [
+    "transform-rn-react-dom"
+  ]
+}
+```
