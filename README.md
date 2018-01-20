@@ -184,6 +184,8 @@ FAQ
 
 1. TypeError: Class constructor Store can not be invoked without 'new'?
 
+![err](https://raw.githubusercontent.com/hufeng/plume2/master/docs/screenshot/err.png)
+
 默认我们的 plume2 发布的模块级别是 es6，为了让我们调试方便，没有编译到 es5 的 level。这样在和 webpack 的配合的时候，webpack 一般在配置 babel-loader 的时候，会忽略 node_modules
 这样会导致我们业务代码编译级别是 es5,plume2 是 es6，就会报这个错误。
 
