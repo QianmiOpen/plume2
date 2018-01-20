@@ -180,7 +180,7 @@ plume2 git/master
 
 [plume2](https://hufeng.github.io/plume2/)
 
-FAQ
+## FAQ
 
 1. TypeError: Class constructor Store can not be invoked without 'new'?
 
