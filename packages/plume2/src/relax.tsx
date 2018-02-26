@@ -53,11 +53,18 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
             JSON.stringify(this.relaxProps, null, 2)
           );
           console.groupEnd && console.groupEnd();
+          console.time(`${Relax.displayName} render`);
         }
       }
     }
 
     componentDidMount() {
+      if (process.env.NODE_ENV !== 'production') {
+        if ((this.context['_plume$Store'] as any)._opts.debug) {
+          console.timeEnd(`${Relax.displayName} render`);
+        }
+      }
+
       this._isMounted = true;
     }
 
@@ -66,10 +73,22 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     }
 
     componentDidUpdate() {
+      if (process.env.NODE_ENV !== 'production') {
+        if ((this.context['_plume$Store'] as any)._opts.debug) {
+          console.timeEnd(`${Relax.displayName} re-render`);
+        }
+      }
+
       this._isMounted = true;
     }
 
     shouldComponentUpdate(nextProps) {
+      if (process.env.NODE_ENV !== 'production') {
+        if ((this.context['_plume$Store'] as any)._opts.debug) {
+          console.time(`${Relax.displayName} re-render`);
+        }
+      }
+
       const newRelaxProps = this.computeRelaxProps(nextProps);
 
       if (
@@ -90,9 +109,13 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
             console.groupEnd && console.groupEnd();
           }
         }
-
         return true;
       } else {
+        if (process.env.NODE_ENV !== 'production') {
+          if ((this.context['_plume$Store'] as any)._opts.debug) {
+            console.timeEnd(`${Relax.displayName} re-render`);
+          }
+        }
         return false;
       }
     }

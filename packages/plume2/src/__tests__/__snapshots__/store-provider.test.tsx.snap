@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`store provider test suite debug mode 1`] = `<div />`;
+
 exports[`store provider test suite first render 1`] = `
 <div>
   plume

@@ -75,4 +75,15 @@ describe('store provider test suite', () => {
     const tree = renderer.create(<StateApp />).toJSON();
     expect(tree).toMatchSnapshot();
   });
+
+  it('debug mode', () => {
+    @StoreProvider(AppStore, { debug: true })
+    class DebugApp extends React.Component {
+      render() {
+        return <div />;
+      }
+    }
+    const tree = renderer.create(<DebugApp />).toJSON();
+    expect(tree).toMatchSnapshot();
+  });
 });

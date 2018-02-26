@@ -25,6 +25,7 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
 
       constructor(props: Object) {
         super(props);
+
         this._isMounted = false;
         this.store = new AppStore(opts || { debug: false });
 
@@ -55,6 +56,7 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
               console.log(`%cplume2@${version}🚀`, cssRule);
             }
             console.log(`${WrapperComponent.displayName} will mount 🚀`);
+            console.time(`${WrapperComponent.displayName} render`);
           }
         }
       }
@@ -72,6 +74,8 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
          */
         if (process.env.NODE_ENV != 'production') {
           if ((this.store as any)._opts.debug) {
+            console.timeEnd(`${WrapperComponent.displayName} render`);
+
             const displayName = getDisplayName(Base);
             window['_plume2App'] = window['_plume2App'] || {};
             window['_plume2App'][displayName] = {
@@ -92,6 +96,12 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
         super.componentDidUpdate &&
           super.componentDidUpdate(prevProps, prevState, prevContext);
         this._isMounted = true;
+
+        if (process.env.NODE_ENV != 'production') {
+          if ((this.store as any)._opts.debug) {
+            console.timeEnd(`${WrapperComponent.displayName} re-render`);
+          }
+        }
       }
 
       componentWillUnmount() {
@@ -115,6 +125,7 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
         if (process.env.NODE_ENV != 'production') {
           if ((this.store as any)._opts.debug) {
             console.log(`\n${WrapperComponent.displayName} will update 🚀`);
+            console.time(`${WrapperComponent.displayName} re-render`);
           }
         }
 
