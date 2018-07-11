@@ -1,36 +1,31 @@
-import React from 'react';
 import { Relax } from 'plume2';
-import actionType from '../action-type';
-import actionCreator from '../action-creator';
+import React from 'react';
+import { TCounterViewAction } from '../typings';
 
 @Relax
 export default class Counter extends React.Component {
   props: {
     relaxProps?: {
       count: number;
+      viewAction: TCounterViewAction;
     };
   };
 
   static relaxProps = {
-    count: 'count'
+    count: 'count',
+    viewAction: 'viewAction'
   };
 
   render() {
-    const { count } = this.props.relaxProps;
+    const { count, viewAction } = this.props.relaxProps;
 
     return (
       <div>
-        <a
-          href="javascript:;"
-          onClick={() => actionCreator.fire(actionType.INCREMENT)}
-        >
+        <a href="javascript:;" onClick={viewAction.CounterViewAction.decrement}>
           decrement
         </a>
         <span>{count}</span>
-        <a
-          href="javascript:;"
-          onClick={() => actionCreator.fire(actionType.DECREMENT)}
-        >
+        <a href="javascript:;" onClick={viewAction.CounterViewAction.increment}>
           increment
         </a>
       </div>

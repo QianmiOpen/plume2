@@ -44,7 +44,7 @@ export interface IOptions {
 }
 
 export interface IViewActionMapper {
-  [name: string]: ViewAction;
+  [name: string]: typeof ViewAction;
 }
 
 export type TViewAction<T = {}> = {

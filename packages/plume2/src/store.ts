@@ -38,7 +38,7 @@ export default class Store<T = {}> {
     //初始化route
     this._route = this._route || {};
     this._reduceActorState();
-    this.viewAction = {};
+    this.viewAction = {} as TViewAction<T>;
     this._initViewAction();
   }
 
@@ -289,7 +289,7 @@ export default class Store<T = {}> {
   /**
    * 获取store容器的数据状态
    */
-  state() {
+  state(): IMap {
     return this._state;
   }
 
@@ -342,7 +342,7 @@ export default class Store<T = {}> {
       const ViewAction = viewActionMapper[key];
       //init and pass current to viewAction
       const viewAction = new ViewAction();
-      viewAction._bindStore(this);
+      (viewAction as any)._bindStore(this);
       this.viewAction[key] = viewAction;
     }
   };

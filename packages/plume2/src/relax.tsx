@@ -39,7 +39,6 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
       this._isMounted = false;
       //计算一次relaxProps
       this.relaxProps = this.computeRelaxProps();
-      console.log(this.relaxProps);
 
       //will drop on production env
       if (process.env.NODE_ENV != 'production') {
@@ -179,7 +178,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
 
     _handleStoreChange = (state: IMap) => {
       if (this._isMounted) {
-        (this as any).setState({
+        this.setState({
           storeState: state
         });
       }

@@ -1,17 +1,17 @@
-import { Actor, Action, IMap } from 'plume2';
-import actionType from '../action-type';
+import { Action, Actor, IMap } from 'plume2';
+import { Command } from '../command';
 
 export default class CounterActor extends Actor {
   defaultState() {
     return { count: 0 };
   }
 
-  @Action(actionType.INCREMENT)
+  @Action(Command.INCREMENT)
   increment(state: IMap) {
     return state.update('count', count => count + 1);
   }
 
-  @Action(actionType.DECREMENT)
+  @Action(Command.DECREMENT)
   decrement(state: IMap) {
     return state.update('count', count => count - 1);
   }

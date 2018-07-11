@@ -7,5 +7,6 @@
     "outDir": "./es5",
     "skipLibCheck": true,
     "declarationDir": "./es5/typings"
-  }
+  },
+  "exclude": ["src/__tests__/**"]
 }

@@ -6,7 +6,7 @@ import { QL } from './ql';
 import Relax from './relax';
 import Store from './store';
 import StoreProvider from './store-provder';
-import { IMap, IOptions } from './typing';
+import { IMap, IOptions, TViewAction } from './typing';
 import { ViewAction } from './view-action';
 
 export {
@@ -20,5 +20,6 @@ export {
   Store,
   StoreProvider,
   IMap,
-  IOptions
+  IOptions,
+  TViewAction
 };

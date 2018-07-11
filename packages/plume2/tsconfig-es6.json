@@ -6,5 +6,6 @@
     "rootDir": "./src",
     "outDir": "./es6",
     "declarationDir": "./es6/typings"
-  }
+  },
+  "exclude": ["src/__tests__/**"]
 }
