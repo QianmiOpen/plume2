@@ -1,5 +1,5 @@
-import { Map, fromJS } from 'immutable';
-import { Actor, Action, Store, QL, IMap } from '../index';
+import { fromJS } from 'immutable';
+import { Action, Actor, IMap, QL, Store } from '../index';
 import { QueryLang } from '../ql';
 
 let uuid = 0;

@@ -1,6 +1,5 @@
-import * as React from 'react';
-import { Map } from 'immutable';
-import * as PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import React from 'react';
 import Store from './store';
 import { IMap, IOptions } from './typing';
 
@@ -13,6 +12,11 @@ export type TStore = typeof Store;
 const getDisplayName = WrappedComponent =>
   WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
+/**
+ * StoreProvider连接ReactUI和Store
+ * @param AppStore
+ * @param opts
+ */
 export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
   return function wrapper(Base: React.ComponentClass): any {
     return class WrapperComponent extends Base {

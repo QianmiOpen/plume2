@@ -24,7 +24,7 @@ describe('ql test suite', () => {
     const helloQL = QL('helloQL', [
       'loading',
       /**
-       * 
+       *
        */
       loading => loading
     ]) as QueryLang;

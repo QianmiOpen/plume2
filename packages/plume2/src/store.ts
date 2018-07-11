@@ -1,10 +1,9 @@
-import * as ReactDOM from 'react-dom';
-import { Map, fromJS } from 'immutable';
+import { fromJS } from 'immutable';
+import ReactDOM from 'react-dom';
 import Actor from './actor';
 import { QueryLang } from './ql';
 import { isArray, isString } from './type';
-import { IOptions, IMap } from './typing';
-import { ActionHandler } from './action-creator';
+import { IMap, IOptions, IViewActionMapper, TViewAction } from './typing';
 
 export type TDispatch = () => void;
 export type TRollback = () => void;
@@ -24,9 +23,10 @@ const batchedUpdates =
 /**
  * Store状态容器
  * 整个应用中心的状态管理 控制整个应用的状态控制
+ * Store = f(Actor, ViewAction)
  */
 
-export default class Store {
+export default class Store<T = {}> {
   constructor(props?: IOptions) {
     this._opts = props || { debug: false };
     this._state = fromJS({});
@@ -37,13 +37,15 @@ export default class Store {
 
     //初始化route
     this._route = this._route || {};
-    this._actors = this.bindActor();
-    this._initActionCreator();
-    this.reduceActorState();
+    this._reduceActorState();
+    this.viewAction = {};
+    this._initViewAction();
   }
 
+  public readonly viewAction: TViewAction<T>;
+
+  //当前的路由
   private _route: { [key: string]: Function };
-  private _actionCreator: ActionHandler | Array<ActionHandler>;
   //store的配置项
   private _opts: IOptions;
   //当前store的聚合状态
@@ -67,12 +69,11 @@ export default class Store {
   }
 
   /**
-   * 绑定ActionCreator
+   * 绑定ViewAction
    */
-  bindActionCreator(): ActionHandler | Array<ActionHandler> {
-    return null;
+  bindViewAction(): IViewActionMapper {
+    return {};
   }
-
   /**
    * 接收ActionCreator分派的任务
    * @param msg
@@ -164,99 +165,6 @@ export default class Store {
     }
 
     return isRollback;
-  }
-
-  private _initActionCreator() {
-    //actionCreator绑定store
-    const actionCreator = this.bindActionCreator();
-    if (actionCreator != null) {
-      if (isArray(actionCreator)) {
-        (actionCreator as Array<ActionHandler>).forEach((creator: any) =>
-          creator._bindStore(this)
-        );
-      } else {
-        (actionCreator as any)._bindStore(this);
-      }
-      this._actionCreator = actionCreator;
-    }
-  }
-
-  private reduceActorState() {
-    this._state = this._state.withMutations(state => {
-      for (let actor of this._actors) {
-        let initState = fromJS(actor.defaultState());
-        this._actorsState.push(initState);
-        state = state.merge(initState);
-      }
-      return state;
-    });
-  }
-
-  private _notifier() {
-    batchedUpdates(() => {
-      this._callbacks.forEach(cb => cb(this._state));
-    });
-  }
-
-  private _dispatchActor(msg: string, params?: any) {
-    let _state = this._state;
-
-    if (process.env.NODE_ENV != 'production') {
-      if (this._opts.debug) {
-        console.groupCollapsed &&
-          console.groupCollapsed(`store dispatch => '${msg}'`);
-        //如果参数存在
-        if (typeof params !== 'undefined') {
-          if (typeof params === 'object') {
-            console.log(`params|>`);
-            console.dir && console.dir(params);
-          } else {
-            console.log(`params|> ${params}`);
-          }
-        }
-      }
-    }
-
-    for (let i = 0, len = this._actors.length; i < len; i++) {
-      let actor = this._actors[i] as any;
-      const fn = actor._route[msg];
-
-      //如果actor没有处理msg的方法，直接跳过
-      if (!fn) {
-        //log
-        if (process.env.NODE_ENV != 'production') {
-          if (this._opts.debug) {
-            console.log(
-              `${actor.constructor.name} receive '${msg}', but no handle 😭`
-            );
-          }
-        }
-        continue;
-      }
-
-      //debug
-      if (process.env.NODE_ENV != 'production') {
-        if (this._opts.debug) {
-          const actorName = actor.constructor.name;
-          console.log(`${actorName} receive => '${msg}'`);
-        }
-      }
-
-      let preActorState = this._actorsState[i];
-      const newActorState = actor.receive(msg, preActorState, params);
-      if (preActorState != newActorState) {
-        this._actorsState[i] = newActorState;
-        _state = _state.merge(newActorState);
-      }
-    }
-
-    if (process.env.NODE_ENV != 'production') {
-      if (this._opts.debug) {
-        console.groupEnd && console.groupEnd();
-      }
-    }
-
-    return _state;
   }
 
   /**
@@ -426,6 +334,99 @@ export default class Store {
     }
 
     this._callbacks.splice(index, 1);
+  }
+
+  //====================private method==========================
+  private _initViewAction = () => {
+    const viewActionMapper = this.bindViewAction() || {};
+    const keys = Object.keys(viewActionMapper);
+    for (let key of keys) {
+      //get current ViewAction class
+      const ViewAction = viewActionMapper[key];
+      //init and pass current to viewAction
+      const viewAction = new ViewAction();
+      viewAction._bindStore(this);
+      this.viewAction[key] = viewAction;
+    }
+  };
+
+  private _reduceActorState() {
+    this._actors = this.bindActor() || [];
+    this._state = this._state.withMutations(state => {
+      for (let actor of this._actors) {
+        let initState = fromJS(actor.defaultState());
+        this._actorsState.push(initState);
+        state = state.merge(initState);
+      }
+      return state;
+    });
+  }
+
+  private _notifier() {
+    batchedUpdates(() => {
+      this._callbacks.forEach(cb => cb(this._state));
+    });
+  }
+
+  private _dispatchActor(msg: string, params?: any) {
+    let _state = this._state;
+
+    if (process.env.NODE_ENV != 'production') {
+      if (this._opts.debug) {
+        console.groupCollapsed &&
+          console.groupCollapsed(`store dispatch => '${msg}'`);
+        //如果参数存在
+        if (typeof params !== 'undefined') {
+          if (typeof params === 'object') {
+            console.log(`params|>`);
+            console.dir && console.dir(params);
+          } else {
+            console.log(`params|> ${params}`);
+          }
+        }
+      }
+    }
+
+    for (let i = 0, len = this._actors.length; i < len; i++) {
+      let actor = this._actors[i] as any;
+      const fn = actor._route[msg];
+
+      //如果actor没有处理msg的方法，直接跳过
+      if (!fn) {
+        //log
+        if (process.env.NODE_ENV != 'production') {
+          if (this._opts.debug) {
+            console.log(
+              `${actor.constructor.name} receive '${msg}', but no handle 😭`
+            );
+          }
+        }
+        continue;
+      }
+
+      //debug
+      if (process.env.NODE_ENV != 'production') {
+        if (this._opts.debug) {
+          const actorName = actor.constructor.name;
+          console.log(`${actorName} receive => '${msg}'`);
+        }
+      }
+
+      let preActorState = this._actorsState[i];
+      const newActorState = actor.receive(msg, preActorState, params);
+      if (preActorState != newActorState) {
+        this._actorsState[i] = newActorState;
+        _state = _state.merge(newActorState);
+      }
+    }
+
+    if (process.env.NODE_ENV != 'production') {
+      if (this._opts.debug) {
+        console.groupEnd && console.groupEnd();
+      }
+    }
+
+    return _state;
   }
 
   //=============================help method==========================

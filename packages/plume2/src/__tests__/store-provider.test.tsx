@@ -1,7 +1,7 @@
-import * as React from 'react';
-import * as renderer from 'react-test-renderer';
-import { Actor, Store, StoreProvider } from '../index';
+import React from 'react';
+import renderer from 'react-test-renderer';
 import { Action } from '../decorator';
+import { Actor, Store, StoreProvider } from '../index';
 
 class HelloActor extends Actor {
   defaultState() {

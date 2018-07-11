@@ -1,9 +1,8 @@
-import * as React from 'react';
-import * as renderer from 'react-test-renderer';
-import { Map } from 'immutable';
-import { Actor, Store, StoreProvider, QL, Relax } from '../index';
-import { IMap } from '../typing';
+import React from 'react';
+import renderer from 'react-test-renderer';
+import { Actor, QL, Relax, Store, StoreProvider } from '../index';
 import { PQL } from '../pql';
+import { IMap } from '../typing';
 
 class ProductActor extends Actor {
   defaultState() {

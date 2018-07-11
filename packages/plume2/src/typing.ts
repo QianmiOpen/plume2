@@ -1,4 +1,5 @@
 import { Map } from 'immutable';
+import { ViewAction } from './view-action';
 
 /**
  * Immutable的map类型
@@ -41,3 +42,11 @@ export interface IOptions {
   debug?: boolean;
   [name: string]: any;
 }
+
+export interface IViewActionMapper {
+  [name: string]: ViewAction;
+}
+
+export type TViewAction<T> = {
+  [K in keyof T]: T[K] extends new (...args: Array<any>) => infer R ? R : any
+};

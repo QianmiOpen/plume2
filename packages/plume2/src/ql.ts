@@ -1,4 +1,3 @@
-import { isArray, isString } from './type';
 export type Lang = Array<any>;
 
 let uuid = 0;

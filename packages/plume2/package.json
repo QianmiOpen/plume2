@@ -8,8 +8,18 @@
     "type": "git",
     "url": "git+https://github.com/hufeng/plume.git"
   },
-  "keywords": ["preact", "immutable", "flux", "mobile"],
-  "files": ["package.json", "es5", "README.md", "es6"],
+  "keywords": [
+    "preact",
+    "immutable",
+    "flux",
+    "mobile"
+  ],
+  "files": [
+    "package.json",
+    "es5",
+    "README.md",
+    "es6"
+  ],
   "author": "hufeng",
   "license": "MIT",
   "bugs": {
@@ -19,7 +29,6 @@
   "dependencies": {
     "immutable": "^3.8.1",
     "mitt": "^1.1.2",
-    "str-enum": "^1.0.0",
     "prop-types": "^15.5.10"
   }
 }
