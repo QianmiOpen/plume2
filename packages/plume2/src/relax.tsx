@@ -39,16 +39,31 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
       this._isMounted = false;
       //计算一次relaxProps
       this.relaxProps = this.computeRelaxProps();
+      console.log(this.relaxProps);
 
       //will drop on production env
       if (process.env.NODE_ENV != 'production') {
         if ((this.context['_plume$Store'] as any)._opts.debug) {
+          const relaxData = relaxProps => {
+            const data = {};
+            for (let prop in relaxProps) {
+              if (
+                prop === 'viewAction' ||
+                typeof relaxProps[prop] === 'function'
+              ) {
+                continue;
+              }
+              data[prop] = relaxProps[prop];
+            }
+            return data;
+          };
+
           console.groupCollapsed &&
             console.groupCollapsed(`${Relax.displayName} will mount 🚀`);
           console.log('props:|>', JSON.stringify(this.props, null, 2));
           console.log(
             'relaxProps:|>',
-            JSON.stringify(this.relaxProps, null, 2)
+            JSON.stringify(relaxData(this.relaxProps), null, 2)
           );
           console.groupEnd && console.groupEnd();
         }
@@ -78,12 +93,25 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
 
         if (process.env.NODE_ENV != 'production') {
           if ((this.context['_plume$Store'] as any)._opts.debug) {
+            const relaxData = relaxProps => {
+              const data = {};
+              for (let prop in relaxProps) {
+                if (
+                  prop === 'viewAction' ||
+                  typeof relaxProps[prop] == 'function'
+                ) {
+                  continue;
+                }
+                data[prop] = relaxProps[prop];
+              }
+              return data;
+            };
             console.groupCollapsed &&
               console.groupCollapsed(`${Relax.displayName} will update 🚀`);
-            console.log('props:|>', JSON.stringify(this.relaxProps, null, 2));
+            console.log('props:|>', JSON.stringify(this.props, null, 2));
             console.log(
               'relaxProps:|>',
-              JSON.stringify(this.relaxProps, null, 2)
+              JSON.stringify(relaxData(this.relaxProps), null, 2)
             );
             console.groupEnd && console.groupEnd();
           }
@@ -120,8 +148,10 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
       for (let propName in staticRelaxProps) {
         //prop的属性值
         const propValue = staticRelaxProps[propName];
-
-        if (
+        //判断注入的属性是不是viewAction,如果是就直接将store中的viewAction注入
+        if (propValue === 'viewAction') {
+          relaxProps[propName] = store.viewAction;
+        } else if (
           isString(propValue) ||
           isArray(propValue) ||
           propValue instanceof QueryLang

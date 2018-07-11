@@ -41,7 +41,7 @@ const todoQL = QL('todoQL', [
   'todo',
   'filter',
   //过滤数据
-  (todo, filter) => todo
+  todo => todo
 ]);
 
 const countQL = QL('countQL', [

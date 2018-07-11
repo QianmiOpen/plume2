@@ -14,5 +14,6 @@ export class ViewAction {
   //只会在store中初始化的时候被调用绑定store的上下文
   private _bindStore(store: Store) {
     this.store = store;
+    return this;
   }
 }

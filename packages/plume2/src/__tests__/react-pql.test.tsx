@@ -33,7 +33,7 @@ class ProductApp extends React.Component {
 
     return (
       <div>
-        {products.map((p, index) => {
+        {products.map(p => {
           return <ProductItem key={p.get('id')} />;
         })}
       </div>

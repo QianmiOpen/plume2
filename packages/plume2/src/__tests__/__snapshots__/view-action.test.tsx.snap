@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`viewAction test suite test relax inject viewAction 1`] = `
+<div>
+  <div>
+    
+  </div>
+  <div>
+    
+  </div>
+</div>
+`;
+
+exports[`viewAction test suite test relax inject viewAction 2`] = `
+<div>
+  <div>
+    hello
+  </div>
+  <div>
+    world
+  </div>
+</div>
+`;
