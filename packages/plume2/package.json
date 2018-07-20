@@ -1,6 +1,6 @@
 {
   "name": "plume2",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "a lightweight of flux for mobile and web",
   "main": "./es6/index.js",
   "types": "./es6/typings/index.d.ts",
