@@ -1,5 +1,5 @@
-import { Map, fromJS } from 'immutable';
-import { Actor, Action, Store, QL, IMap } from '../index';
+import { fromJS } from 'immutable';
+import { Action, Actor, IMap, QL, Store } from '../index';
 import { QueryLang } from '../ql';
 
 let uuid = 0;
@@ -41,7 +41,7 @@ const todoQL = QL('todoQL', [
   'todo',
   'filter',
   //过滤数据
-  (todo, filter) => todo
+  todo => todo
 ]);
 
 const countQL = QL('countQL', [

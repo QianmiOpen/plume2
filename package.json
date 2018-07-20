@@ -2,12 +2,13 @@
   "private": true,
   "name": "plume2",
   "description": "a lightweight of flux for mobile web",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "test": "npx jest --verbose",
+    "test": "npx jest --verbose --watch",
     "coverage": "npx jest --coverage",
-    "build:plume2":
-      "npm run clean:plume2 && tsc -p packages/plume2/tsconfig.json && tsc -p packages/plume2/tsconfig-es6.json",
+    "build:plume2": "npm run clean:plume2 && tsc -p packages/plume2/tsconfig.json && tsc -p packages/plume2/tsconfig-es6.json",
     "clean:plume2": "rm -rf packages/plume2/es5 && rm -rf packages/plume2/es6"
   },
   "jest": {
@@ -16,8 +17,16 @@
     },
     "notify": true,
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
-    "moduleFileExtensions": ["ts", "tsx", "js", "json"],
-    "testPathIgnorePatterns": ["/node_modules/", "/examples/"]
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/examples/"
+    ]
   },
   "devDependencies": {
     "@types/jest": "^20.0.4",
@@ -35,6 +44,6 @@
     "react-dom": "^15.6.1",
     "react-test-renderer": "^15.6.1",
     "ts-jest": "^20.0.7",
-    "typescript": "^2.4.2"
+    "typescript": "2.9.2"
   }
 }

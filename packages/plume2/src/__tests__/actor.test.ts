@@ -1,5 +1,5 @@
 import { Map } from 'immutable';
-import { Actor, Action, IMap } from '../index';
+import { Action, Actor, IMap } from '../index';
 
 //////////////////init state/////////////////////////
 class HelloActor extends Actor {
@@ -19,13 +19,11 @@ class HelloActor extends Actor {
 describe('actor test suite', () => {
   it('default state', () => {
     const helloActor = new HelloActor();
-
     expect(helloActor.defaultState()).toEqual({ name: 'plume2' });
   });
 
   it('_route', () => {
     const helloActor = new HelloActor();
-
     expect((helloActor as any)._route).toEqual({
       change: helloActor.change
     });

@@ -13,6 +13,7 @@
 
 export const Action = (msg: string) => (
   target: any,
+  //@ts-ignore
   property: any,
   descriptor: TypedPropertyDescriptor<any>
 ) => {

@@ -1,10 +1,9 @@
-import * as React from 'react';
-import { Map } from 'immutable';
-import * as PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
+import React from 'react';
 import Store from './store';
 import { IMap, IOptions } from './typing';
 
-export type TStore = typeof Store;
+export type TStore = new (...args: Array<any>) => Store;
 
 /**
  * 获取组件的displayName便于react-devtools的调试
@@ -13,6 +12,11 @@ export type TStore = typeof Store;
 const getDisplayName = WrappedComponent =>
   WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
+/**
+ * StoreProvider连接ReactUI和Store
+ * @param AppStore
+ * @param opts
+ */
 export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
   return function wrapper(Base: React.ComponentClass): any {
     return class WrapperComponent extends Base {
@@ -28,7 +32,6 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
 
         this._isMounted = false;
         this.store = new AppStore(opts || { debug: false });
-
         this.state = { ...this.state, ...this.store.state().toObject() };
 
         this.store.subscribe(this._handleStoreChange);
@@ -56,7 +59,6 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
               console.log(`%cplume2@${version}🚀`, cssRule);
             }
             console.log(`${WrapperComponent.displayName} will mount 🚀`);
-            console.time(`${WrapperComponent.displayName} render`);
           }
         }
       }
@@ -74,13 +76,10 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
          */
         if (process.env.NODE_ENV != 'production') {
           if ((this.store as any)._opts.debug) {
-            console.timeEnd(`${WrapperComponent.displayName} render`);
-
             const displayName = getDisplayName(Base);
             window['_plume2App'] = window['_plume2App'] || {};
             window['_plume2App'][displayName] = {
-              store: this.store,
-              actionCreator: (this.store as any)._actionCreator
+              store: this.store
             };
           }
         }
@@ -96,12 +95,6 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
         super.componentDidUpdate &&
           super.componentDidUpdate(prevProps, prevState, prevContext);
         this._isMounted = true;
-
-        if (process.env.NODE_ENV != 'production') {
-          if ((this.store as any)._opts.debug) {
-            console.timeEnd(`${WrapperComponent.displayName} re-render`);
-          }
-        }
       }
 
       componentWillUnmount() {
@@ -125,7 +118,6 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
         if (process.env.NODE_ENV != 'production') {
           if ((this.store as any)._opts.debug) {
             console.log(`\n${WrapperComponent.displayName} will update 🚀`);
-            console.time(`${WrapperComponent.displayName} re-render`);
           }
         }
 

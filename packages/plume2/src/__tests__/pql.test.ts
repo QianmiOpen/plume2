@@ -1,4 +1,4 @@
-import { Actor, Store, QL } from '../index';
+import { Actor, QL, Store } from '../index';
 import { PQL } from '../pql';
 
 class LoadingActor extends Actor {

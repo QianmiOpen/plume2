@@ -10,8 +10,8 @@
  *  //解绑
  *  msg.off('hello')
  */
-import * as mitt from 'mitt';
+import mitt from 'mitt';
 
-const msg: mitt.Emitter = new ((mitt as any).default || mitt)();
+const msg: mitt.Emitter = new mitt();
 
 export default msg;

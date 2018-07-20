@@ -1,11 +1,11 @@
-import * as React from 'react';
-import * as PropTypes from 'prop-types';
-import { Map, is, fromJS } from 'immutable';
-import { isArray, isString } from './type';
-import Store from './store';
-import { QueryLang } from './ql';
-import { IMap, IRelaxContext, IRelaxComponent } from './typing';
+import { fromJS, is } from 'immutable';
+import PropTypes from 'prop-types';
+import React from 'react';
 import { PartialQueryLang } from './pql';
+import { QueryLang } from './ql';
+import Store from './store';
+import { isArray, isString } from './type';
+import { IMap, IRelaxComponent, IRelaxContext } from './typing';
 
 export default function RelaxContainer(Wrapper: IRelaxComponent): any {
   return class Relax extends React.Component {
@@ -25,13 +25,11 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     relaxProps: Object;
     context: { _plume$Store: Store };
 
-    private _dql2QL: { [name: string]: QueryLang };
     private _isMounted: boolean;
 
     constructor(props: Object, context: IRelaxContext<Store>) {
       super(props);
       this._isMounted = false;
-      this._dql2QL = {};
       this.state = { storeState: fromJS({}) };
       //提前绑定事件，为了争取父子有序
       context._plume$Store.subscribe(this._handleStoreChange);
@@ -40,31 +38,38 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     componentWillMount() {
       this._isMounted = false;
       //计算一次relaxProps
-      this.relaxProps = this.computeRelaxProps(this.props);
+      this.relaxProps = this.computeRelaxProps();
 
       //will drop on production env
       if (process.env.NODE_ENV != 'production') {
         if ((this.context['_plume$Store'] as any)._opts.debug) {
+          const relaxData = relaxProps => {
+            const data = {};
+            for (let prop in relaxProps) {
+              if (
+                prop === 'viewAction' ||
+                typeof relaxProps[prop] === 'function'
+              ) {
+                continue;
+              }
+              data[prop] = relaxProps[prop];
+            }
+            return data;
+          };
+
           console.groupCollapsed &&
             console.groupCollapsed(`${Relax.displayName} will mount 🚀`);
           console.log('props:|>', JSON.stringify(this.props, null, 2));
           console.log(
             'relaxProps:|>',
-            JSON.stringify(this.relaxProps, null, 2)
+            JSON.stringify(relaxData(this.relaxProps), null, 2)
           );
           console.groupEnd && console.groupEnd();
-          console.time(`${Relax.displayName} render`);
         }
       }
     }
 
     componentDidMount() {
-      if (process.env.NODE_ENV !== 'production') {
-        if ((this.context['_plume$Store'] as any)._opts.debug) {
-          console.timeEnd(`${Relax.displayName} render`);
-        }
-      }
-
       this._isMounted = true;
     }
 
@@ -73,23 +78,11 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     }
 
     componentDidUpdate() {
-      if (process.env.NODE_ENV !== 'production') {
-        if ((this.context['_plume$Store'] as any)._opts.debug) {
-          console.timeEnd(`${Relax.displayName} re-render`);
-        }
-      }
-
       this._isMounted = true;
     }
 
     shouldComponentUpdate(nextProps) {
-      if (process.env.NODE_ENV !== 'production') {
-        if ((this.context['_plume$Store'] as any)._opts.debug) {
-          console.time(`${Relax.displayName} re-render`);
-        }
-      }
-
-      const newRelaxProps = this.computeRelaxProps(nextProps);
+      const newRelaxProps = this.computeRelaxProps();
 
       if (
         !is(fromJS(this.props), fromJS(nextProps)) ||
@@ -99,23 +92,31 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
 
         if (process.env.NODE_ENV != 'production') {
           if ((this.context['_plume$Store'] as any)._opts.debug) {
+            const relaxData = relaxProps => {
+              const data = {};
+              for (let prop in relaxProps) {
+                if (
+                  prop === 'viewAction' ||
+                  typeof relaxProps[prop] == 'function'
+                ) {
+                  continue;
+                }
+                data[prop] = relaxProps[prop];
+              }
+              return data;
+            };
             console.groupCollapsed &&
               console.groupCollapsed(`${Relax.displayName} will update 🚀`);
-            console.log('props:|>', JSON.stringify(this.relaxProps, null, 2));
+            console.log('props:|>', JSON.stringify(this.props, null, 2));
             console.log(
               'relaxProps:|>',
-              JSON.stringify(this.relaxProps, null, 2)
+              JSON.stringify(relaxData(this.relaxProps), null, 2)
             );
             console.groupEnd && console.groupEnd();
           }
         }
         return true;
       } else {
-        if (process.env.NODE_ENV !== 'production') {
-          if ((this.context['_plume$Store'] as any)._opts.debug) {
-            console.timeEnd(`${Relax.displayName} re-render`);
-          }
-        }
         return false;
       }
     }
@@ -128,7 +129,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
       return <Wrapper {...this.props} relaxProps={this.relaxProps} />;
     }
 
-    computeRelaxProps(props) {
+    computeRelaxProps() {
       //dev check
       if (process.env.NODE_ENV != 'production') {
         if (!Wrapper.relaxProps) {
@@ -146,8 +147,10 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
       for (let propName in staticRelaxProps) {
         //prop的属性值
         const propValue = staticRelaxProps[propName];
-
-        if (
+        //判断注入的属性是不是viewAction,如果是就直接将store中的viewAction注入
+        if (propValue === 'viewAction') {
+          relaxProps[propName] = store.viewAction;
+        } else if (
           isString(propValue) ||
           isArray(propValue) ||
           propValue instanceof QueryLang
@@ -175,16 +178,12 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
 
     _handleStoreChange = (state: IMap) => {
       if (this._isMounted) {
-        (this as any).setState({
+        this.setState({
           storeState: state
         });
       }
     };
   };
-
-  function _isNotValidValue(v: any) {
-    return typeof v != 'undefined' && v != null;
-  }
 
   function getDisplayName(WrappedComponent) {
     return WrappedComponent.displayName || WrappedComponent.name || 'Component';

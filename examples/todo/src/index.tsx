@@ -1,15 +1,12 @@
+import { StoreProvider } from 'plume2';
 import React from 'react';
 import { render } from 'react-dom';
-
-import { StoreProvider } from 'plume2';
-import AppStore from './store';
-
+import Footer from './component/footer';
 import Header from './component/header';
 import Main from './component/main-section';
-import Footer from './component/footer';
-
 import './css/base.css';
 import './css/index.css';
+import AppStore from './store';
 
 if (__DEV__) {
   require('preact/devtools');

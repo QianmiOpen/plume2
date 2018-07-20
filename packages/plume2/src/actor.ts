@@ -1,20 +1,20 @@
+import { IMap, TRoute } from './typing';
+
 /**
  * actor
  *
  * 借鉴MapReduce的理念，store负责分派，actor负责处理
  */
-import { IMap, TRoute } from './typing';
-
 export default class Actor {
   constructor() {
     this._route = this._route || {};
   }
 
+  private _route: TRoute;
+
   defaultState(): Object {
     return {};
   }
-
-  private _route: TRoute;
 
   /**
    * 接收store分派的任务

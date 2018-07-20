@@ -1,6 +1,6 @@
-import * as React from 'react';
-import * as renderer from 'react-test-renderer';
-import { Actor, Action, Store, StoreProvider, QL, Relax } from '../index';
+import React from 'react';
+import renderer from 'react-test-renderer';
+import { Action, Actor, QL, Relax, Store, StoreProvider } from '../index';
 import { PQL } from '../pql';
 
 //===============Actor=========================

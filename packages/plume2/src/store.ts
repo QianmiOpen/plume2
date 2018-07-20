@@ -1,10 +1,9 @@
-import * as ReactDOM from 'react-dom';
-import { Map, fromJS } from 'immutable';
+import { fromJS } from 'immutable';
+import ReactDOM from 'react-dom';
 import Actor from './actor';
 import { QueryLang } from './ql';
 import { isArray, isString } from './type';
-import { IOptions, IMap } from './typing';
-import { ActionHandler } from './action-creator';
+import { IMap, IOptions, IViewActionMapper, TViewAction } from './typing';
 
 export type TDispatch = () => void;
 export type TRollback = () => void;
@@ -24,9 +23,10 @@ const batchedUpdates =
 /**
  * Store状态容器
  * 整个应用中心的状态管理 控制整个应用的状态控制
+ * Store = f(Actor, ViewAction)
  */
 
-export default class Store {
+export default class Store<T = {}> {
   constructor(props?: IOptions) {
     this._opts = props || { debug: false };
     this._state = fromJS({});
@@ -37,13 +37,15 @@ export default class Store {
 
     //初始化route
     this._route = this._route || {};
-    this._actors = this.bindActor();
-    this._initActionCreator();
-    this.reduceActorState();
+    this._reduceActorState();
+    this.viewAction = {} as TViewAction<T>;
+    this._initViewAction();
   }
 
+  public readonly viewAction: TViewAction<T>;
+
+  //当前的路由
   private _route: { [key: string]: Function };
-  private _actionCreator: ActionHandler | Array<ActionHandler>;
   //store的配置项
   private _opts: IOptions;
   //当前store的聚合状态
@@ -67,12 +69,11 @@ export default class Store {
   }
 
   /**
-   * 绑定ActionCreator
+   * 绑定ViewAction
    */
-  bindActionCreator(): ActionHandler | Array<ActionHandler> {
-    return null;
+  bindViewAction(): IViewActionMapper {
+    return {};
   }
-
   /**
    * 接收ActionCreator分派的任务
    * @param msg
@@ -166,22 +167,188 @@ export default class Store {
     return isRollback;
   }
 
-  private _initActionCreator() {
-    //actionCreator绑定store
-    const actionCreator = this.bindActionCreator();
-    if (actionCreator != null) {
-      if (isArray(actionCreator)) {
-        (actionCreator as Array<ActionHandler>).forEach((creator: any) =>
-          creator._bindStore(this)
-        );
-      } else {
-        (actionCreator as any)._bindStore(this);
-      }
-      this._actionCreator = actionCreator;
+  /**
+   * 计算querylang
+   * @param ql querylang
+   */
+  bigQuery = (ql: QueryLang | string | Array<string | number>): any => {
+    //如果当前的查询参数是字符串，直接获取状态对应的路径参数
+    if (isString(ql)) {
+      return this._state.get(ql as string);
     }
+
+    if (isArray(ql)) {
+      return this._state.getIn(ql as Array<any>);
+    }
+
+    if (!(ql instanceof QueryLang)) {
+      throw new Error('invalid QL');
+    }
+
+    //数据是否过期,默认否
+    let outdate = false;
+    const id = ql.id();
+    const name = ql.name();
+    //获取缓存数据结构
+    this._cacheQL[id] = this._cacheQL[id] || [];
+    //copy lang
+    const lang = ql.lang().slice();
+    //reactive function
+    const rxFn = lang.pop();
+
+    //will drop on production env
+    if (process.env.NODE_ENV != 'production') {
+      if (this._opts.debug) {
+        console.groupCollapsed &&
+          console.groupCollapsed(`🔥:tracing: QL(${name})`);
+      }
+    }
+
+    let args = lang.map((elem, index) => {
+      if (elem instanceof QueryLang) {
+        const value = this.bigQuery(elem);
+        if (value != this._cacheQL[id][index]) {
+          outdate = true;
+          this._cacheQL[id][index] = value;
+        }
+
+        if (process.env.NODE_ENV != 'production') {
+          if (this._opts.debug) {
+            console.log(
+              `dep:${elem.name()}, cache:${!outdate},value:${JSON.stringify(
+                value,
+                null,
+                2
+              )}`
+            );
+          }
+        }
+
+        return value;
+      } else {
+        const value = isArray(elem)
+          ? this._state.getIn(elem)
+          : this._state.get(elem);
+
+        if (
+          this._cacheQL[id].length == 0 ||
+          value != this._cacheQL[id][index]
+        ) {
+          outdate = true;
+          this._cacheQL[id][index] = value;
+        }
+
+        if (process.env.NODE_ENV != 'production') {
+          if (this._opts.debug) {
+            console.log(
+              `dep:${elem}, cache:${!outdate}, value:${JSON.stringify(
+                value,
+                null,
+                2
+              )}`
+            );
+          }
+        }
+
+        return value;
+      }
+    });
+
+    //如果数据过期，重新计算一次
+    if (outdate) {
+      const result = rxFn.apply(null, args);
+      this._cacheQL[id][args.length] = result;
+
+      if (process.env.NODE_ENV != 'production') {
+        if (this._opts.debug) {
+          console.log(`QL(${name})|> ${JSON.stringify(result, null, 2)}`);
+          console.groupEnd && console.groupEnd();
+        }
+      }
+
+      return result;
+    } else {
+      if (process.env.NODE_ENV != 'production') {
+        if (this._opts.debug) {
+          console.log(
+            `🚀:QL(${name}), cache: true, result: ${JSON.stringify(
+              this._cacheQL[id][args.length],
+              null,
+              2
+            )}`
+          );
+          console.groupEnd && console.groupEnd();
+        }
+      }
+
+      //返回cache中最后一个值
+      return this._cacheQL[id][args.length];
+    }
+  };
+
+  /**
+   * 获取store容器的数据状态
+   */
+  state(): IMap {
+    return this._state;
   }
 
-  private reduceActorState() {
+  /**
+   *获取数据的快捷方式
+   */
+  get(path: string | Array<string | number>) {
+    return this.bigQuery(path);
+  }
+
+  /**
+   * 设置store数据容器的状态，一般用于rollback之后的状态恢复
+   * @param state 设置store的状态
+   */
+  setState(state) {
+    this._state = state;
+  }
+
+  /**
+   * 定义store发生的数据变化
+   * @param cb 回调函数
+   */
+  subscribe(cb: TSubscribeHandler) {
+    if (typeof cb != 'function' || this._callbacks.indexOf(cb) != -1) {
+      return;
+    }
+
+    this._callbacks.push(cb);
+  }
+
+  /**
+   * 取消store发生数据变化的订阅
+   * @param cb 回调函数
+   */
+  unsubscribe(cb: TSubscribeHandler) {
+    const index = this._callbacks.indexOf(cb);
+    if (typeof cb != 'function' || index == -1) {
+      return;
+    }
+
+    this._callbacks.splice(index, 1);
+  }
+
+  //====================private method==========================
+  private _initViewAction = () => {
+    const viewActionMapper = this.bindViewAction() || {};
+    const keys = Object.keys(viewActionMapper);
+    for (let key of keys) {
+      //get current ViewAction class
+      const ViewAction = viewActionMapper[key];
+      //init and pass current to viewAction
+      const viewAction = new ViewAction();
+      (viewAction as any)._bindStore(this);
+      this.viewAction[key] = viewAction;
+    }
+  };
+
+  private _reduceActorState() {
+    this._actors = this.bindActor() || [];
     this._state = this._state.withMutations(state => {
       for (let actor of this._actors) {
         let initState = fromJS(actor.defaultState());
@@ -257,175 +424,6 @@ export default class Store {
     }
 
     return _state;
-  }
-
-  /**
-   * 计算querylang
-   * @param ql querylang
-   */
-  bigQuery = (ql: QueryLang | string | Array<string | number>): any => {
-    //如果当前的查询参数是字符串，直接获取状态对应的路径参数
-    if (isString(ql)) {
-      return this._state.get(ql as string);
-    }
-
-    if (isArray(ql)) {
-      return this._state.getIn(ql as Array<any>);
-    }
-
-    if (!(ql instanceof QueryLang)) {
-      throw new Error('invalid QL');
-    }
-
-    //数据是否过期,默认否
-    let outdate = false;
-    const id = ql.id();
-    const name = ql.name();
-    //获取缓存数据结构
-    this._cacheQL[id] = this._cacheQL[id] || [];
-    //copy lang
-    const lang = ql.lang().slice();
-    //reactive function
-    const rxFn = lang.pop();
-
-    //will drop on production env
-    if (process.env.NODE_ENV != 'production') {
-      if (this._opts.debug) {
-        console.groupCollapsed &&
-          console.groupCollapsed(`🔥:tracing: QL(${name})`);
-        console.time && console.time('QL:duration');
-      }
-    }
-
-    let args = lang.map((elem, index) => {
-      if (elem instanceof QueryLang) {
-        const value = this.bigQuery(elem);
-        if (value != this._cacheQL[id][index]) {
-          outdate = true;
-          this._cacheQL[id][index] = value;
-        }
-
-        if (process.env.NODE_ENV != 'production') {
-          if (this._opts.debug) {
-            console.log(
-              `dep:${elem.name()}, cache:${!outdate},value:${JSON.stringify(
-                value,
-                null,
-                2
-              )}`
-            );
-          }
-        }
-
-        return value;
-      } else {
-        const value = isArray(elem)
-          ? this._state.getIn(elem)
-          : this._state.get(elem);
-
-        if (
-          this._cacheQL[id].length == 0 ||
-          value != this._cacheQL[id][index]
-        ) {
-          outdate = true;
-          this._cacheQL[id][index] = value;
-        }
-
-        if (process.env.NODE_ENV != 'production') {
-          if (this._opts.debug) {
-            console.log(
-              `dep:${elem}, cache:${!outdate}, value:${JSON.stringify(
-                value,
-                null,
-                2
-              )}`
-            );
-          }
-        }
-
-        return value;
-      }
-    });
-
-    //如果数据过期，重新计算一次
-    if (outdate) {
-      const result = rxFn.apply(null, args);
-      this._cacheQL[id][args.length] = result;
-
-      if (process.env.NODE_ENV != 'production') {
-        if (this._opts.debug) {
-          console.log(`QL(${name})|> ${JSON.stringify(result, null, 2)}`);
-          console.time && console.timeEnd('QL:duration');
-          console.groupEnd && console.groupEnd();
-        }
-      }
-
-      return result;
-    } else {
-      if (process.env.NODE_ENV != 'production') {
-        if (this._opts.debug) {
-          console.log(
-            `🚀:QL(${name}), cache: true, result: ${JSON.stringify(
-              this._cacheQL[id][args.length],
-              null,
-              2
-            )}`
-          );
-          console.time && console.timeEnd('QL:duration');
-          console.groupEnd && console.groupEnd();
-        }
-      }
-
-      //返回cache中最后一个值
-      return this._cacheQL[id][args.length];
-    }
-  };
-
-  /**
-   * 获取store容器的数据状态
-   */
-  state() {
-    return this._state;
-  }
-
-  /**
-   *获取数据的快捷方式
-   */
-  get(path: string | Array<string | number>) {
-    return this.bigQuery(path);
-  }
-
-  /**
-   * 设置store数据容器的状态，一般用于rollback之后的状态恢复
-   * @param state 设置store的状态
-   */
-  setState(state) {
-    this._state = state;
-  }
-
-  /**
-   * 定义store发生的数据变化
-   * @param cb 回调函数
-   */
-  subscribe(cb: TSubscribeHandler) {
-    if (typeof cb != 'function' || this._callbacks.indexOf(cb) != -1) {
-      return;
-    }
-
-    this._callbacks.push(cb);
-  }
-
-  /**
-   * 取消store发生数据变化的订阅
-   * @param cb 回调函数
-   */
-  unsubscribe(cb: TSubscribeHandler) {
-    const index = this._callbacks.indexOf(cb);
-    if (typeof cb != 'function' || index == -1) {
-      return;
-    }
-
-    this._callbacks.splice(index, 1);
   }
 
   //=============================help method==========================

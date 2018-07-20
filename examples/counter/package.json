@@ -7,13 +7,14 @@
     "test": "jest --verbose",
     "start": "./node_modules/.bin/webpack-dev-server",
     "clean": "rm -rf ./dist",
-    "build:dll":
-      "./node_modules/.bin/webpack --config webpack.dll.config.js --progress --color",
-    "build":
-      "./node_modules/.bin/webpack --config webpack.production.js --progress --color",
+    "build:dll": "./node_modules/.bin/webpack --config webpack.dll.config.js --progress --color",
+    "build": "./node_modules/.bin/webpack --config webpack.production.js --progress --color",
     "build:all": "npm run clean && npm run build:dll && npm run build"
   },
-  "keywords": ["plume2", "bootstrap"],
+  "keywords": [
+    "plume2",
+    "bootstrap"
+  ],
   "repository": {
     "type": "git",
     "url": ""
@@ -22,11 +23,8 @@
   "license": "BSD",
   "dependencies": {
     "@types/node": "^8.0.14",
-    "@types/react": "^15.0.38",
-    "@types/react-dom": "^15.5.1",
-    "plume2": "0.3.2",
-    "preact": "^8.2.1",
-    "preact-compat": "^3.16.0"
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
   },
   "devDependencies": {
     "babel-loader": "^7.1.1",
@@ -34,7 +32,7 @@
     "babel-preset-env": "^1.6.0",
     "html-webpack-plugin": "^2.29.0",
     "ts-loader": "^2.3.1",
-    "typescript": "^2.4.2",
+    "typescript": "2.9.2",
     "webpack": "^3.3.0",
     "webpack-dev-server": "^2.5.1"
   }

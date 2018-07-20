@@ -11,11 +11,7 @@ module.exports = {
   },
   resolve: {
     modules: ['node_modules', path.resolve(__dirname, 'web_modules')],
-    extensions: ['.web.js', '.js', '.json', '.ts', '.tsx'],
-    alias: {
-      react: 'preact-compat',
-      'react-dom': 'preact-compat'
-    }
+    extensions: ['.web.js', '.js', '.json', '.ts', '.tsx']
   },
   module: {
     rules: [

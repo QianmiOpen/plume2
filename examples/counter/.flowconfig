@@ -1,9 +1,0 @@
-[ignore]
-.*/node_modules/fbjs/lib/partitionObjectByKey.js.flow
-
-[include]
-
-[libs]
-
-[options]
-esproposal.decorators=ignore
