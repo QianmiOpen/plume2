@@ -50,3 +50,9 @@ export interface IViewActionMapper {
 export type TViewAction<T = {}> = {
   [K in keyof T]: T[K] extends new (...args: Array<any>) => infer R ? R : any
 };
+
+export interface IReceiveMsg {
+  msg: string;
+  state: IMap;
+  params?: any;
+}

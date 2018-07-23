@@ -1,4 +1,4 @@
-import { IMap, TRoute } from './typing';
+import { IMap, IReceiveMsg, TRoute } from './typing';
 
 /**
  * actor
@@ -22,7 +22,7 @@ export default class Actor {
    * @param state
    * @param params
    */
-  receive(msg: string, state: IMap, params?: any): IMap {
+  receive({ msg, state, params }: IReceiveMsg): IMap {
     const fn = this._route[msg];
     return fn ? fn.call(this, state, params) : state;
   }

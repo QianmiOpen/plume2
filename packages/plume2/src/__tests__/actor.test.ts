@@ -15,11 +15,38 @@ class HelloActor extends Actor {
   }
 }
 
+class ReceiveActor extends Actor {
+  defaultState() {
+    return {
+      name: 'receive actor'
+    };
+  }
+
+  receive({ msg, state }) {
+    switch (msg) {
+      case 'change':
+        return state.set('name', 'change actor');
+    }
+  }
+}
+
 ///////////////////////test suite/////////////////////
 describe('actor test suite', () => {
   it('default state', () => {
     const helloActor = new HelloActor();
     expect(helloActor.defaultState()).toEqual({ name: 'plume2' });
+
+    const receive = new ReceiveActor();
+    expect(receive.defaultState()).toEqual({ name: 'receive actor' });
+  });
+
+  it('test receive ', () => {
+    const receive = new ReceiveActor();
+    const newState = receive.receive({
+      msg: 'change',
+      state: Map({ name: 'reveive actor' })
+    });
+    expect(newState.toJS()).toEqual({ name: 'change actor' });
   });
 
   it('_route', () => {
@@ -32,7 +59,10 @@ describe('actor test suite', () => {
   it('@Action method', () => {
     const helloActor = new HelloActor();
     const state = Map({ name: 'plume' });
-    const newState = helloActor.receive('change', state);
+    const newState = helloActor.receive({
+      msg: 'change',
+      state
+    });
 
     expect(newState.toJS()).toEqual({ name: 'plume++' });
   });

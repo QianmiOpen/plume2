@@ -35,8 +35,6 @@ export default class Store<T = {}> {
     this._cacheQL = {};
     this._isInTranstion = false;
 
-    //初始化route
-    this._route = this._route || {};
     this._reduceActorState();
     this.viewAction = {} as TViewAction<T>;
     this._initViewAction();
@@ -44,8 +42,6 @@ export default class Store<T = {}> {
 
   public readonly viewAction: TViewAction<T>;
 
-  //当前的路由
-  private _route: { [key: string]: Function };
   //store的配置项
   private _opts: IOptions;
   //当前store的聚合状态
@@ -61,10 +57,12 @@ export default class Store<T = {}> {
   //判断当前的dispatch是不是在事务中
   private _isInTranstion: boolean;
 
+  //==================public method ==================
+
   /**
    * 绑定Actor
    */
-  bindActor(): Array<Actor> {
+  bindActor(): Array<Actor | typeof Actor> {
     return [];
   }
 
@@ -74,17 +72,6 @@ export default class Store<T = {}> {
   bindViewAction(): IViewActionMapper {
     return {};
   }
-  /**
-   * 接收ActionCreator分派的任务
-   * @param msg
-   * @param state
-   * @param params
-   */
-  receive = (msg: string, params?: any) => {
-    this._route = this._route;
-    const fn = this._route[msg];
-    fn.call(this, params);
-  };
 
   /**
    * store分发事件协同actor
@@ -348,9 +335,15 @@ export default class Store<T = {}> {
   };
 
   private _reduceActorState() {
-    this._actors = this.bindActor() || [];
+    this._actors = [];
+    const actors = this.bindActor() || [];
     this._state = this._state.withMutations(state => {
-      for (let actor of this._actors) {
+      for (let actor of actors) {
+        //支持bindActor直接传递Actor本身不需要new
+        if (typeof actor === 'function') {
+          actor = new actor();
+        }
+        this._actors.push(actor);
         let initState = fromJS(actor.defaultState());
         this._actorsState.push(initState);
         state = state.merge(initState);
@@ -385,8 +378,8 @@ export default class Store<T = {}> {
     }
 
     for (let i = 0, len = this._actors.length; i < len; i++) {
-      let actor = this._actors[i] as any;
-      const fn = actor._route[msg];
+      let actor = this._actors[i];
+      const fn = (actor as any)._route[msg];
 
       //如果actor没有处理msg的方法，直接跳过
       if (!fn) {
@@ -394,7 +387,9 @@ export default class Store<T = {}> {
         if (process.env.NODE_ENV != 'production') {
           if (this._opts.debug) {
             console.log(
-              `${actor.constructor.name} receive '${msg}', but no handle 😭`
+              `${
+                (actor.constructor as any).name
+              } receive '${msg}', but no handle 😭`
             );
           }
         }
@@ -404,13 +399,16 @@ export default class Store<T = {}> {
       //debug
       if (process.env.NODE_ENV != 'production') {
         if (this._opts.debug) {
-          const actorName = actor.constructor.name;
-          console.log(`${actorName} receive => '${msg}'`);
+          console.log(`${(actor.constructor as any).name} receive => '${msg}'`);
         }
       }
 
       let preActorState = this._actorsState[i];
-      const newActorState = actor.receive(msg, preActorState, params);
+      const newActorState = actor.receive({
+        msg,
+        state: preActorState,
+        params
+      });
       if (preActorState != newActorState) {
         this._actorsState[i] = newActorState;
         _state = _state.merge(newActorState);

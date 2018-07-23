@@ -1,5 +1,6 @@
 import Actor from './actor';
 import { Action } from './decorator';
+import { go } from './go';
 import msg from './msg';
 import { PQL } from './pql';
 import { QL } from './ql';
@@ -10,6 +11,7 @@ import { IMap, IOptions, TViewAction } from './typing';
 import { ViewAction } from './view-action';
 
 export {
+  go,
   QL,
   PQL,
   msg,
