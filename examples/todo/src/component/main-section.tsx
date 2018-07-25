@@ -1,9 +1,9 @@
-import React from 'react';
-import { Relax, IMap } from 'plume2';
 import { List } from 'immutable';
-import { todoQL } from '../ql';
-import actionType from '../action-type';
+import { IMap, Relax } from 'plume2';
+import React from 'react';
 import actionCreator from '../action-creator';
+import actionType from '../action-type';
+import { todoQL } from '../ql';
 
 @Relax
 export default class MainSection extends React.Component {

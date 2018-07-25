@@ -1,9 +1,0 @@
-{
-  "name": "babel-plugin-transform-rn-react-dom",
-  "version": "1.0.0",
-  "description": "replace react-dom => react-native in react-native app",
-  "main": "./lib/index.js",
-  "repository": "https://github.com/hufeng/babel-transform-rn-react-dom.git",
-  "author": "hufeng <hufeng@qianmi.com>",
-  "license": "MIT"
-}

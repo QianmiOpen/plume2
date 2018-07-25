@@ -4,7 +4,7 @@ import * as ViewAction from './view-action';
 
 export default class AppStore extends Store {
   bindActor() {
-    return [new CounterActor()];
+    return [CounterActor];
   }
 
   bindViewAction() {

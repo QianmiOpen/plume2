@@ -1,8 +1,8 @@
-import React from 'react';
 import { Relax } from 'plume2';
-import { valueQL } from '../ql';
-import actionType from '../action-type';
+import React from 'react';
 import actionCreator from '../action-creator';
+import actionType from '../action-type';
+import { valueQL } from '../ql';
 
 @Relax
 export default class Header extends React.Component {

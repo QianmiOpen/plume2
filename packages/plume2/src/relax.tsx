@@ -7,6 +7,29 @@ import Store from './store';
 import { isArray, isString } from './type';
 import { IMap, IRelaxComponent, IRelaxContext } from './typing';
 
+/**
+ * 通过分析relaxProps构成，来判断@Relax需不需要订阅store的变化
+ * @param relaxProps
+ */
+export const isRxRelaxProps = (relaxProps: Object): boolean => {
+  for (let prop in relaxProps) {
+    const propValue = relaxProps[prop];
+    if (
+      (isString(propValue) && prop !== 'viewAction') ||
+      isArray(propValue) ||
+      propValue instanceof QueryLang
+    ) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
+ * Relax Container
+ * 负责注入relaxProps属性对应的值
+ * @param Wrapper
+ */
 export default function RelaxContainer(Wrapper: IRelaxComponent): any {
   return class Relax extends React.Component {
     //displayName
@@ -20,20 +43,24 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     //声明上下文依赖
     static contextTypes = { _plume$Store: PropTypes.object };
 
+    //relax related props
     props: Object;
-    state: Object;
-    relaxProps: Object;
     context: { _plume$Store: Store };
-
-    private _isMounted: boolean;
 
     constructor(props: Object, context: IRelaxContext<Store>) {
       super(props);
       this._isMounted = false;
       this.state = { storeState: fromJS({}) };
-      //提前绑定事件，为了争取父子有序
-      context._plume$Store.subscribe(this._handleStoreChange);
+
+      this._isNeedRxStore = isRxRelaxProps(Relax.relaxProps);
+      if (this._isNeedRxStore) {
+        context._plume$Store.subscribe(this._handleStoreChange);
+      }
     }
+
+    private relaxProps: Object;
+    private _isMounted: boolean;
+    private _isNeedRxStore: boolean;
 
     componentWillMount() {
       this._isMounted = false;
@@ -58,7 +85,11 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
           };
 
           console.groupCollapsed &&
-            console.groupCollapsed(`${Relax.displayName} will mount 🚀`);
+            console.groupCollapsed(
+              `${Relax.displayName} will mount rx store: ${
+                this._isNeedRxStore
+              } 🚀 `
+            );
           console.log('props:|>', JSON.stringify(this.props, null, 2));
           console.log(
             'relaxProps:|>',
@@ -106,7 +137,11 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
               return data;
             };
             console.groupCollapsed &&
-              console.groupCollapsed(`${Relax.displayName} will update 🚀`);
+              console.groupCollapsed(
+                `${Relax.displayName} will update rx store ${
+                  this._isNeedRxStore
+                } 🚀`
+              );
             console.log('props:|>', JSON.stringify(this.props, null, 2));
             console.log(
               'relaxProps:|>',
@@ -122,7 +157,9 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     }
 
     componentWillUnmount() {
-      this.context['_plume$Store'].unsubscribe(this._handleStoreChange);
+      if (this._isNeedRxStore) {
+        this.context['_plume$Store'].unsubscribe(this._handleStoreChange);
+      }
     }
 
     render() {

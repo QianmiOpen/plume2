@@ -1,4 +1,4 @@
-import { Actor, Action, IMap } from 'plume2';
+import { Action, Actor, IMap } from 'plume2';
 import actionCreator from '../action-type';
 
 export default class FilterActor extends Actor {

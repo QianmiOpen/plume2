@@ -1,5 +1,5 @@
-import { Actor, Action, IMap } from 'plume2';
 import { fromJS } from 'immutable';
+import { Action, Actor, IMap } from 'plume2';
 import actionCreator from '../action-type';
 
 let uuid = 0;
