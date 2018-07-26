@@ -16,13 +16,30 @@ module.exports = function(babel) {
 
   return {
     visitor: {
-      ImportDeclaration: function(path, state) {
-        if (t.isStringLiteral(path.node.source, { value: 'react-dom' })) {
+      /**
+       * if current env is react-native
+       * import ReactDOM from 'react-dom' => import ReactDOM from 'react-native'
+       * @param {*} path
+       * @param {*} param1
+       */
+      ImportDeclaration(path, { opts }) {
+        if (
+          opts.reactnative &&
+          t.isStringLiteral(path.node.source, {
+            value: 'react-dom'
+          })
+        ) {
           path.node.source = t.StringLiteral('react-native');
         }
       },
-      CallExpression(path) {
-        if (isRequireReactDOM(t, path)) {
+
+      /**
+       * if current env is react-native
+       * var ReactDOM = require('react-dom') => var ReactDOM = require('react-native');
+       * @param {*} path
+       * @param {*} param1
+       */ CallExpression(path, { opts }) {
+        if (opts.reactnative && isRequireReactDOM(t, path)) {
           path.node.arguments[0] = t.StringLiteral('react-native');
         }
       }

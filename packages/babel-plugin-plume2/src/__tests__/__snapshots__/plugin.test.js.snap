@@ -1,14 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`match-snapshot 1`] = `
+exports[`babel-plugin-plume2 test suite match-snapshot 1`] = `
 "
 import ReactDOM from 'react-native';
 var ReactDOM1 = require('react-native');"
-`;
-
-exports[`origin code 1`] = `
-"
-import ReactDOM from 'react-dom';
-var ReactDOM1 = require('react-dom');
-"
 `;
