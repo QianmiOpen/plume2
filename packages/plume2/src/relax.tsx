@@ -34,7 +34,6 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
   return class Relax extends React.Component {
     //displayName
     static displayName = `Relax(${getDisplayName(Wrapper)})`;
-
     //拷贝WrapperComponent的defaultProps
     static defaultProps = Wrapper.defaultProps || {};
     //拷贝WrapperComponent的relaxProps
@@ -45,33 +44,36 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
 
     //relax related props
     props: Object;
+    //current context
     context: { _plume$Store: Store };
 
     constructor(props: Object, context: IRelaxContext<Store>) {
       super(props);
       this._isMounted = false;
-      this.state = { storeState: fromJS({}) };
+      this.state = { storeState: {} };
 
+      //判断是不是需要响应store的状态变化
       this._isNeedRxStore = isRxRelaxProps(Relax.relaxProps);
       if (this._isNeedRxStore) {
         context._plume$Store.subscribe(this._handleStoreChange);
       }
     }
 
-    private relaxProps: Object;
+    private _relaxProps: Object;
     private _isMounted: boolean;
     private _isNeedRxStore: boolean;
 
     componentWillMount() {
       this._isMounted = false;
       //计算一次relaxProps
-      this.relaxProps = this.computeRelaxProps();
+      this._relaxProps = this._computeRelaxProps();
 
       //will drop on production env
       if (process.env.NODE_ENV != 'production') {
         if ((this.context['_plume$Store'] as any)._opts.debug) {
           const relaxData = relaxProps => {
             const data = {};
+            //filter viewAction and function
             for (let prop in relaxProps) {
               if (
                 prop === 'viewAction' ||
@@ -93,7 +95,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
           console.log('props:|>', JSON.stringify(this.props, null, 2));
           console.log(
             'relaxProps:|>',
-            JSON.stringify(relaxData(this.relaxProps), null, 2)
+            JSON.stringify(relaxData(this._relaxProps), null, 2)
           );
           console.groupEnd && console.groupEnd();
         }
@@ -113,13 +115,13 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     }
 
     shouldComponentUpdate(nextProps) {
-      const newRelaxProps = this.computeRelaxProps();
+      const newRelaxProps = this._computeRelaxProps();
 
       if (
         !is(fromJS(this.props), fromJS(nextProps)) ||
-        !is(fromJS(this.relaxProps), fromJS(newRelaxProps))
+        !is(fromJS(this._relaxProps), fromJS(newRelaxProps))
       ) {
-        this.relaxProps = newRelaxProps;
+        this._relaxProps = newRelaxProps;
 
         if (process.env.NODE_ENV != 'production') {
           if ((this.context['_plume$Store'] as any)._opts.debug) {
@@ -145,7 +147,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
             console.log('props:|>', JSON.stringify(this.props, null, 2));
             console.log(
               'relaxProps:|>',
-              JSON.stringify(relaxData(this.relaxProps), null, 2)
+              JSON.stringify(relaxData(this._relaxProps), null, 2)
             );
             console.groupEnd && console.groupEnd();
           }
@@ -163,17 +165,18 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     }
 
     render() {
-      return <Wrapper {...this.props} relaxProps={this.relaxProps} />;
+      return <Wrapper {...this.props} relaxProps={this._relaxProps} />;
     }
 
-    computeRelaxProps() {
+    _computeRelaxProps() {
       //dev check
       if (process.env.NODE_ENV != 'production') {
         if (!Wrapper.relaxProps) {
           console.warn(
-            `${Relax.displayName} could not find any static relaxProps!!!😅`
+            `😓 ${
+              Relax.displayName
+            } could not find any static relaxProps, Please remove @Relex!!!`
           );
-          return {};
         }
       }
 
@@ -186,6 +189,14 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
         const propValue = staticRelaxProps[propName];
         //判断注入的属性是不是viewAction,如果是就直接将store中的viewAction注入
         if (propValue === 'viewAction') {
+          //warning...
+          if (process.env.NODE_ENV != 'production') {
+            if (!store.viewAction) {
+              console.error(
+                `store can not find viewAction, please bind viewAction first`
+              );
+            }
+          }
           relaxProps[propName] = store.viewAction;
         } else if (
           isString(propValue) ||
