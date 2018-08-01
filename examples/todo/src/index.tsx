@@ -8,10 +8,6 @@ import './css/base.css';
 import './css/index.css';
 import AppStore from './store';
 
-if (__DEV__) {
-  require('preact/devtools');
-}
-
 //debug: true, it will show good logs
 @StoreProvider(AppStore, { debug: __DEV__ })
 export default class TodoApp extends React.Component {

@@ -1,4 +1,4 @@
-import { Actor, Action, IMap } from 'plume2';
+import { Actor } from 'plume2';
 
 export default class HelloActor extends Actor {
   defaultState() {

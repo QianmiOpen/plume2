@@ -1,4 +1,4 @@
 {
   "presets": ["react-native"],
-  "plugins": ["transform-rn-react-dom"]
+  "plugins": ["plume2"]
 }

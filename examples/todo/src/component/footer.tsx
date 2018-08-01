@@ -1,7 +1,5 @@
 import { Relax } from 'plume2';
 import React from 'react';
-import actionCreator from '../action-creator';
-import actionType from '../action-type';
 import { countQL } from '../ql';
 
 @Relax
@@ -10,16 +8,18 @@ export default class Footer extends React.Component {
     relaxProps?: {
       count: number;
       filterStatus: string;
+      viewAction: TTodoViewAction;
     };
   };
 
   static relaxProps = {
     count: countQL,
-    filterStatus: 'filterStatus'
+    filterStatus: 'filterStatus',
+    viewAction: 'viewAction'
   };
 
   render() {
-    const { count, filterStatus } = this.props.relaxProps;
+    const { count, filterStatus, viewAction } = this.props.relaxProps;
     const countText = this._getCountText(count);
 
     return (
@@ -30,7 +30,7 @@ export default class Footer extends React.Component {
             <a
               href="javascript:;"
               className={'' === filterStatus ? 'selected' : ''}
-              onClick={() => actionCreator.fire(actionType.CHANGE_FILTER, '')}
+              onClick={() => viewAction.TodoAction.changeFilter('')}
             >
               All
             </a>
@@ -39,9 +39,7 @@ export default class Footer extends React.Component {
             <a
               href="javascript:;"
               className={'active' === filterStatus ? 'selected' : ''}
-              onClick={() =>
-                actionCreator.fire(actionType.CHANGE_FILTER, 'active')
-              }
+              onClick={() => viewAction.TodoAction.changeFilter('active')}
             >
               Active
             </a>
@@ -50,9 +48,7 @@ export default class Footer extends React.Component {
             <a
               href="javacript:;"
               className={'completed' === filterStatus ? 'selected' : ''}
-              onClick={() =>
-                actionCreator.fire(actionType.CHANGE_FILTER, 'completed')
-              }
+              onClick={() => viewAction.TodoAction.changeFilter('completed')}
             >
               Completed
             </a>
@@ -60,7 +56,7 @@ export default class Footer extends React.Component {
         </ul>
         <button
           className="clear-completed"
-          onClick={() => actionCreator.fire(actionType.CLEAN_COMPLETED)}
+          onClick={() => viewAction.TodoAction.cleanCompleted()}
         >
           Clear completed
         </button>

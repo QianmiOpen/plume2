@@ -1,20 +1,14 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "target": "es6",
-        "noImplicitAny": false,
-        "sourceMap": true,
-        "allowSyntheticDefaultImports": true,
-        "experimentalDecorators": true,
-        "jsx": "react",
-        "baseUrl": ".",
-        "rootDir": "src",
-        "outDir": "build",
-        "paths": {
-            "*": [
-                "*",
-                "vendor/*"
-            ]
-        }
-    }
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2015",
+    "noImplicitAny": false,
+    "sourceMap": false,
+    "experimentalDecorators": true,
+    "jsx": "react",
+    "esModuleInterop": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
+  },
+  "exclude": ["node_modules/**"]
 }

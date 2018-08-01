@@ -2,8 +2,8 @@
   "name": "plume2",
   "version": "0.3.3",
   "description": "a lightweight of flux for mobile and web",
-  "main": "./es5/index.js",
-  "types": "./es5/typings/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/typings/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hufeng/plume.git"

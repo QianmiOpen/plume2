@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { Relax } from 'plume2';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 @Relax
 export default class Hello extends React.Component<any, any> {

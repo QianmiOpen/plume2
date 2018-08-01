@@ -1,8 +1,7 @@
-import * as React from 'react';
-import { Relax } from 'plume2';
+import { Relax, TViewAction } from 'plume2';
+import React from 'react';
 import { withRouter } from 'react-router-dom';
-import actionType from '../action-type';
-import actionCreator from '../action-creator';
+import * as viewAction from '../view-action';
 
 @withRouter
 @Relax
@@ -11,22 +10,22 @@ export default class Like extends React.Component<any, any> {
     history?: any;
     relaxProps?: {
       like: number;
+      viewAction: TViewAction<typeof viewAction>;
     };
   };
 
   static relaxProps = {
-    like: 'like'
+    like: 'like',
+    viewAction: 'viewAction'
   };
 
   render() {
     const { history } = this.props;
-    const { like } = this.props.relaxProps;
+    const { like, viewAction } = this.props.relaxProps;
+
     return (
       <div>
-        <a
-          href={'javascript:void(0);'}
-          onClick={() => actionCreator.fire(actionType.INCREMENT)}
-        >
+        <a href={'javascript:void(0);'} onClick={viewAction.LikeAction.like}>
           {`点赞🔥 ${like} `}
         </a>
         <div>

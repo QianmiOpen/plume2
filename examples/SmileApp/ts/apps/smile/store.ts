@@ -1,20 +1,14 @@
-import { Store, IOptions } from 'plume2';
+import { Store } from 'plume2';
 import CountActor from './actor/count-actor';
 import LoadingActor from './actor/loading-actor';
-import { fetchCount } from './webapi';
-import actionCreator from './action-creator';
+import * as viewAction from './view-action';
 
-export default class AppStore extends Store {
+export default class AppStore extends Store<typeof viewAction> {
   bindActor() {
-    return [
-      //count-actor
-      new CountActor(),
-      //loading-actor
-      new LoadingActor()
-    ];
+    return [CountActor, LoadingActor];
   }
 
-  bindActionCreator() {
-    return actionCreator;
+  bindViewAction() {
+    return viewAction;
   }
 }

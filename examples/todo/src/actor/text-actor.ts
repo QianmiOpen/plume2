@@ -1,22 +1,22 @@
-import { Actor, Action, IMap } from 'plume2';
-import actionCreator from '../action-type';
+import { Action, Actor, IMap } from 'plume2';
+import { Command } from '../command';
 
 export default class TextActor extends Actor {
   defaultState() {
     return { value: '' };
   }
 
-  @Action(actionCreator.CHANGE_TEXT)
+  @Action(Command.CHANGE_TEXT)
   changeText(state: IMap, text) {
     return state.set('value', text);
   }
 
-  @Action(actionCreator.SUMBIT_TEXT)
+  @Action(Command.SUMBIT_TEXT)
   submit(state: IMap) {
     return state.set('value', '');
   }
 
-  @Action(actionCreator.INIT)
+  @Action(Command.INIT)
   init(state: IMap, { value }) {
     return state.set('value', value);
   }

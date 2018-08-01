@@ -1,30 +1,30 @@
-var path = require("path");
-var webpack = require("webpack");
-var HtmlWebpackPlugin = require("html-webpack-plugin");
+var path = require('path');
+var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  devtool: "cheap-module-source-map",
-  entry: "./src/index.tsx",
+  devtool: 'cheap-module-source-map',
+  entry: './src/index.tsx',
   output: {
-    path: "./build",
-    filename: "bundle.js"
+    path: './build',
+    filename: 'bundle.js'
   },
   resolve: {
-    modules: ["node_modules", path.resolve(__dirname, "web_modules")],
-    extensions: [".web.js", ".js", ".json", ".ts", ".tsx"],
+    modules: ['node_modules', path.resolve(__dirname, 'web_modules')],
+    extensions: ['.web.js', '.js', '.json', '.ts', '.tsx'],
     alias: {
-      react: "preact-compat",
-      "react-dom": "preact-compat"
+      react: 'preact-compat',
+      'react-dom': 'preact-compat'
     }
   },
   module: {
     loaders: [
       {
         test: /\.tsx?$/,
-        include: [path.resolve(__dirname, "src")],
-        loader: "ts-loader"
+        include: [path.resolve(__dirname, 'src')],
+        loader: ['babel-loader', 'ts-loader']
       },
-      { test: /\.css$/, loader: "style-loader!css-loader" }
+      { test: /\.css$/, loader: 'style-loader!css-loader' }
     ]
   },
   plugins: [
@@ -33,13 +33,13 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       dev: true,
-      favicon: "./favicon.ico",
-      filename: "index.html",
-      template: "./index.ejs"
+      favicon: './favicon.ico',
+      filename: 'index.html',
+      template: './index.ejs'
     })
   ],
   devServer: {
-    host: "0.0.0.0",
+    host: '0.0.0.0',
     port: 3000
   }
 };

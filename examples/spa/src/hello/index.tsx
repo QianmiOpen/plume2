@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
 import { StoreProvider } from 'plume2';
-import AppStore from './store';
+import React from 'react';
 import Hello from './component/hello';
+import AppStore from './store';
 
 @StoreProvider(AppStore, { debug: __DEV__ })
-export default class HelloApp extends React.Component<any, any> {
+export default class HelloApp extends React.Component {
   render() {
     return <Hello />;
   }

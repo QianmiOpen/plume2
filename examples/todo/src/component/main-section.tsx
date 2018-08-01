@@ -1,8 +1,6 @@
 import { List } from 'immutable';
 import { IMap, Relax } from 'plume2';
 import React from 'react';
-import actionCreator from '../action-creator';
-import actionType from '../action-type';
 import { todoQL } from '../ql';
 
 @Relax
@@ -11,24 +9,24 @@ export default class MainSection extends React.Component {
     relaxProps?: {
       index: number;
       todo: List<IMap>;
+      viewAction: TTodoViewAction;
     };
   };
 
   static relaxProps = {
-    todo: todoQL
+    todo: todoQL,
+    viewAction: 'viewAction'
   };
 
   render() {
-    const { todo } = this.props.relaxProps;
+    const { todo, viewAction } = this.props.relaxProps;
 
     return (
       <section className="main">
         <input
           className="toggle-all"
           type="checkbox"
-          onChange={e =>
-            actionCreator.fire(actionType.TOGGLE_ALL, e.target.checked)
-          }
+          onChange={e => viewAction.TodoAction.toggleAll(e.target.checked)}
         />
         <label htmlFor="toggle-all">Mark all as complete</label>
         <ul className="todo-list">
@@ -39,12 +37,12 @@ export default class MainSection extends React.Component {
                   className="toggle"
                   type="checkbox"
                   checked={v.get('done')}
-                  onChange={() => actionCreator.fire(actionType.TOGGLE, k)}
+                  onChange={() => viewAction.TodoAction.toggle(k)}
                 />
                 <label>{v.get('text')}</label>
                 <button
                   className="destroy"
-                  onClick={() => actionCreator.fire(actionType.DESTROY, k)}
+                  onClick={() => viewAction.TodoAction.destroy(k)}
                 />
               </div>
             </li>

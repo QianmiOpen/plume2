@@ -1,7 +1,7 @@
+import createHistory from 'history/createBrowserHistory';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { HashRouter as Router } from 'react-router-dom';
-import createHistory from 'history/createBrowserHistory';
 import AsyncRoute from './async-route';
 
 if (__DEV__) {

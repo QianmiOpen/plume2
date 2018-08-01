@@ -6,8 +6,6 @@
     "sourceMap": false,
     "experimentalDecorators": true,
     "jsx": "react",
-    "rootDir": "src",
-    "outDir": "./build",
     "esModuleInterop": true,
     "skipDefaultLibCheck": true,
     "skipLibCheck": true

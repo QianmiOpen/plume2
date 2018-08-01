@@ -9,30 +9,30 @@
     "clean": "rm -rf ./dist",
     "compile": "./node_modules/.bin/tsc && cp -R ./src/css ./build/",
     "watch": "./node_modules/.bin/tsc -w",
-    "build:dll":
-      "./node_modules/.bin/webpack --config webpack.dll.config.js --progress --color",
-    "build":
-      "./node_modules/.bin/webpack --config webpack.production.js --progress --color",
+    "build:dll": "./node_modules/.bin/webpack --config webpack.dll.config.js --progress --color",
+    "build": "./node_modules/.bin/webpack --config webpack.production.js --progress --color",
     "build:all": "npm run clean && npm run build:dll && npm run build"
   },
-  "keywords": ["plume2", "starter"],
+  "keywords": [
+    "plume2",
+    "starter"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/hufeng/plume2-starter.git"
   },
   "author": "hufeng",
-  "license": "BSD",
+  "license": "MIT",
   "dependencies": {
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  },
+  "devDependencies": {
     "@types/node": "^8.0.14",
     "@types/react": "^15.0.38",
     "@types/react-dom": "^15.5.1",
-    "plume2": "0.3.2",
-    "preact": "^8.2.1",
-    "preact-compat": "^3.16.0"
-  },
-  "devDependencies": {
     "babel-jest": "^20.0.3",
-    "babel-loader": "^7.1.1",
+    "babel-loader": "^7.1.5",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.0",
     "css-loader": "^0.28.4",
@@ -40,7 +40,7 @@
     "loglevel": "^1.4.1",
     "style-loader": "^0.18.2",
     "ts-loader": "^2.3.1",
-    "typescript": "^2.4.2",
+    "typescript": "2.9.2",
     "webpack": "^3.3.0",
     "webpack-dev-server": "^2.6.0"
   }

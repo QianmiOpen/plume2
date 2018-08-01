@@ -1,5 +1,4 @@
 import { QL } from 'plume2';
-import { fromJS } from 'immutable';
 
 /**
  * 查询输入框的值

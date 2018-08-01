@@ -3,5 +3,5 @@ build-plume2: clean-plume2
 	@echo "build plume2 successfully ❤️ \n"
 
 clean-plume2:
-	rm -rf packages/plume2/es5
+	rm -rf packages/plume2/lib
 	@echo "clean plume2 successfully 👏 \n"

@@ -11,18 +11,14 @@ module.exports = {
   },
   resolve: {
     modules: ['node_modules', path.resolve(__dirname, 'web_modules')],
-    extensions: ['.web.js', '.js', '.json', '.ts', '.tsx'],
-    alias: {
-      react: 'preact-compat',
-      'react-dom': 'preact-compat'
-    }
+    extensions: ['.web.js', '.js', '.json', '.ts', '.tsx']
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
         include: [path.resolve(__dirname, 'src')],
-        loader: 'ts-loader'
+        loader: ['babel-loader?cacheDirectory', 'ts-loader']
       },
       { test: /\.css$/, loader: 'style-loader!css-loader' }
     ]

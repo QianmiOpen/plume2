@@ -1,19 +1,13 @@
-import { Store, IOptions, Action } from 'plume2';
+import { Store } from 'plume2';
 import LikeActor from './actor/like-actor';
-import actionType from './action-type';
-import actionCreator from './action-creator';
+import * as viewAction from './view-action';
 
 export default class AppStore extends Store {
   bindActor() {
-    return [new LikeActor()];
+    return [LikeActor];
   }
 
-  bindActionCreator() {
-    return actionCreator;
-  }
-
-  @Action(actionType.INCREMENT)
-  inc() {
-    this.dispatch(actionType.INCREMENT);
+  bindViewAction() {
+    return viewAction;
   }
 }

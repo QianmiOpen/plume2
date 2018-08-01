@@ -1,7 +1,5 @@
 import { Relax } from 'plume2';
 import React from 'react';
-import actionCreator from '../action-creator';
-import actionType from '../action-type';
 import { valueQL } from '../ql';
 
 @Relax
@@ -9,11 +7,13 @@ export default class Header extends React.Component {
   props: {
     relaxProps?: {
       value: string;
+      viewAction: TTodoViewAction;
     };
   };
 
   static relaxProps = {
-    value: valueQL
+    value: valueQL,
+    viewAction: 'viewAction'
   };
 
   render() {
@@ -33,12 +33,16 @@ export default class Header extends React.Component {
   }
 
   _handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    actionCreator.fire(actionType.CHANGE_TEXT, (e.target as any).value);
+    this.props.relaxProps.viewAction.TodoAction.changeText(
+      (e.target as any).value
+    );
   };
 
   _handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13) {
-      actionCreator.fire(actionType.SUMBIT_TEXT, (e.target as any).value);
+      this.props.relaxProps.viewAction.TodoAction.submitText(
+        (e.target as any).value
+      );
     }
   };
 }

@@ -1,17 +1,15 @@
 import { fromJS } from 'immutable';
 import { Action, Actor, IMap } from 'plume2';
-import actionCreator from '../action-type';
+import { Command } from '../command';
 
 let uuid = 0;
 
 export default class TodoActor extends Actor {
   defaultState() {
-    return {
-      todo: []
-    };
+    return { todo: [] };
   }
 
-  @Action(actionCreator.SUMBIT_TEXT)
+  @Action(Command.SUMBIT_TEXT)
   add(state: IMap, text: string) {
     return state.update('todo', todo =>
       todo.push(
@@ -24,29 +22,29 @@ export default class TodoActor extends Actor {
     );
   }
 
-  @Action(actionCreator.DESTROY)
+  @Action(Command.DESTROY)
   destroy(state: IMap, index: number) {
     return state.deleteIn(['todo', index]);
   }
 
-  @Action(actionCreator.TOGGLE)
+  @Action(Command.TOGGLE)
   toggle(state: IMap, index: number) {
     return state.updateIn(['todo', index, 'done'], done => !done);
   }
 
-  @Action(actionCreator.TOGGLE_ALL)
+  @Action(Command.TOGGLE_ALL)
   toggleAll(state: IMap, checked: boolean) {
     return state.update('todo', todo =>
       todo.map(item => item.set('done', checked))
     );
   }
 
-  @Action(actionCreator.CLEAN_COMPLETED)
+  @Action(Command.CLEAN_COMPLETED)
   clear(state: IMap) {
     return state.update('todo', todo => todo.filter(item => !item.get('done')));
   }
 
-  @Action(actionCreator.INIT)
+  @Action(Command.INIT)
   init(state: IMap, { todo }) {
     return state.set('todo', fromJS(todo));
   }
