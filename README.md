@@ -16,9 +16,9 @@ light weight framework React for mobile web
 
 Reactive and Predictable state container for React or ReactNative.
 
-* Thanks Immutable.js
-* Thanks MapReduce
-* Thanks Functional Reactive Programming.
+- Thanks Immutable.js
+- Thanks MapReduce
+- Thanks Functional Reactive Programming.
 
 ### iflux
 
@@ -55,24 +55,24 @@ _[iflux](https://github.com/QianmiOpen/iflux) = immutable.js + react.js_
 
 优点：
 
-* 简单直接，几乎没有什么规则
-* 单根数据源(single data source)
-* Immutable fronted UI
-* High Performance
+- 简单直接，几乎没有什么规则
+- 单根数据源(single data source)
+- Immutable fronted UI
+- High Performance
 
 但是随着业务的不断的发展，数据层的复杂度也在上升。这时候 iflux 就会暴露出很多的缺点
 
-* Big Store, Store 中大量的数据和业务的处理，代码膨胀的厉害
-* Store 是单例，不销毁，有共享的问题
-* store 的数据通过 props 不断的透传，代码写的很费劲
-* 大量的数据之间的依赖关系，需要手动的保证和处理
+- Big Store, Store 中大量的数据和业务的处理，代码膨胀的厉害
+- Store 是单例，不销毁，有共享的问题
+- store 的数据通过 props 不断的透传，代码写的很费劲
+- 大量的数据之间的依赖关系，需要手动的保证和处理
 
 ### 怎么解决?
 
-* 使用 MapReduce 的理念解决 big Store
-* 使用@Relax 自动注入 store 中的数据和事件
-* Store 不再是单例
-* 使用 FRP 的理念, 简单的实现反应式数据，抽象源数据和派生数据
+- 使用 MapReduce 的理念解决 big Store
+- 使用@Relax 自动注入 store 中的数据和事件
+- Store 不再是单例
+- 使用 FRP 的理念, 简单的实现反应式数据，抽象源数据和派生数据
 
 这就是我们的 plume2
 
@@ -161,67 +161,34 @@ ReactDOM.render(<HelloApp />, document.getElementById('app'));
 
 **thanks all(pr, issue)**
 
-```text
-plume2 git/master  
-❯ git summary
-
- project  : plume2
- repo age : 8 months
- active   : 42 days
- commits  : 164
- files    : 191
- authors  :
-   149	hufeng  90.9%
-    14	胡锋    8.5%
-     1	blsery  0.6%
-```
-
 ## document
 
 [plume2](https://hufeng.github.io/plume2/)
 
 ## FAQ
 
-1. TypeError: Class constructor Store can not be invoked without 'new'?
+1.  TypeError: Class constructor Store can not be invoked without 'new'?
 
 ![err](https://raw.githubusercontent.com/hufeng/plume2/master/docs/screenshot/err.png)
 
 默认我们的 plume2 发布的模块级别是 es6，为了让我们调试方便，没有编译到 es5 的 level。这样在和 webpack 的配合的时候，webpack 一般在配置 babel-loader 的时候，会忽略 node_modules
 这样会导致我们业务代码编译级别是 es5,plume2 是 es6，就会报这个错误。
 
-解决，我们现在发布也是带了 es5 的模块，只不过默认的仍然是 es6.你可以直接用
+plume2@0.3.4 默认发布的就是 es5 module 不再需要提前的任意转换
 
-```js
-import {Store ...}  from 'plume2/es5'
-```
-
-当然这并不是最好的解决方案
-
-还是通过 babel 和 webpack 配置来解决问题比较好,比如：
-
-```javascript
-{
-  test: /\.js$/,
-  include: [
-    path.resolve(__dirname, 'node_modules/plume2'),
-  ],
-  loader: 'babel-loader'
-}
-```
-
-2. ReactNative can not find react-dom module
+2.  ReactNative can not find react-dom module
 
 这是什么原因呢？因为我们的 store 模块依赖了 react-dom，在 react-native 的环境是没有 react-dom 这个模块，所以请使用我们的一个自定义的 babel 插件来解决问题。
 
 ```sh
-yarn add babel-plugin-transform-rn-react-dom
+yarn add babel-plugin-plume2
 ```
 
 ```js
 //.babelrc
 {
   "plugins": [
-    "transform-rn-react-dom"
+    ["plume2", {reactnative: true}]
   ]
 }
 ```

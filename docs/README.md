@@ -137,10 +137,10 @@ Store, 我们的数据状态容器中心，管理着整个 app 的数据的生�
 
 **Store 的主要职责有哪些?**
 
-1. 聚合 actor
-2. 分派 actor(单分派、事务分派)
-3. 通过 bigQuery 计算我们的查询语言(QL/PQL)
-4. 响应页面的事件(ActionCreator)
+1.  聚合 actor
+2.  分派 actor(单分派、事务分派)
+3.  通过 bigQuery 计算我们的查询语言(QL/PQL)
+4.  响应页面的事件(ActionCreator)
 
 **Show me code!**
 
@@ -245,10 +245,10 @@ StoreProvider 容器组件衔接我们的 React 组件和 AppStore。向 React �
 
 在 StoreProvider 中的主要任务是:
 
-1. 初始化我们的 AppStore
-2. 将 AppStore 的对象绑定到 React 组件的上下文
-3. Relay 就是通过上下文取的 store 对象
-4. 监听 Store 的 state 变化
+1.  初始化我们的 AppStore
+2.  将 AppStore 的对象绑定到 React 组件的上下文
+3.  Relay 就是通过上下文取的 store 对象
+4.  监听 Store 的 state 变化
 
 **友情提示:我们还提供了 debug 模式 😁**
 
@@ -292,10 +292,10 @@ Relax 是 plume2 中非常重要的容器组件，类似 Spring 容器的依赖�
 
 **计算的规则:**
 
-1. store 的 state 的值，直接给出值得 immutable 的路径，如： count: 'count', todoText: ['todo', 1, 'text']
+1.  store 的 state 的值，直接给出值得 immutable 的路径，如： count: 'count', todoText: ['todo', 1, 'text']
 
-2. store 的 method,直接和 method 同名的就 ok
-   如： destroy: noop, 我们更希望通过 ActionCreator 来单独处理 UI 的 side effect
+2.  store 的 method,直接和 method 同名的就 ok
+    如： destroy: noop, 我们更希望通过 ActionCreator 来单独处理 UI 的 side effect
 
 ```js
 @Relax
@@ -323,11 +323,11 @@ export default class Footer extends React.Component {
 
 **为什么我们需要一个 QL**
 
-1. 我们把 store state 看成 source data，因为 UI 展示的数据，可能需要根据我们的源数据进行组合
+1.  我们把 store state 看成 source data，因为 UI 展示的数据，可能需要根据我们的源数据进行组合
 
-2. 我们需要 UI 的数据具有 reactive 的能力，当 source data 变化的时候，@Relax 会去重新计算我们的 QL
+2.  我们需要 UI 的数据具有 reactive 的能力，当 source data 变化的时候，@Relax 会去重新计算我们的 QL
 
-3. 命令式的编程手动的精确的处理数据之间的依赖和更新，Reactive 会自动处理数据依赖，但是同一个 QL 可能会被执行多次，造成计算上的浪费，不过不需要担心，QL 支持 cache，确保 path 对应的数据没有变化的时候，QL 不会重复计算
+3.  命令式的编程手动的精确的处理数据之间的依赖和更新，Reactive 会自动处理数据依赖，但是同一个 QL 可能会被执行多次，造成计算上的浪费，不过不需要担心，QL 支持 cache，确保 path 对应的数据没有变化的时候，QL 不会重复计算
 
 **QL = Query Lang**
 
@@ -388,7 +388,7 @@ plume2 完全站在 typescript 静态和编译角度去思考框架的特性和�
 
 ## improvements
 
-1. 干掉 DQL，DQL 有些鸡肋，这就是理想和现实的差别，DQL 实现过程中需要动态递归的替换模板变量也是比较受罪，更重要的事，DQL 的动态数据的来源只能是 React 的 Component 的 props，这就带来了一些不够灵活，比较受限。我们设计 DQL 或者 QL 本意是是什么，是获取数据声明式(Declarative)以及数据本身的反应式(reactive). 为了解决这个问题，我们设计了更简单的 PQL(partial Query Lang)
+1.  干掉 DQL，DQL 有些鸡肋，这就是理想和现实的差别，DQL 实现过程中需要动态递归的替换模板变量也是比较受罪，更重要的事，DQL 的动态数据的来源只能是 React 的 Component 的 props，这就带来了一些不够灵活，比较受限。我们设计 DQL 或者 QL 本意是是什么，是获取数据声明式(Declarative)以及数据本身的反应式(reactive). 为了解决这个问题，我们设计了更简单的 PQL(partial Query Lang)
 
 ```js
   import {PQL, Relax} from 'plume2'
@@ -413,7 +413,7 @@ plume2 完全站在 typescript 静态和编译角度去思考框架的特性和�
 
 简单清晰实现，更灵活的参数入口。目前不支持 PQL 嵌套 PQL。
 
-2. 更舒服的开发体验
+2.  更舒服的开发体验
 
 有时候我们为了快速的在浏览器的控制台如(chrome console)去快速测试我们的一些 store 的方法，我们会写
 
@@ -446,7 +446,7 @@ plume2 会自动在 window 上面绑定\_plume2App, 各个 key 就是 storeprovi
 
 这样小伙伴尽情玩耍就可以了。
 
-3. 更好的事件处理模块目前我们的 UI 交互的事件的 handler 都在 store 中，因为我们希望 UI 是 less-logic 这样才好通用我们业务层。之前都是通过 relax 和 relaxProps 去 injected 我们 store 的方法给 UI 的交互逻辑，如：
+3.  更好的事件处理模块目前我们的 UI 交互的事件的 handler 都在 store 中，因为我们希望 UI 是 less-logic 这样才好通用我们业务层。之前都是通过 relax 和 relaxProps 去 injected 我们 store 的方法给 UI 的交互逻辑，如：
 
 ```typescript
 const noop = () => {};
@@ -519,7 +519,7 @@ const HelloApp = () => (
 
 ## 都什么年代了 你还裸用字符串，你这是魔鬼字符串。。😓
 
-4. 是的，我们加，我们加字符串的枚举类型，一次来解决 dispatch 到 actor 等各种常量字符串
+4.  是的，我们加，我们加字符串的枚举类型，一次来解决 dispatch 到 actor 等各种常量字符串
 
 ```js
 export default ActionType('INCREMENT', 'DECREMENT');
