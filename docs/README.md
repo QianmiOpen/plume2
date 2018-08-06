@@ -1,7 +1,7 @@
 # Hello, plume2.
 
 ```javascript
-import { Actor, Store, StoreProvider, Relax } from 'plume2';
+import { Actor, Store, StoreProvider, Relax, ViewAction } from 'plume2';
 
 //MapReduce
 class HelloActor extends Actor {
@@ -10,10 +10,26 @@ class HelloActor extends Actor {
   }
 }
 
+//reactive ui event
+class AppViewAction extends ViewAction {
+  sayHello = text => {
+    this.store.dispatch('say:hello', text);
+  };
+}
+
 //Single Data Source
 class AppStore extends Store {
+  //bind data transform
   bindActor() {
-    return [new HelloActor()];
+    //after plume2@1.0.0, directly pass Actor class
+    return [HelloActor];
+  }
+
+  //bind ui event
+  bindViewAction() {
+    return {
+      AppViewAction
+    };
   }
 }
 
@@ -21,13 +37,21 @@ class AppStore extends Store {
 @Relax
 class Text extends React.Component {
   static relaxProps = {
-    text: 'text'
+    //auto injected by store.state().get('text')
+    text: 'text',
+    //auto injected by store's bindViewAction
+    viewAction: 'viewAction'
   };
 
   render() {
-    const { text } = this.props.relaxProps;
-    return <div>{text}</div>;
+    const { text, viewAction } = this.props.relaxProps;
+    return <div onClick={this._handleClick}>{text}</div>;
   }
+
+  _handleClick = () => {
+    const { text, viewAction } = this.props.relaxProps;
+    viewAction.AppViewAction.sayHello(text);
+  };
 }
 
 //App entry
@@ -109,6 +133,9 @@ class HelloActor extends Actor {
    * 领域的初始数据，该数据会被自动的转化为immutable
    */
   defaultState() {
+    //返回的对象会被自动的转化成immutable，
+    //除非有特殊数据结构如(Set, OrderedMap之类)
+    //不需要特殊指定immutable数据结构
     return { text: 'hello plume2' };
   }
 
@@ -140,33 +167,20 @@ Store, 我们的数据状态容器中心，管理着整个 app 的数据的生�
 1.  聚合 actor
 2.  分派 actor(单分派、事务分派)
 3.  通过 bigQuery 计算我们的查询语言(QL/PQL)
-4.  响应页面的事件(ActionCreator)
+4.  响应页面的事件(ViewAction)
 
 **Show me code!**
 
 ```js
-import { Store } from 'plume2';
+import { Store, ViewAction } from 'plume2';
 import LoadingActor from 'loading-actor';
 import UserActor from 'user-actor';
 import TodoActor from 'todo-actor';
 
-class AppStore extends Store {
-  /**
-   * 聚合Actor
-   * 通过reduce 各个actor的defaultState
-   * 聚合出store的state作为source data.
-   */
-  bindActor() {
-    return [
-      //reduce each actor
-      new LoadingActor(),
-      new UserActor(),
-      new TodoActor()
-    ];
-  }
-
-  //;;;;;;;;;;;;;响应页面事件的逻辑处理;;;;;;;;;;;;;;
-
+/**
+ *;;;;;;;;;;;;;响应页面事件的逻辑处理;;;;;;;;;;;;;;
+ */
+class AppViewAction extends ViewAction {
   //show simple dispatch
   //when dispatch finished, if status had changed,
   //each Relax component received message
@@ -175,7 +189,7 @@ class AppStore extends Store {
     //然后根据actor的返回值，重新聚合新的store的state
     //该为单分派，当dispatch结束，store的state发生改变的时候，
     //UI容器组件(StoreProvider, Relax)会收到通知重新re-render UI
-    this.dispatch('update');
+    this.store.dispatch('update');
   };
 
   //show multiple dispatch in a transaction
@@ -187,17 +201,34 @@ class AppStore extends Store {
     //如果发生错误，数据会自动回滚到上一次的状态，避免脏数据
     //我们也可以指定，自定义的回滚处理
     //this.transaction(()=> {/*正常逻辑*/}, () => {/*自定义的回滚函数*/})
-    this.transaction(() => {
-      this.dispatch('loading:end');
+    this.store.transaction(() => {
+      this.store.dispatch('loading:end');
 
       //这个地方可以得到上一次的dispatch之后的结果
       //如：
       const loading = this.state().get('loading');
-
-      this.dispatch('init:user', { id: 1, name: 'plume2' });
-      this.dispatch('save');
+      this.store.dispatch('init:user', { id: 1, name: 'plume2' });
+      this.store.dispatch('save');
     });
   };
+}
+
+class AppStore extends Store {
+  /**
+   * 聚合Actor
+   * 通过reduce 各个actor的defaultState
+   * 聚合出store的state作为source data.
+   */
+  bindActor() {
+    //plume2@1.0.0直接传递Actor的class
+    return [LoadingActor, UserActor, TodoActor];
+  }
+
+  bindViewAction() {
+    return {
+      AppViewAction
+    };
+  }
 }
 ```
 
@@ -207,7 +238,9 @@ Store public-API
 /**
  * 绑定需要聚合的Actor
  */
-bindActor(): Array<Actor>
+bindActor(): Array<Actor | typeof Actor>
+
+bindViewAction(): IViewActionMapper
 
 /**
  * 事务控制dispatch
@@ -297,6 +330,10 @@ Relax 是 plume2 中非常重要的容器组件，类似 Spring 容器的依赖�
 2.  store 的 method,直接和 method 同名的就 ok
     如： destroy: noop, 我们更希望通过 ActionCreator 来单独处理 UI 的 side effect
 
+3.  如果属性值是'viewAction'， 直接注入 store 中绑定的 ViewAction
+
+4.  如果属性值是 QL，注入 QL 计算之后的结果， 如果 PQL 会自动绑定 store 的上下文
+
 ```js
 @Relax
 export default class Footer extends React.Component {
@@ -304,7 +341,9 @@ export default class Footer extends React.Component {
     changeFilter: noop,
     clearCompleted: noop,
     count: countQL,
-    filterStatus: 'filterStatus'
+    loadingPQL: loadingPQL,
+    filterStatus: 'filterStatus',
+    viewAction: 'viewAction'
   };
 
   render() {
@@ -312,7 +351,8 @@ export default class Footer extends React.Component {
       changeFilter,
       clearCompleted,
       count,
-      filterStatus
+      filterStatus,
+      viewAction
     } = this.props.relaxProps;
     //...
   }
@@ -517,6 +557,57 @@ const HelloApp = () => (
 );
 ```
 
+> Fixed
+
+这种方式有个问题就是 ActionCreator 是个单例，这样会导致多次重复 render 一个页面的时候，
+会有事件被 store 的上下文覆盖的问题。基于这样的考虑还是需要通过上下文注入绑定，所以
+在 1.0.0 中我们设计了 ViewAction 来解决这个问题。
+
+## ViewAction
+
+```typescript
+import { ViewAction, Store } from 'plume2';
+
+class LoadingViewAction extends ViewAction {
+  loading = () => {
+    this.store.dispatch('loading:start');
+  };
+}
+
+class FilterViewAction extends ViewAction {
+  filter = (text: string) => {
+    this.store.dispatch('fitler:text', text);
+  };
+}
+
+//bind to store
+class AppStore extends Store {
+  bindViewAction() {
+    return {
+      LoadingViewAction,
+      FilterViewAction
+    };
+  }
+}
+
+//how to injected to ui
+class Filter extends React.Component {
+  props: {
+    relaxProps?: {
+      //代码自动提示，参考example中的例子
+      viewAction: TViewAction<typeof {LoadingViewAction, FilterViewAction}>
+    }
+  }
+  static relaxProps = {
+    viewAction: 'viewAction'
+  };
+
+  render() {
+    const {viewAction} = this.props.relaxProps;
+  }
+}
+```
+
 ## 都什么年代了 你还裸用字符串，你这是魔鬼字符串。。😓
 
 4.  是的，我们加，我们加字符串的枚举类型，一次来解决 dispatch 到 actor 等各种常量字符串
@@ -535,6 +626,18 @@ const Actions = actionType({
   Text: 'text/plain',
   JPEG: 'image/jpeg'
 });
+```
+
+> Fixed
+> typescript 2.7 以后添加了字符串常量枚举
+
+所以直接使用就好了，推荐使用常量字符串枚举，为什么？😆
+
+```typescript
+export const enum Command {
+  LOADING = 'loading',
+  FILTER_TEXT = 'filter:text'
+}
 ```
 
 ### 金无足赤人无完人，在实践中积累，反思，成长。框架亦然。

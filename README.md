@@ -120,8 +120,8 @@ yarn add react react-dom # yarn add preact preact-compat
 # quick demo
 
 ```js
-//四大领域对象
-//Actor, Store, StoreProvider, Relax
+//domain Object
+//Actor, Store, StoreProvider, Relax, ViewAction
 
 class HelloActor extends Actor {
   defaultState() {
@@ -129,21 +129,38 @@ class HelloActor extends Actor {
   }
 }
 
+class HelloViewAction extends ViewAction {
+  sayHello = text => {
+    this.store.dispatch('say:hello', text);
+  };
+}
+
 class AppStore extends Store {
   bindActor() {
-    return [new HelloActor()];
+    return [HelloActor];
+  }
+
+  bindViewAction() {
+    return {
+      HelloViewAction
+    };
   }
 }
 
 @Relax
 class Text extends React.Component {
   static relaxProps = {
-    text: 'text'
+    text: 'text',
+    viewAction: 'viewAction'
   };
 
   render() {
-    const { text } = this.props.relaxProps;
-    return <div>{text}</div>;
+    const { text, viewAction } = this.props.relaxProps;
+    return (
+      <div onClick={() => viewAction.HelloViewAction.sayHello(text)}>
+        {text}
+      </div>
+    );
   }
 }
 
@@ -175,6 +192,7 @@ ReactDOM.render(<HelloApp />, document.getElementById('app'));
 这样会导致我们业务代码编译级别是 es5,plume2 是 es6，就会报这个错误。
 
 plume2@0.3.4 默认发布的就是 es5 module 不再需要提前的任意转换
+<strong>在 plume2@1.0.0 之后，默认发布的就是 es5 module，不在需要这种转换 </strong>
 
 2.  ReactNative can not find react-dom module
 
