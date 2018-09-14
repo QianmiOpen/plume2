@@ -7,6 +7,8 @@ import Store from './store';
 import { isArray, isString } from './type';
 import { IMap, IRelaxComponent, IRelaxContext } from './typing';
 
+const relaxCount = {};
+
 /**
  * 通过分析relaxProps构成，来判断@Relax需不需要订阅store的变化
  * @param relaxProps
@@ -42,11 +44,6 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     //声明上下文依赖
     static contextTypes = { _plume$Store: PropTypes.object };
 
-    //relax related props
-    props: Object;
-    //current context
-    context: { _plume$Store: Store };
-
     constructor(props: Object, context: IRelaxContext<Store>) {
       super(props);
       this._isMounted = false;
@@ -57,7 +54,31 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
       if (this._isNeedRxStore) {
         context._plume$Store.subscribe(this._handleStoreChange);
       }
+
+      //will drop on production env
+      if (process.env.NODE_ENV != 'production') {
+        if ((context['_plume$Store'] as any)._opts.debug) {
+          const count = relaxCount[Relax.displayName];
+          if (typeof count != 'number') {
+            relaxCount[Relax.displayName] = 1;
+          } else {
+            relaxCount[Relax.displayName]++;
+          }
+
+          if (count > 10) {
+            console.warn(
+              `you have to many ${
+                Relax.displayName
+              } component, May be effect performance!`
+            );
+          }
+        }
+      }
     }
+    //relax related props
+    props: Object;
+    //current context
+    context: { _plume$Store: Store };
 
     private _relaxProps: Object;
     private _isMounted: boolean;
@@ -162,6 +183,12 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
       if (this._isNeedRxStore) {
         this.context['_plume$Store'].unsubscribe(this._handleStoreChange);
       }
+
+      if (process.env.NODE_ENV != 'production') {
+        if ((this.context['_plume$Store'] as any)._opts.debug) {
+          relaxCount[Relax.displayName]--;
+        }
+      }
     }
 
     render() {
@@ -226,9 +253,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
 
     _handleStoreChange = (state: IMap) => {
       if (this._isMounted) {
-        this.setState({
-          storeState: state
-        });
+        this.setState({ storeState: state });
       }
     };
   };

@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test output include warning 1`] = `
+<div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+  <div>
+    hello
+  </div>
+</div>
+`;
