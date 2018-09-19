@@ -1,3 +1,4 @@
+import i from 'immutable';
 import Actor from './actor';
 import { Action } from './decorator';
 import { go } from './go';
@@ -11,6 +12,7 @@ import { IMap, IOptions, TViewAction } from './typing';
 import { ViewAction } from './view-action';
 
 export {
+  i,
   go,
   QL,
   PQL,
