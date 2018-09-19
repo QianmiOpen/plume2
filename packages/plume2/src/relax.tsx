@@ -49,6 +49,16 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
       this._isMounted = false;
       this.state = { storeState: {} };
 
+      //优化开发体验，在relax判断是不是context是不是有绑定的store
+      //如果没有提示用户需要在顶层的React组件加上StoreProvider
+      if (process.env.NODE_ENV != 'production') {
+        if (!context._plume$Store) {
+          throw new Error(
+            'Could not find any store in context, Please add @StoreProvder on top React Component'
+          );
+        }
+      }
+
       //判断是不是需要响应store的状态变化
       this._isNeedRxStore = isRxRelaxProps(Relax.relaxProps);
       if (this._isNeedRxStore) {
