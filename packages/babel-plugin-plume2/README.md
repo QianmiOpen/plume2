@@ -8,3 +8,18 @@
 而此方法在 reactnative 中是通过 react-native 模块暴露的，所以我们这个插件就可以在编译器做特殊处理
 
 //TODO 后期会有更多的优化
+
+# How to use?
+
+```sh
+yarn add babel-plugin-plume2 --dev
+```
+
+//.babelrc
+
+```json
+{
+  "presets": ["react-native"],
+  "plugins": [["plume2", { "reactnative": true }]]
+}
+```
