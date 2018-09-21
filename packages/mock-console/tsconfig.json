@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig",
+  "compilerOptions": {
+    "target": "es5",
+    "declaration": true,
+    "rootDir": "./src",
+    "outDir": "./lib",
+    "skipLibCheck": true,
+    "declarationDir": "./lib/typings"
+  }
+}

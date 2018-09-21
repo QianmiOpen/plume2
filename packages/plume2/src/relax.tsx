@@ -75,7 +75,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
             relaxCount[Relax.displayName]++;
           }
 
-          if (count > 10) {
+          if (count == 10) {
             console.warn(
               `you have to many ${
                 Relax.displayName
@@ -206,17 +206,6 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     }
 
     _computeRelaxProps() {
-      //dev check
-      if (process.env.NODE_ENV != 'production') {
-        if (!Wrapper.relaxProps) {
-          console.warn(
-            `😓 ${
-              Relax.displayName
-            } could not find any static relaxProps, Please remove @Relex!!!`
-          );
-        }
-      }
-
       const relaxProps = {};
       const staticRelaxProps = Relax.relaxProps;
       const store: Store = this.context['_plume$Store'];

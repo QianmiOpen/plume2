@@ -1,3 +1,4 @@
+import { MockLog } from 'mock-console';
 import { Action, Actor, IMap, Store } from '../index';
 
 class HelloActor extends Actor {
@@ -31,8 +32,8 @@ class AppStore extends Store {
   bindActor() {
     return [
       //binding actor
-      new HelloActor(),
-      new LoadingActor()
+      HelloActor,
+      LoadingActor
     ];
   }
 
@@ -97,6 +98,7 @@ describe('store test suite', () => {
 
   it('store subscribe', () => {
     const store = new AppStore({}) as any;
+    //@ts-ignore
     const _handleStoreChange = (state: IMap) => {
       expect(store.state()).toEqual({ loading: true, name: 'plume++' });
     };
@@ -122,15 +124,22 @@ describe('store test suite', () => {
 
     class AppStore extends Store {
       bindActor() {
-        return [new LoadingActor()];
+        return [LoadingActor];
       }
     }
 
+    const mock = new MockLog();
     const store = new AppStore({ debug: true });
     store.dispatch('loading:end', false);
 
     expect(store.state().toJS()).toEqual({
       loading: false
     });
+
+    expect(mock.logs).toEqual([
+      "store dispatch => 'loading:end'",
+      'params|> false',
+      "LoadingActor receive => 'loading:end'"
+    ]);
   });
 });

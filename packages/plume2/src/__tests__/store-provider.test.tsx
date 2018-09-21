@@ -1,3 +1,4 @@
+import { MockLog } from 'mock-console';
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { Action } from '../decorator';
@@ -83,7 +84,13 @@ describe('store provider test suite', () => {
         return <div />;
       }
     }
+
+    const mock = new MockLog();
     const tree = renderer.create(<DebugApp />).toJSON();
     expect(tree).toMatchSnapshot();
+    expect(mock.logs).toEqual([
+      '%cplume2@1.0.0🚀',
+      'StoreProvider(DebugApp) will mount 🚀'
+    ]);
   });
 });

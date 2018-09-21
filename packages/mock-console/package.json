@@ -1,0 +1,12 @@
+{
+  "name": "mock-console",
+  "version": "1.0.0",
+  "description": "jest.fn mock console.xxx",
+  "main": "./lib/index.js",
+  "types": "./lib/typings/index.d.ts",
+  "keywords": [
+    "mock jest console"
+  ],
+  "author": "hufeng",
+  "license": "MIT"
+}

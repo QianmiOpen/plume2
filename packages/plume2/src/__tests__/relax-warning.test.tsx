@@ -1,3 +1,4 @@
+import { MockWarn } from 'mock-console';
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { Actor, Relax, Store, StoreProvider } from '..';
@@ -27,12 +28,17 @@ class Home extends React.Component {
 
 @Relax
 class Test extends React.Component {
+  static relaxProps = {};
   render() {
     return <div>hello</div>;
   }
 }
 
 it('test output include warning', () => {
+  const mock = new MockWarn();
   const tree = renderer.create(<Home />).toJSON();
   expect(tree).toMatchSnapshot();
+  expect(mock.logs).toEqual([
+    'you have to many Relax(Test) component, May be effect performance!'
+  ]);
 });

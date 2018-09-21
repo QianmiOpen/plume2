@@ -27,3 +27,13 @@ it('test go failed', async () => {
   expect(res).toEqual(null);
   expect(err).toEqual(new Error('exception'));
 });
+
+it('test multiple go', async () => {
+  let { res, err } = await go(hello());
+  expect(res).toEqual('hello');
+  expect(err).toEqual(null);
+
+  ({ res, err } = await go(world()));
+  expect(res).toEqual(null);
+  expect(err).toEqual(new Error('exception'));
+});
