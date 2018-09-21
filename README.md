@@ -34,7 +34,7 @@ _[iflux](https://github.com/QianmiOpen/iflux) = immutable.js + react.js_
 +-----------------------+
 |       WebApi          |
 +-----------------------+
-          |  
+          |
          \|/
 +-----------------------+
 |   Store（immutable）   |<-----+
@@ -199,14 +199,14 @@ plume2@0.3.4 默认发布的就是 es5 module 不再需要提前的任意转换
 这是什么原因呢？因为我们的 store 模块依赖了 react-dom，在 react-native 的环境是没有 react-dom 这个模块，所以请使用我们的一个自定义的 babel 插件来解决问题。
 
 ```sh
-yarn add babel-plugin-plume2
+yarn add babel-plugin-plume2 --dev
 ```
 
 ```js
 //.babelrc
 {
   "plugins": [
-    ["plume2", {reactnative: true}]
+    ["plume2", {"reactnative": true}]
   ]
 }
 ```
