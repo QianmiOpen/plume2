@@ -1,3 +1,4 @@
+import { MockLog } from 'mock-console';
 import React from 'react';
 import renderer from 'react-test-renderer';
 import {
@@ -110,11 +111,13 @@ describe('viewAction test suite', () => {
   });
 
   it('test relax inject viewAction', () => {
+    const mockLog = new MockLog();
     const component = renderer.create(<HelloApp />);
     expect(component.toJSON()).toMatchSnapshot();
     const store = window['_plume2App'].HelloApp.store as AppStore;
     store.viewAction.HelloViewAction.sayHello();
     store.viewAction.WorldViewAction.sayWorld();
     expect(component.toJSON()).toMatchSnapshot();
+    expect(mockLog).toMatchSnapshot();
   });
 });

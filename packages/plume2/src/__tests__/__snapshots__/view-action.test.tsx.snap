@@ -21,3 +21,31 @@ exports[`viewAction test suite test relax inject viewAction 2`] = `
   </div>
 </div>
 `;
+
+exports[`viewAction test suite test relax inject viewAction 3`] = `
+MockLog {
+  "_logs": Array [
+    "%cplume2@1.0.0🚀",
+    "StoreProvider(HelloApp) will mount 🚀",
+    "Relax(HelloRelax) will mount rx store: true 🚀 ",
+    "props:|>",
+    "relaxProps:|>",
+    "store dispatch => 'hello'",
+    "params|> hello",
+    "HelloWorldActor receive => 'hello'",
+    "
+StoreProvider(HelloApp) will update 🚀",
+    "Relax(HelloRelax) will update rx store true 🚀",
+    "props:|>",
+    "relaxProps:|>",
+    "store dispatch => 'world'",
+    "params|> world",
+    "HelloWorldActor receive => 'world'",
+    "
+StoreProvider(HelloApp) will update 🚀",
+    "Relax(HelloRelax) will update rx store true 🚀",
+    "props:|>",
+    "relaxProps:|>",
+  ],
+}
+`;

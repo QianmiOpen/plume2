@@ -1,4 +1,3 @@
-import { MockConsole } from 'mock-console';
 import { Action, Actor, IMap, Store } from '../index';
 
 class HelloActor extends Actor {
@@ -27,7 +26,7 @@ class LoadingActor extends Actor {
 
 class AppStore extends Store {
   bindActor() {
-    return [new LoadingActor(), new HelloActor()];
+    return [LoadingActor, HelloActor];
   }
 
   rollBack = () => {
@@ -76,18 +75,16 @@ describe('test store transaction fail rollback', () => {
   });
 
   it('test customRollBack', () => {
-    const store = new AppStore({});
+    const store = new AppStore();
     const state = store.state();
     store.customRollBack();
     expect(store.state()).toEqual(state);
   });
 
   it('test without rollback', () => {
-    const mock = new MockConsole();
-    const store = new AppStore({ debug: true });
+    const store = new AppStore();
     const state = store.state();
     store.change();
     expect(store.state() == state).toEqual(false);
-    expect(mock.logs).toEqual([]);
   });
 });

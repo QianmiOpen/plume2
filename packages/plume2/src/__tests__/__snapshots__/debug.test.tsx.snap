@@ -5,3 +5,10 @@ exports[`test debug window app 1`] = `
   hello world
 </div>
 `;
+
+exports[`test debug window app 2`] = `
+Array [
+  "%cplume2@1.0.0🚀",
+  "StoreProvider(DebugApp) will mount 🚀",
+]
+`;

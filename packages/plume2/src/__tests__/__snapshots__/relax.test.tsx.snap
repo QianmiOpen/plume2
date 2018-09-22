@@ -16,3 +16,29 @@ exports[`relax test suite initial render relax 1`] = `
   </div>
 </div>
 `;
+
+exports[`relax test suite initial render relax 2`] = `
+Array [
+  "%cplume2@1.0.0🚀",
+  "StoreProvider(HelloApp) will mount 🚀",
+  "🔥:tracing: QL(loadingQL)",
+  "dep:loading, cache:false, value:false",
+  "QL(loadingQL)|> false",
+  "🔥:tracing: QL(mottQL)",
+  "🔥:tracing: QL(loadingQL)",
+  "dep:loading, cache:true, value:false",
+  "🚀:QL(loadingQL), cache: true, result: false",
+  "dep:loadingQL, cache:false,value:false",
+  "dep:mott, cache:false, value:\\"hello world!\\"",
+  "QL(mottQL)|> {
+  \\"loading\\": false,
+  \\"mott\\": \\"hello world!\\"
+}",
+  "Relax(HelloRelax) will mount rx store: true 🚀 ",
+  "props:|>",
+  "relaxProps:|>",
+  "🔥:tracing: QL(loadingPQL)",
+  "dep:mott, cache:false, value:\\"hello world!\\"",
+  "QL(loadingPQL)|> \\"hello world!\\"",
+]
+`;

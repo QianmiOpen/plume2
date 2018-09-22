@@ -103,30 +103,7 @@ describe('relax test suite', () => {
     const mock = new MockLog();
     const tree = renderer.create(<HelloApp />).toJSON();
     expect(tree).toMatchSnapshot();
-    //log test
-    expect(mock.logs).toEqual([
-      '%cplume2@1.0.0🚀',
-      'StoreProvider(HelloApp) will mount 🚀',
-      '🔥:tracing: QL(loadingQL)',
-      'dep:loading, cache:false, value:false',
-      'QL(loadingQL)|> false',
-      '🔥:tracing: QL(mottQL)',
-      '🔥:tracing: QL(loadingQL)',
-      'dep:loading, cache:true, value:false',
-      '🚀:QL(loadingQL), cache: true, result: false',
-      'dep:loadingQL, cache:false,value:false',
-      'dep:mott, cache:false, value:"hello world!"',
-      `QL(mottQL)|> {
-  \"loading\": false,
-  \"mott\": \"hello world!\"
-}`,
-      'Relax(HelloRelax) will mount rx store: true 🚀 ',
-      'props:|>',
-      'relaxProps:|>',
-      '🔥:tracing: QL(loadingPQL)',
-      'dep:mott, cache:false, value:"hello world!"',
-      'QL(loadingPQL)|> "hello world!"'
-    ]);
+    expect(mock.logs).toMatchSnapshot();
   });
 
   it('dispatch event', () => {

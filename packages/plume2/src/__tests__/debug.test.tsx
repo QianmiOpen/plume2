@@ -1,3 +1,4 @@
+import { MockLog } from 'mock-console';
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { Actor, Store, StoreProvider } from '../index';
@@ -32,8 +33,10 @@ class DebugApp extends React.Component {
 }
 
 it('test debug window app', () => {
+  const mockLogs = new MockLog();
   const tree = renderer.create(<DebugApp />).toJSON();
   expect(tree).toMatchSnapshot();
   expect(window['_plume2App'].DebugApp != null).toEqual(true);
   expect(window['_plume2App'].DebugApp.store instanceof AppStore).toEqual(true);
+  expect(mockLogs.logs).toMatchSnapshot();
 });
