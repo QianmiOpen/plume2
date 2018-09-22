@@ -3,7 +3,7 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { Action, Actor, QL, Relax, Store, StoreProvider } from '../index';
 import { PQL } from '../pql';
-import { isRxRelaxProps } from '../relax';
+import { isNeedRxStoreChange } from '../relax';
 
 //===============Actor=========================
 class LoadingActor extends Actor {
@@ -158,30 +158,30 @@ describe('relax test suite', () => {
 });
 
 it('test relaxProps is not need rx', () => {
-  expect(isRxRelaxProps({ hello: 'hello' })).toEqual(true);
+  expect(isNeedRxStoreChange({ hello: 'hello' })).toEqual(true);
 
   expect(
-    isRxRelaxProps({
+    isNeedRxStoreChange({
       hello: ['state', 'hello']
     })
   ).toEqual(true);
 
-  expect(isRxRelaxProps({ ql: loadingQL })).toEqual(true);
+  expect(isNeedRxStoreChange({ ql: loadingQL })).toEqual(true);
 
   expect(
-    isRxRelaxProps({
+    isNeedRxStoreChange({
       viewAction: 'viewAction'
     })
   ).toEqual(false);
 
   expect(
-    isRxRelaxProps({
+    isNeedRxStoreChange({
       fn: () => {}
     })
   ).toEqual(false);
 
   expect(
-    isRxRelaxProps({
+    isNeedRxStoreChange({
       pql: loadingPQL
     })
   ).toEqual(false);

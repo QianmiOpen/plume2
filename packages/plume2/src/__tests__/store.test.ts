@@ -136,10 +136,6 @@ describe('store test suite', () => {
       loading: false
     });
 
-    expect(mock.logs).toEqual([
-      "store dispatch => 'loading:end'",
-      'params|> false',
-      "LoadingActor receive => 'loading:end'"
-    ]);
+    expect(mock.logs).toMatchSnapshot();
   });
 });

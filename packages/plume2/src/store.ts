@@ -130,10 +130,10 @@ export default class Store<T = {}> {
       isRollback = true;
 
       if (process.env.NODE_ENV != 'production') {
-        console.warn(
-          '😭, some exception occur in transaction, store state roll back'
-        );
         if (this._opts.debug) {
+          console.warn(
+            '😭, some exception occur in transaction, store state roll back'
+          );
           console.trace(err);
         }
       }

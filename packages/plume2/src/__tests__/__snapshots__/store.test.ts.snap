@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`store test suite dispatch false 1`] = `
+Array [
+  "store dispatch => 'loading:end'",
+  "params|> false",
+  "LoadingActor receive => 'loading:end'",
+]
+`;

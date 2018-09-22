@@ -34,9 +34,19 @@ Array [
   \\"loading\\": false,
   \\"mott\\": \\"hello world!\\"
 }",
-  "Relax(HelloRelax) will mount rx store: true 🚀 ",
-  "props:|>",
-  "relaxProps:|>",
+  "Relax(HelloRelax) willMount rx store true 🚀",
+  "props => {
+  \\"relaxProps\\": {
+    \\"loading\\": false,
+    \\"mott\\": \\"hello world!\\",
+    \\"loadingQL\\": false,
+    \\"mottQL\\": {
+      \\"loading\\": false,
+      \\"mott\\": \\"hello world!\\"
+    },
+    \\"loadingPQL\\": \\"store@loadingPQL\\"
+  }
+}",
   "🔥:tracing: QL(loadingPQL)",
   "dep:mott, cache:false, value:\\"hello world!\\"",
   "QL(loadingPQL)|> \\"hello world!\\"",

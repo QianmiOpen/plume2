@@ -27,25 +27,40 @@ MockLog {
   "_logs": Array [
     "%cplume2@1.0.0🚀",
     "StoreProvider(HelloApp) will mount 🚀",
-    "Relax(HelloRelax) will mount rx store: true 🚀 ",
-    "props:|>",
-    "relaxProps:|>",
+    "Relax(HelloRelax) willMount rx store true 🚀",
+    "props => {
+  \\"relaxProps\\": {
+    \\"hello\\": \\"\\",
+    \\"world\\": \\"\\",
+    \\"viewAction\\": \\"store@viewAction\\"
+  }
+}",
     "store dispatch => 'hello'",
     "params|> hello",
     "HelloWorldActor receive => 'hello'",
     "
 StoreProvider(HelloApp) will update 🚀",
-    "Relax(HelloRelax) will update rx store true 🚀",
-    "props:|>",
-    "relaxProps:|>",
+    "Relax(HelloRelax) willUpdate rx store true 🚀",
+    "props => {
+  \\"relaxProps\\": {
+    \\"hello\\": \\"hello\\",
+    \\"world\\": \\"\\",
+    \\"viewAction\\": \\"store@viewAction\\"
+  }
+}",
     "store dispatch => 'world'",
     "params|> world",
     "HelloWorldActor receive => 'world'",
     "
 StoreProvider(HelloApp) will update 🚀",
-    "Relax(HelloRelax) will update rx store true 🚀",
-    "props:|>",
-    "relaxProps:|>",
+    "Relax(HelloRelax) willUpdate rx store true 🚀",
+    "props => {
+  \\"relaxProps\\": {
+    \\"hello\\": \\"hello\\",
+    \\"world\\": \\"world\\",
+    \\"viewAction\\": \\"store@viewAction\\"
+  }
+}",
   ],
 }
 `;
