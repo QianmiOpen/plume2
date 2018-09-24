@@ -52,3 +52,48 @@ Array [
   "QL(loadingPQL)|> \\"hello world!\\"",
 ]
 `;
+
+exports[`relax test suite test app relaxprops 1`] = `
+<div>
+  <div />
+  <div>
+    hello world!
+  </div>
+</div>
+`;
+
+exports[`relax test suite test app relaxprops 2`] = `
+Array [
+  "%cplume2@1.0.0🚀",
+  "StoreProvider(TestApp) will mount 🚀",
+  "🔥:tracing: QL(loadingQL)",
+  "dep:loading, cache:false, value:false",
+  "QL(loadingQL)|> false",
+  "🔥:tracing: QL(mottQL)",
+  "🔥:tracing: QL(loadingQL)",
+  "dep:loading, cache:true, value:false",
+  "🚀:QL(loadingQL), cache: true, result: false",
+  "dep:loadingQL, cache:false,value:false",
+  "dep:mott, cache:false, value:\\"hello world!\\"",
+  "QL(mottQL)|> {
+  \\"loading\\": false,
+  \\"mott\\": \\"hello world!\\"
+}",
+  "Relax(WorldRelax) willMount rx store true 🚀",
+  "props => {
+  \\"relaxProps\\": {
+    \\"loading\\": false,
+    \\"mott\\": \\"hello world!\\",
+    \\"loadingQL\\": false,
+    \\"mottQL\\": {
+      \\"loading\\": false,
+      \\"mott\\": \\"hello world!\\"
+    },
+    \\"loadingPQL\\": \\"store@loadingPQL\\"
+  }
+}",
+  "🔥:tracing: QL(loadingPQL)",
+  "dep:mott, cache:false, value:\\"hello world!\\"",
+  "QL(loadingPQL)|> \\"hello world!\\"",
+]
+`;

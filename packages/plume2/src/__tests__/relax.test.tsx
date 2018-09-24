@@ -98,10 +98,70 @@ class HelloRelax extends React.Component {
   }
 }
 
+//===================TestApp======================
+@Relax
+class WorldRelax extends React.Component {
+  props: {
+    mottFlag?: string;
+    relaxProps?: {
+      loading: boolean;
+      mott: string;
+      loadingQL: boolean;
+      mottQL: { loading: boolean; mott: string };
+      loadingPQL: (mott: string) => string;
+    };
+  };
+
+  static relaxProps = [
+    'loading',
+    'mott',
+    {
+      loadingQL,
+      mottQL,
+      loadingPQL
+    }
+  ];
+
+  render() {
+    const {
+      loading,
+      mott,
+      loadingQL,
+      mottQL,
+      loadingPQL
+    } = this.props.relaxProps;
+
+    expect(false).toEqual(loadingQL);
+    expect({ loading: false, mott: 'hello world!' }).toEqual(mottQL);
+    expect('hello world!').toEqual(loadingPQL('mott'));
+
+    return (
+      <div>
+        <div>{loading}</div>
+        <div>{mott}</div>
+      </div>
+    );
+  }
+}
+
+@StoreProvider(AppStore, { debug: true })
+class TestApp extends React.Component {
+  render() {
+    return <WorldRelax />;
+  }
+}
+
 describe('relax test suite', () => {
   it('initial render relax', () => {
     const mock = new MockLog();
     const tree = renderer.create(<HelloApp />).toJSON();
+    expect(tree).toMatchSnapshot();
+    expect(mock.logs).toMatchSnapshot();
+  });
+
+  it('test app relaxprops', () => {
+    const mock = new MockLog();
+    const tree = renderer.create(<TestApp />).toJSON();
     expect(tree).toMatchSnapshot();
     expect(mock.logs).toMatchSnapshot();
   });

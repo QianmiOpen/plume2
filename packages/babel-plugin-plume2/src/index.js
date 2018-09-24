@@ -11,6 +11,10 @@ function isRequireReactDOM(t, path) {
   );
 }
 
+function isPlume2QL(path) {
+  return t.isIdentifier(path.node.callee, { name: 'QL' });
+}
+
 module.exports = function(babel) {
   var t = babel.types;
 
@@ -38,7 +42,8 @@ module.exports = function(babel) {
        * var ReactDOM = require('react-dom') => var ReactDOM = require('react-native');
        * @param {*} path
        * @param {*} param1
-       */ CallExpression(path, { opts }) {
+       */
+      CallExpression(path, { opts }) {
         if (opts.reactnative && isRequireReactDOM(t, path)) {
           path.node.arguments[0] = t.StringLiteral('react-native');
         }

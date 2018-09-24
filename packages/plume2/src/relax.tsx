@@ -161,8 +161,33 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
 
     _computeRelaxProps() {
       const relaxProps = {};
-      const staticRelaxProps = Relax.relaxProps;
+      let staticRelaxProps = Relax.relaxProps;
       const store: Store = this.context['_plume$Store'];
+
+      //如果relaxProps是Array，将数据格式做一些处理，来支撑这个格式
+      //static relaxProps = [
+      // 'stateName1',
+      // 'stateName2',
+      // 'viewAction',
+      //   {
+      //     stateName3Alias: ['goodsList', 1, "goodsName"],
+      //       helloQL,
+      //       worldQL,
+      //   },
+      //  ]
+      if (isArray(staticRelaxProps)) {
+        staticRelaxProps = (staticRelaxProps as Array<any>).reduce(
+          (preVal, curVal) => {
+            if (isString(curVal)) {
+              preVal[curVal] = curVal;
+            } else {
+              preVal = { ...preVal, ...curVal };
+            }
+            return preVal;
+          },
+          {}
+        );
+      }
 
       for (let propName in staticRelaxProps) {
         //prop的属性值
