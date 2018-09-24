@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test relax proxy ref 1`] = `
+<div>
+  hello
+</div>
+`;
+
+exports[`test relax proxy ref 2`] = `
+Array [
+  "%cplume2@1.0.0🚀",
+  "StoreProvider(TestApp) will mount 🚀",
+  "Relax(Text) willMount rx store true 🚀",
+  "props => {
+  \\"relaxProps\\": {
+    \\"hello\\": \\"hello\\"
+  }
+}",
+]
+`;

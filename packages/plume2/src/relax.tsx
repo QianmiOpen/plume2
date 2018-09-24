@@ -79,6 +79,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     //current context
     context: { _plume$Store: Store };
 
+    private _relaxProxy: Object;
     private _relaxProps: Object;
     private _isMounted: boolean;
     private _isNeedRxStore: boolean;
@@ -156,7 +157,13 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     }
 
     render() {
-      return <Wrapper {...this.props} relaxProps={this._relaxProps} />;
+      return (
+        <Wrapper
+          ref={relaxProxy => (this._relaxProxy = relaxProxy)}
+          {...this.props}
+          relaxProps={this._relaxProps}
+        />
+      );
     }
 
     _computeRelaxProps() {
