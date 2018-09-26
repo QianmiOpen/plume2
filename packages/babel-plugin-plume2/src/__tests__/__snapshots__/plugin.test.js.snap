@@ -1,6 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`babel-plugin-plume2 test suite match-snapshot 1`] = `
+exports[`babel-plugin-plume2 test suite optimize QL name 1`] = `
+"
+const helloQL = QL('', [/*...*/]);
+const worldQL = QL('', [/*...*/]);"
+`;
+
+exports[`babel-plugin-plume2 test suite optimize StoreProvider opts 1`] = `
+"
+StoreProvider(AppStore);"
+`;
+
+exports[`babel-plugin-plume2 test suite react-native match-snapshot 1`] = `
 "
 import ReactDOM from 'react-native';
 var ReactDOM1 = require('react-native');"

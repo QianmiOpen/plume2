@@ -8,5 +8,8 @@
     "plume2"
   ],
   "author": "hufeng",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "debug": "^4.0.1"
+  }
 }
