@@ -1,3 +1,5 @@
+declare const jest: { fn: Function };
+
 export class MockConsole {
   constructor() {
     this._logs = [];

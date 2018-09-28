@@ -1,32 +1,101 @@
-import { Actor, Relax, Store, StoreProvider } from 'plume2';
+import {
+  Action,
+  Actor,
+  IMap,
+  QL,
+  Relax,
+  Store,
+  StoreProvider,
+  TViewAction,
+  ViewAction
+} from 'plume2';
 import React from 'react';
 import ReactDOM from 'react-dom';
+
+class HelloViewAction extends ViewAction {
+  handleClick() {
+    this.store.dispatch('click');
+  }
+}
 
 class HelloActor extends Actor {
   defaultState() {
     return {
-      mott: 'Build tools for human'
+      mott: 'Build tools for human!!'
     };
+  }
+
+  @Action('click')
+  click(state: IMap) {
+    return state.set('mott', 'click me');
   }
 }
 
-class AppStore extends Store {
-  bindActor() {
-    return [HelloActor];
+class WorldActor extends Actor {
+  defaultState() {
+    return {
+      text: 'plume'
+    };
+  }
+
+  @Action('click')
+  click(state: IMap) {
+    return state.set('text', 'plume2');
   }
 }
+
+const viewAction = {
+  HelloViewAction
+};
+
+class AppStore extends Store {
+  bindActor() {
+    return [HelloActor, WorldActor];
+  }
+
+  bindViewAction() {
+    return viewAction;
+  }
+}
+
+const helloQL = QL('helloQL', [
+  'mott',
+  'text',
+  (mott: string, text: string) => `${mott}:${text}`
+]);
+
+type THelloViewAction = TViewAction<typeof viewAction>;
 
 @Relax
 class Mott extends React.Component {
   props: {
     relaxProps?: {
       mott: string;
+      text: string;
+      hello: string;
+      viewAction: THelloViewAction;
     };
   };
-  static relaxProps = ['mott'];
+  static relaxProps = [
+    'mott',
+    'text',
+    'viewAction',
+    {
+      hello: helloQL
+    }
+  ];
 
   render() {
-    return <div>{this.props.relaxProps.mott}</div>;
+    const { mott, text, hello, viewAction } = this.props.relaxProps;
+    return (
+      <div>
+        <div onClick={() => viewAction.HelloViewAction.handleClick()}>
+          {mott}
+        </div>
+        <div>{text}</div>
+        <div>{hello}</div>
+      </div>
+    );
   }
 }
 

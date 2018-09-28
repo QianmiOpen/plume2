@@ -1,9 +1,8 @@
-/// <reference types="jest" />
 export declare class MockConsole {
     constructor();
     private _logs;
     mock(): void;
-    mockFn(): jest.Mock<any>;
+    mockFn(): any;
     readonly logs: any;
     reset(): void;
 }

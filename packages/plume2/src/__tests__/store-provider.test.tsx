@@ -88,9 +88,6 @@ describe('store provider test suite', () => {
     const mock = new MockLog();
     const tree = renderer.create(<DebugApp />).toJSON();
     expect(tree).toMatchSnapshot();
-    expect(mock.logs).toEqual([
-      '%cplume2@1.0.0🚀',
-      'StoreProvider(DebugApp) will mount 🚀'
-    ]);
+    expect(mock.logs).toMatchSnapshot();
   });
 });
