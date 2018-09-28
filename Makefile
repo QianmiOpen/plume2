@@ -3,7 +3,7 @@ build-plume2: clean-plume2
 	@echo "build plume2 successfully ❤️ \n"
 
 build-mock-console: clean-mock-console
-	npx tsc --project packages/mock-console/tsconfig.json
+	npx tsc --project packages/mock-jest-console/tsconfig.json
 	@echo "build mock-console successfully ❤️ \n"
 
 clean-plume2:
@@ -11,4 +11,4 @@ clean-plume2:
 	@echo "clean plume2 successfully 👏 \n"
 
 clean-mock-console:
-	rm -rf packages/mock-console/lib
+	rm -rf packages/mock-jest-console/lib

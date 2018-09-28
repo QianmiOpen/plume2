@@ -1,4 +1,4 @@
-import { MockLog } from 'mock-console';
+import { MockLog } from 'mock-jest-console';
 import { Action, Actor, IMap, Store } from '../index';
 
 class HelloActor extends Actor {

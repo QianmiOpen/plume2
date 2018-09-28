@@ -1,4 +1,4 @@
-import { MockLog, MockWarn } from 'mock-console';
+import { MockLog, MockWarn } from 'mock-jest-console';
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { Actor, Relax, Store, StoreProvider } from '..';

@@ -1,5 +1,5 @@
 {
-  "name": "mock-console",
+  "name": "mock-jest-console",
   "version": "1.0.0",
   "description": "jest.fn mock console.xxx",
   "main": "./lib/index.js",
