@@ -1,0 +1,28 @@
+{
+  "name": "hello-world",
+  "version": "1.0.0",
+  "description": "parcel build simple plume2 app",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel serve index.html"
+  },
+  "keywords": [
+    "parcel",
+    "plume2"
+  ],
+  "author": "hufeng",
+  "license": "MIT",
+  "dependencies": {
+    "plume2": "^1.1.0",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2"
+  },
+  "devDependencies": {
+    "@types/react": "^16.4.14",
+    "@types/react-dom": "^16.0.8",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "typescript": "^3.1.1"
+  }
+}
