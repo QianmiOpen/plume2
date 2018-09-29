@@ -4,15 +4,21 @@
   "description": "a lightweight of flux for mobile and web",
   "main": "./es5/index.js",
   "types": "./es5/typings/index.d.ts",
+  "bin": {
+    "plume2": "./cli/index.js",
+    "plume2-new": "./cli/new-app.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hufeng/plume.git"
   },
   "keywords": [
+    "react",
     "preact",
+    "react-native",
     "immutable",
     "flux",
-    "mobile"
+    "lightweight"
   ],
   "files": [
     "package.json",
@@ -26,6 +32,8 @@
   },
   "homepage": "https://github.com/hufeng/plume#readme",
   "dependencies": {
+    "commander": "^2.18.0",
+    "fs-extra": "^7.0.0",
     "immutable": "^3.8.1",
     "mitt": "^1.1.2",
     "prop-types": "^15.5.10"
