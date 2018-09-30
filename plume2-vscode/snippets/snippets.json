@@ -1,0 +1,166 @@
+{
+  "Print to log": {
+    "prefix": "log",
+    "body": ["console.log($1);"],
+    "description": "Log output to console log"
+  },
+  "Print to warn": {
+    "prefix": "warn",
+    "body": ["console.warn($1);"],
+    "description": "Log output to console warn"
+  },
+  "Print to error": {
+    "prefix": "error",
+    "body": ["console.error($1);"],
+    "description": "Log output to console error"
+  },
+  "actor": {
+    "prefix": "actor",
+    "body": [
+      "import {Actor, Action, IMap} from 'plume2'",
+      "",
+      "export default class $1 extends Actor {",
+      "  defaultState() {",
+      "    return {$2}",
+      "  }",
+      "}"
+    ]
+  },
+  "action": {
+    "prefix": "@A",
+    "body": [
+      "@Action(${1:name})",
+      "${2:actionName}(state: IMap, ${}) {",
+      "  return state$0",
+      "}"
+    ]
+  },
+  "store": {
+    "prefix": "store",
+    "body": [
+      "import {Store} from 'plume2'",
+      "import actors from './actor'",
+      "import * as viewAction from './view-actor'",
+      "",
+      "export default class AppStore extends Store {",
+      "  bindActor() {",
+      "    return actors",
+      "  }",
+      "",
+      "  bindViewAction() {",
+      "    return viewAction",
+      "  }",
+      "}"
+    ]
+  },
+  "ql": {
+    "prefix": "ql",
+    "body": ["const ${1:name} = QL('${1:name}', [", "  $2", "])"]
+  },
+  "pql": {
+    "prefix": "pql",
+    "body": [
+      "const ${1:pqlName} = pql(($2) => QL('${3:qlName}', [",
+      "  $0",
+      "])"
+    ]
+  },
+  "StoreProvider": {
+    "prefix": "spd",
+    "body": [
+      "import React from 'react'",
+      "import {StoreProvider} from 'plume2'",
+      "import AppStore from './store'",
+      "",
+      "@StoreProvider(AppStore)",
+      "export default class $1 extends React.Component {",
+      "  render() {",
+      "    return (",
+      "      $0",
+      "    )",
+      "  }",
+      "}"
+    ]
+  },
+  "relax": {
+    "prefix": "relax",
+    "body": [
+      "import React from 'react'",
+      "import {Relax} from 'plume2'",
+      "",
+      "@Relax",
+      "export default class $1 extends React.Component {",
+      "  props: {",
+      "    relaxProps?: {",
+      "     $3",
+      "    }",
+      "  };",
+      "",
+      "  static relaxProps = {",
+      "    $2",
+      "  };",
+      "",
+      "  render() {",
+      "    return (",
+      "      $0",
+      "    )",
+      "  }",
+      "}"
+    ]
+  },
+  "relaxProps": {
+    "prefix": "rpc",
+    "body": ["const {$1} = this.props.relaxProps"]
+  },
+  "PureComponent": {
+    "prefix": "pure",
+    "body": [
+      "import React from 'react'",
+      "",
+      "export default class $1 extends React.PureComponent {",
+      "  render() {",
+      "   return (",
+      "     $2",
+      "   )",
+      "  }",
+      "}"
+    ]
+  },
+  "Component": {
+    "prefix": "rc",
+    "body": [
+      "import React from 'react'",
+      "",
+      "export default class $1 extends React.Component {",
+      "",
+      "  render() {",
+      "   return (",
+      "     $2",
+      "   )",
+      "  }",
+      "}"
+    ]
+  },
+  "command": {
+    "prefix": "cmd",
+    "body": ["export const enum Command {", "  $0", "}"]
+  },
+  "viewAction": {
+    "prefix": "va",
+    "body": [
+      "import {ViewAction} from 'plume2'",
+      "",
+      "export class $1 extends ViewAction {",
+      "  $0",
+      "}"
+    ]
+  },
+  "import": {
+    "prefix": "ipt",
+    "body": ["import $2 from '$1'"]
+  },
+  "require": {
+    "prefix": "re",
+    "body": ["const $2= require($1)"]
+  }
+}
