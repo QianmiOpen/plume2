@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`could not inject value from store 1`] = `<div />`;
+
+exports[`could not inject value from store 2`] = `
+Array [
+  "%cplume2@1.1.0🚀",
+  "StoreProvider(TestApp) will mount 🚀",
+  "🔥:tracing: QL(helloQL)",
+  "dep:hello, cache:false, value:undefined",
+  "QL(helloQL)|> undefined",
+  "Relax(Mott) willMount rx store true 🚀",
+  "props => {
+  \\"relaxProps\\": {}
+}",
+]
+`;
+
+exports[`could not inject value from store 3`] = `
+Array [
+  "relaxProps[hello] Could not find any value from store",
+  "relaxProps[helloQL] Could not find any value from store",
+]
+`;

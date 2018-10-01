@@ -27,14 +27,22 @@ export const outputRelaxProps = ({ Relax, relax, lifycycle }) => {
       `${Relax.displayName} ${lifycycle} rx store ${relax._isNeedRxStore} 🚀`
     );
 
+  const _relaxProps = relax._relaxProps;
+
+  //check relax value
+  for (let prop in _relaxProps) {
+    const propVal = _relaxProps[prop];
+    if (typeof propVal === 'undefined') {
+      console.warn(`relaxProps[${prop}] Could not find any value from store`);
+    }
+  }
+
   console.log(
     'props => ' +
       JSON.stringify(
         {
-          ...this.props,
           relaxProps: {
-            ...this.props,
-            ...relaxData(relax._relaxProps)
+            ...relaxData(_relaxProps)
           }
         },
         null,

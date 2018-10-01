@@ -20,11 +20,6 @@
     "flux",
     "lightweight"
   ],
-  "files": [
-    "package.json",
-    "es5",
-    "README.md"
-  ],
   "author": "hufeng",
   "license": "MIT",
   "bugs": {

@@ -203,8 +203,10 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
         if (propValue === 'viewAction') {
           //============AOT==================
           if (process.env.NODE_ENV != 'production') {
-            const { relaxDevHelper } = require('./helper').default;
-            relaxDevHelper.ifNoViewActionInStore(store);
+            if ((this.context['_plume$Store'] as any)._opts.debug) {
+              const { relaxDevHelper } = require('./helper').default;
+              relaxDevHelper.ifNoViewActionInStore(store);
+            }
           }
 
           relaxProps[propName] = store.viewAction;
