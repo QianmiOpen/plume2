@@ -8,6 +8,9 @@ exports[`test debug window app 1`] = `
 
 exports[`test debug window app 2`] = `
 Array [
+  "===========store init==========",
+  "Actor:reduce LoadingActor",
+  "Actor:reduce HelloActor",
   "%cplume2@1.1.1🚀",
   "StoreProvider(DebugApp) will mount 🚀",
 ]

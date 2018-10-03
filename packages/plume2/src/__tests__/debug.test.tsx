@@ -1,4 +1,4 @@
-import { MockLog } from 'mock-jest-console';
+import { MockConsole } from 'mock-jest-console';
 import React from 'react';
 import renderer from 'react-test-renderer';
 import { Actor, Store, StoreProvider } from '../index';
@@ -33,7 +33,7 @@ class DebugApp extends React.Component {
 }
 
 it('test debug window app', () => {
-  const mockLogs = new MockLog();
+  const mockLogs = new MockConsole();
   const tree = renderer.create(<DebugApp />).toJSON();
   expect(tree).toMatchSnapshot();
   expect(window['_plume2App'].DebugApp != null).toEqual(true);

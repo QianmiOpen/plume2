@@ -37,6 +37,12 @@ export default class Store<T = {}> {
     this._uiSubscribers = [];
     this._isInTranstion = false;
 
+    if (process.env.NODE_ENV != 'production') {
+      if (this._opts.debug && console.groupCollapsed) {
+        console.groupCollapsed(`===========store init==========`);
+      }
+    }
+
     //state
     this._state = fromJS({});
     this._actorsState = [];
@@ -48,6 +54,12 @@ export default class Store<T = {}> {
 
     //rx
     this._initRx();
+
+    if (process.env.NODE_ENV != 'production') {
+      if (this._opts.debug && console.groupCollapsed) {
+        console.groupEnd();
+      }
+    }
   }
 
   public readonly viewAction: TViewAction<T>;
@@ -368,6 +380,13 @@ export default class Store<T = {}> {
       const ViewAction = viewActionMapper[key];
       //init and pass current to viewAction
       const viewAction = new ViewAction();
+
+      if (process.env.NODE_ENV != 'production') {
+        if (this._opts.debug) {
+          console.log(`viewAction:merge ${viewAction.constructor.name}`);
+        }
+      }
+
       (viewAction as any)._bindStore(this);
       this.viewAction[key] = viewAction;
     }
@@ -382,6 +401,13 @@ export default class Store<T = {}> {
         if (typeof actor === 'function') {
           actor = new actor();
         }
+
+        if (process.env.NODE_ENV != 'production') {
+          if (this._opts.debug) {
+            console.log(`Actor:reduce ${actor.constructor.name}`);
+          }
+        }
+
         this._actors.push(actor);
         let initState = fromJS(actor.defaultState());
         this._actorsState.push(initState);
@@ -399,7 +425,7 @@ export default class Store<T = {}> {
     }
   }
 
-  _parseRL(rl: RxLang) {
+  private _parseRL(rl: RxLang) {
     const cache = [];
     const name = rl.name();
     const lang = rl.lang().slice();
@@ -407,7 +433,7 @@ export default class Store<T = {}> {
 
     if (process.env.NODE_ENV != 'production') {
       if (this._opts.debug) {
-        console.log(`parse-reactive-lanuage -> ${name}`);
+        console.log(`parse:rl -> ${name}`);
       }
     }
 

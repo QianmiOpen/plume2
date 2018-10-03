@@ -19,6 +19,9 @@ exports[`relax test suite initial render relax 1`] = `
 
 exports[`relax test suite initial render relax 2`] = `
 Array [
+  "===========store init==========",
+  "Actor:reduce LoadingActor",
+  "Actor:reduce HelloActor",
   "%cplume2@1.1.1🚀",
   "StoreProvider(HelloApp) will mount 🚀",
   "🔥:tracing: QL(loadingQL)",
@@ -64,6 +67,9 @@ exports[`relax test suite test app relaxprops 1`] = `
 
 exports[`relax test suite test app relaxprops 2`] = `
 Array [
+  "===========store init==========",
+  "Actor:reduce LoadingActor",
+  "Actor:reduce HelloActor",
   "%cplume2@1.1.1🚀",
   "StoreProvider(TestApp) will mount 🚀",
   "🔥:tracing: QL(loadingQL)",

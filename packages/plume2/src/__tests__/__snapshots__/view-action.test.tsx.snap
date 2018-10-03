@@ -25,6 +25,10 @@ exports[`viewAction test suite test relax inject viewAction 2`] = `
 exports[`viewAction test suite test relax inject viewAction 3`] = `
 MockLog {
   "_logs": Array [
+    "===========store init==========",
+    "Actor:reduce HelloWorldActor",
+    "viewAction:merge HelloViewAction",
+    "viewAction:merge WorldViewAction",
     "%cplume2@1.1.1🚀",
     "StoreProvider(HelloApp) will mount 🚀",
     "Relax(HelloRelax) willMount rx store true 🚀",

@@ -1,6 +1,6 @@
 import { fromJS } from 'immutable';
 import { MockConsole, MockLog } from 'mock-jest-console';
-import { Action, Actor, IMap, RL, Store } from '../index';
+import { Action, Actor, IMap, QL, RL, Store } from '../index';
 
 class HelloActor extends Actor {
   defaultState() {
@@ -13,12 +13,16 @@ class HelloActor extends Actor {
   }
 }
 
+const helloQL = QL('helloQL', ['mott', mott => mott]);
+
 const helloRL = RL('helloRL', [
   'mott',
-  mott => {
+  helloQL,
+  (mott, mottQL) => {
     //side-effect
     //webapi.update();
     expect(mott).toEqual('Build tools for human');
+    expect(mottQL).toEqual('Build tools for human');
   }
 ]);
 
