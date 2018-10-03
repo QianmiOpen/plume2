@@ -2,6 +2,7 @@ import { fromJS } from 'immutable';
 import ReactDOM from 'react-dom';
 import Actor from './actor';
 import { QueryLang } from './ql';
+import { RxLang } from './rx';
 import { isArray, isString } from './type';
 import { IMap, IOptions, IViewActionMapper, TViewAction } from './typing';
 
@@ -13,6 +14,8 @@ export type TSubscribeHandler = (state: IMap) => void;
  * 是不是可以批量处理
  * ReactDOM'sunstable_batchedUpdates可以很酷的解决父子组件级联渲染的问题
  * 可惜Preact不支持，只能靠Immutable的不可变这个特性来挡着了
+ * 在react-native环境中，unstable_batchedUpdates是在react-native对象中
+ * 所以我们的babel-plugin-plume2就是去解决这个问题
  */
 const batchedUpdates =
   ReactDOM.unstable_batchedUpdates ||
@@ -29,25 +32,32 @@ const batchedUpdates =
 export default class Store<T = {}> {
   constructor(props?: IOptions) {
     this._opts = props || { debug: false };
-    this._state = fromJS({});
-    this._actorsState = [];
-    this._callbacks = [];
+
     this._cacheQL = {};
+    this._uiSubscribers = [];
     this._isInTranstion = false;
 
+    //state
+    this._state = fromJS({});
+    this._actorsState = [];
     this._reduceActorState();
+
+    //view-action
     this.viewAction = {} as TViewAction<T>;
     this._initViewAction();
+
+    //rx
+    this._initRx();
   }
 
   public readonly viewAction: TViewAction<T>;
-
   //store的配置项
   private _opts: IOptions;
   //当前store的聚合状态
   private _state: IMap;
+  private _rxSubscribers: Array<Function>;
   //保存当前store的状态变化的监听的handler
-  private _callbacks: Array<TSubscribeHandler>;
+  private _uiSubscribers: Array<TSubscribeHandler>;
   //当前绑定的actor
   private _actors: Array<Actor>;
   //每个actor中自己独有的状态
@@ -59,17 +69,15 @@ export default class Store<T = {}> {
 
   //==================public method ==================
 
-  /**
-   * 绑定Actor
-   */
   bindActor(): Array<Actor | typeof Actor> {
     return [];
   }
 
-  /**
-   * 绑定ViewAction
-   */
   bindViewAction(): IViewActionMapper {
+    return {};
+  }
+
+  bindRx(): { [key: string]: RxLang } {
     return {};
   }
 
@@ -80,14 +88,35 @@ export default class Store<T = {}> {
    * @param params  参数
    */
   dispatch(msg: string, params?: any) {
-    const newStoreState = this._dispatchActor(msg, params);
+    if (process.env.NODE_ENV != 'production') {
+      if (this._opts.debug) {
+        console.groupCollapsed &&
+          console.groupCollapsed(`store dispatch => '${msg}'`);
+        //如果参数存在
+        if (typeof params !== 'undefined') {
+          if (typeof params === 'object') {
+            console.log(`params|> immutable[${params.toJS ? 'yes' : 'no'}] `);
+            console.dir && console.dir(params.toJS ? params.toJS() : params);
+          } else {
+            console.log(`params|> ${params}`);
+          }
+        }
+      }
+    }
 
+    const newStoreState = this._dispatchActor(msg, params);
     //如果发生store的状态变化
     if (newStoreState != this._state) {
       this._state = newStoreState;
       //如果在dispatch不在transation内，通知UI去re-render
       if (!this._isInTranstion) {
         this._notifier();
+      }
+    }
+
+    if (process.env.NODE_ENV != 'production') {
+      if (this._opts.debug) {
+        console.groupEnd && console.groupEnd();
       }
     }
   }
@@ -113,6 +142,7 @@ export default class Store<T = {}> {
       }
     }
 
+    //lock
     this._isInTranstion = true;
     //record current state
     const currentStoreState = this._state;
@@ -142,6 +172,7 @@ export default class Store<T = {}> {
     if (currentStoreState != this._state) {
       this._notifier();
     }
+    //release lock
     this._isInTranstion = false;
 
     //log
@@ -300,11 +331,11 @@ export default class Store<T = {}> {
    * @param cb 回调函数
    */
   subscribe(cb: TSubscribeHandler) {
-    if (typeof cb != 'function' || this._callbacks.indexOf(cb) != -1) {
+    if (typeof cb != 'function' || this._uiSubscribers.indexOf(cb) != -1) {
       return;
     }
 
-    this._callbacks.push(cb);
+    this._uiSubscribers.push(cb);
   }
 
   /**
@@ -312,12 +343,20 @@ export default class Store<T = {}> {
    * @param cb 回调函数
    */
   unsubscribe(cb: TSubscribeHandler) {
-    const index = this._callbacks.indexOf(cb);
+    const index = this._uiSubscribers.indexOf(cb);
     if (typeof cb != 'function' || index == -1) {
       return;
     }
 
-    this._callbacks.splice(index, 1);
+    this._uiSubscribers.splice(index, 1);
+  }
+
+  destroy() {
+    this._cacheQL = null;
+    this._state = null;
+    this._rxSubscribers = null;
+    this._actors = null;
+    this._actorsState = null;
   }
 
   //====================private method==========================
@@ -352,30 +391,56 @@ export default class Store<T = {}> {
     });
   }
 
+  private _initRx() {
+    this._rxSubscribers = [];
+    const rxs = this.bindRx() || [];
+    for (let rx in rxs) {
+      this._rxSubscribers.push(this._parseRL(rxs[rx]));
+    }
+  }
+
+  _parseRL(rl: RxLang) {
+    const cache = [];
+    const name = rl.name();
+    const lang = rl.lang().slice();
+    const rxFn = lang.pop();
+
+    if (process.env.NODE_ENV != 'production') {
+      if (this._opts.debug) {
+        console.log(`parse-reactive-lanuage -> ${name}`);
+      }
+    }
+
+    //init cache
+    for (let dep of lang) {
+      cache.push(this.bigQuery(dep));
+    }
+
+    return () => {
+      let isChanged = false;
+      lang.forEach((l, i) => {
+        const v = this.bigQuery(l);
+        if (v != cache[i]) {
+          isChanged = true;
+          cache[i] = v;
+        }
+      });
+      if (isChanged) {
+        console.log(`store changed -> reactive ${name} was invoked`);
+        rxFn.apply(null, cache);
+      }
+    };
+  }
+
   private _notifier() {
     batchedUpdates(() => {
-      this._callbacks.forEach(cb => cb(this._state));
+      this._uiSubscribers.forEach(cb => cb(this._state));
+      this._rxSubscribers.forEach(cb => cb());
     });
   }
 
   private _dispatchActor(msg: string, params?: any) {
     let _state = this._state;
-
-    if (process.env.NODE_ENV != 'production') {
-      if (this._opts.debug) {
-        console.groupCollapsed &&
-          console.groupCollapsed(`store dispatch => '${msg}'`);
-        //如果参数存在
-        if (typeof params !== 'undefined') {
-          if (typeof params === 'object') {
-            console.log(`params|>`);
-            console.dir && console.dir(params);
-          } else {
-            console.log(`params|> ${params}`);
-          }
-        }
-      }
-    }
 
     for (let i = 0, len = this._actors.length; i < len; i++) {
       let actor = this._actors[i];
@@ -412,12 +477,6 @@ export default class Store<T = {}> {
       if (preActorState != newActorState) {
         this._actorsState[i] = newActorState;
         _state = _state.merge(newActorState);
-      }
-    }
-
-    if (process.env.NODE_ENV != 'production') {
-      if (this._opts.debug) {
-        console.groupEnd && console.groupEnd();
       }
     }
 

@@ -104,10 +104,10 @@ describe('store test suite', () => {
     };
 
     store.subscribe(_handleStoreChange);
-    expect(store._callbacks.length).toEqual(1);
+    expect(store._uiSubscribers.length).toEqual(1);
 
     store.unsubscribe(_handleStoreChange);
-    expect(store._callbacks.length).toEqual(0);
+    expect(store._uiSubscribers.length).toEqual(0);
   });
 
   it('dispatch false', () => {

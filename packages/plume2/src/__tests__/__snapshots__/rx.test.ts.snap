@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reactive rx test suite test helloRL dispatch one time 1`] = `
+Array [
+  "parse-reactive-lanuage -> helloRL",
+  "store dispatch => 'change'",
+  "HelloActor receive => 'change'",
+  "store changed -> reactive helloRL was invoked",
+]
+`;
+
+exports[`reactive rx test suite test helloRL dispatch second time 1`] = `
+Array [
+  "parse-reactive-lanuage -> helloRL",
+  "store dispatch => 'change'",
+  "HelloActor receive => 'change'",
+  "store changed -> reactive helloRL was invoked",
+  "store dispatch => 'change'",
+  "HelloActor receive => 'change'",
+]
+`;
+
+exports[`reactive rx test suite test helloRL dispatch transaction 1`] = `
+Array [
+  "parse-reactive-lanuage -> helloRL",
+  "::::::::::::::::🚀 open new transaction 🚀::::::::::::::::::",
+  "store dispatch => 'change'",
+  "HelloActor receive => 'change'",
+  "store dispatch => 'change'",
+  "HelloActor receive => 'change'",
+  "store dispatch => 'c'",
+  "params|> immutable[yes] ",
+  Object {
+    "addr": Object {
+      "city": "nanjing",
+      "province": "jiangsu",
+    },
+    "id": 1,
+    "name": "plume2",
+  },
+  "HelloActor receive 'c', but no handle 😭",
+  "store changed -> reactive helloRL was invoked",
+]
+`;
+
+exports[`reactive rx test suite test helloRl 1`] = `
+Array [
+  "parse-reactive-lanuage -> helloRL",
+]
+`;

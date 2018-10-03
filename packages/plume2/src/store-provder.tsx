@@ -100,6 +100,8 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
       componentWillUnmount() {
         super.componentWillUnmount && super.componentWillUnmount();
         this.store.unsubscribe(this._handleStoreChange);
+        //销毁store
+        this.store.destroy();
 
         if (process.env.NODE_ENV != 'production') {
           if ((this.store as any)._opts.debug) {

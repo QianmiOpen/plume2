@@ -10,29 +10,29 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-var MockConsole = /** @class */ (function () {
-    function MockConsole() {
+var BaseMock = /** @class */ (function () {
+    function BaseMock() {
         this._logs = [];
         this.mock();
     }
-    MockConsole.prototype.mock = function () { };
-    MockConsole.prototype.mockFn = function () {
+    BaseMock.prototype.mock = function () { };
+    BaseMock.prototype.mockFn = function () {
         var _this = this;
         return jest.fn(function (log) { return _this._logs.push(log); });
     };
-    Object.defineProperty(MockConsole.prototype, "logs", {
+    Object.defineProperty(BaseMock.prototype, "logs", {
         get: function () {
             return this._logs;
         },
         enumerable: true,
         configurable: true
     });
-    MockConsole.prototype.reset = function () {
+    BaseMock.prototype.reset = function () {
         this._logs = [];
     };
-    return MockConsole;
+    return BaseMock;
 }());
-exports.MockConsole = MockConsole;
+exports.BaseMock = BaseMock;
 var MockWarn = /** @class */ (function (_super) {
     __extends(MockWarn, _super);
     function MockWarn() {
@@ -42,7 +42,7 @@ var MockWarn = /** @class */ (function (_super) {
         console.warn = this.mockFn();
     };
     return MockWarn;
-}(MockConsole));
+}(BaseMock));
 exports.MockWarn = MockWarn;
 var MockLog = /** @class */ (function (_super) {
     __extends(MockLog, _super);
@@ -53,5 +53,53 @@ var MockLog = /** @class */ (function (_super) {
         console.log = this.mockFn();
     };
     return MockLog;
-}(MockConsole));
+}(BaseMock));
 exports.MockLog = MockLog;
+var MockDir = /** @class */ (function (_super) {
+    __extends(MockDir, _super);
+    function MockDir() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    MockDir.prototype.mock = function () {
+        console.dir = this.mockFn();
+    };
+    return MockDir;
+}(BaseMock));
+exports.MockDir = MockDir;
+var MockDebug = /** @class */ (function (_super) {
+    __extends(MockDebug, _super);
+    function MockDebug() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    MockDebug.prototype.mock = function () {
+        console.debug = this.mockFn();
+    };
+    return MockDebug;
+}(BaseMock));
+exports.MockDebug = MockDebug;
+var MockError = /** @class */ (function (_super) {
+    __extends(MockError, _super);
+    function MockError() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    MockError.prototype.mock = function () {
+        console.error = this.mockFn();
+    };
+    return MockError;
+}(BaseMock));
+exports.MockError = MockError;
+var MockConsole = /** @class */ (function (_super) {
+    __extends(MockConsole, _super);
+    function MockConsole() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    MockConsole.prototype.mock = function () {
+        console.warn = this.mockFn();
+        console.log = this.mockFn();
+        console.dir = this.mockFn();
+        console.debug = this.mockFn();
+        console.error = this.mockFn();
+    };
+    return MockConsole;
+}(BaseMock));
+exports.MockConsole = MockConsole;
