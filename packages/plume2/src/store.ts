@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable';
+import raf from 'raf';
 import ReactDOM from 'react-dom';
 import Actor from './actor';
 import { QueryLang } from './ql';
@@ -38,8 +39,7 @@ export default class Store<T = {}> {
     this._isInTranstion = false;
 
     if (process.env.NODE_ENV != 'production' && this._opts.debug) {
-      console.groupCollapsed &&
-        console.groupCollapsed(`===========store init==========`);
+      console.groupCollapsed && console.groupCollapsed(`Store init 🚀`);
     }
 
     //state
@@ -427,7 +427,7 @@ export default class Store<T = {}> {
       });
       if (isChanged) {
         if (process.env.NODE_ENV != 'production' && this._opts.debug) {
-          console.log(`store changed -> reactive ${name} was invoked`);
+          console.log(`${name} => 🔥`);
         }
         rxFn.apply(null, cache);
       }
@@ -437,7 +437,18 @@ export default class Store<T = {}> {
   private _notifier() {
     batchedUpdates(() => {
       this._uiSubscribers.forEach(cb => cb(this._state));
-      this._rxSubscribers.forEach(cb => cb());
+
+      raf(() => {
+        if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+          console.groupCollapsed && console.groupCollapsed('Reactive 🚀');
+        }
+
+        this._rxSubscribers.forEach(cb => cb());
+
+        if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+          console.groupEnd && console.groupEnd();
+        }
+      });
     });
   }
 

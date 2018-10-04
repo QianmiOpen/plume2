@@ -2,7 +2,7 @@
 
 exports[`store test suite dispatch false 1`] = `
 Array [
-  "===========store init==========",
+  "Store init 🚀",
   "Actor:reduce LoadingActor",
   "store dispatch => 'loading:end'",
   "params|> false",

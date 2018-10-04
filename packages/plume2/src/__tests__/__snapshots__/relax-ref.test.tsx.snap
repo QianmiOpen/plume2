@@ -9,7 +9,7 @@ exports[`test relax proxy ref 1`] = `
 exports[`test relax proxy ref 2`] = `
 Array [
   "%cplume2@1.1.1🚀",
-  "===========store init==========",
+  "Store init 🚀",
   "Actor:reduce HelloActor",
   "StoreProvider(TestApp) will mount 🚀",
   "Relax(Text) willMount rx store true 🚀",

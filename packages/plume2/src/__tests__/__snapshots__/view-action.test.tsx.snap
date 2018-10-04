@@ -26,7 +26,7 @@ exports[`viewAction test suite test relax inject viewAction 3`] = `
 MockLog {
   "_logs": Array [
     "%cplume2@1.1.1🚀",
-    "===========store init==========",
+    "Store init 🚀",
     "Actor:reduce HelloWorldActor",
     "viewAction:merge HelloViewAction",
     "viewAction:merge WorldViewAction",

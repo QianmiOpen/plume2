@@ -2,7 +2,7 @@
 
 exports[`reactive rx test suite test helloRL dispatch one time 1`] = `
 Array [
-  "===========store init==========",
+  "Store init 🚀",
   "Actor:reduce HelloActor",
   "parse:rl -> helloRL",
   "🔥:tracing: QL(helloQL)",
@@ -10,16 +10,12 @@ Array [
   "QL(helloQL)|> \\"plume2\\"",
   "store dispatch => 'change'",
   "HelloActor receive => 'change'",
-  "🔥:tracing: QL(helloQL)",
-  "dep:mott, cache:false, value:\\"Build tools for human\\"",
-  "QL(helloQL)|> \\"Build tools for human\\"",
-  "store changed -> reactive helloRL was invoked",
 ]
 `;
 
 exports[`reactive rx test suite test helloRL dispatch second time 1`] = `
 Array [
-  "===========store init==========",
+  "Store init 🚀",
   "Actor:reduce HelloActor",
   "parse:rl -> helloRL",
   "🔥:tracing: QL(helloQL)",
@@ -27,10 +23,6 @@ Array [
   "QL(helloQL)|> \\"plume2\\"",
   "store dispatch => 'change'",
   "HelloActor receive => 'change'",
-  "🔥:tracing: QL(helloQL)",
-  "dep:mott, cache:false, value:\\"Build tools for human\\"",
-  "QL(helloQL)|> \\"Build tools for human\\"",
-  "store changed -> reactive helloRL was invoked",
   "store dispatch => 'change'",
   "HelloActor receive => 'change'",
 ]
@@ -38,7 +30,7 @@ Array [
 
 exports[`reactive rx test suite test helloRL dispatch transaction 1`] = `
 Array [
-  "===========store init==========",
+  "Store init 🚀",
   "Actor:reduce HelloActor",
   "parse:rl -> helloRL",
   "🔥:tracing: QL(helloQL)",
@@ -60,16 +52,12 @@ Array [
     "name": "plume2",
   },
   "HelloActor receive 'c', but no handle 😭",
-  "🔥:tracing: QL(helloQL)",
-  "dep:mott, cache:false, value:\\"Build tools for human\\"",
-  "QL(helloQL)|> \\"Build tools for human\\"",
-  "store changed -> reactive helloRL was invoked",
 ]
 `;
 
 exports[`reactive rx test suite test helloRl 1`] = `
 Array [
-  "===========store init==========",
+  "Store init 🚀",
   "Actor:reduce HelloActor",
   "parse:rl -> helloRL",
   "🔥:tracing: QL(helloQL)",
