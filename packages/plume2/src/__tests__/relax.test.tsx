@@ -1,9 +1,9 @@
 import { MockLog } from 'mock-jest-console';
 import React from 'react';
 import renderer from 'react-test-renderer';
+import { isNeedRxStoreChange } from '../helper';
 import { Action, Actor, QL, Relax, Store, StoreProvider } from '../index';
 import { PQL } from '../pql';
-import { isNeedRxStoreChange } from '../relax';
 
 //===============Actor=========================
 class LoadingActor extends Actor {

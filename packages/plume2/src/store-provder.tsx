@@ -1,16 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { getDisplayName } from './helper';
 import Store from './store';
 import { IMap, IOptions } from './typing';
 
 export type TStore = new (...args: Array<any>) => Store;
-
-/**
- * 获取组件的displayName便于react-devtools的调试
- * @param WrappedComponent
- */
-const getDisplayName = WrappedComponent =>
-  WrappedComponent.displayName || WrappedComponent.name || 'Component';
 
 /**
  * StoreProvider连接ReactUI和Store
@@ -32,6 +26,7 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
 
         this._isMounted = false;
         this.store = new AppStore(opts || { debug: false });
+        this._isDebug = (this.store as any)._opts.debug;
         this.state = { ...this.state, ...this.store.state().toObject() };
 
         this.store.subscribe(this._handleStoreChange);
@@ -40,26 +35,25 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
       store: Store;
       state: Object;
       _isMounted: boolean;
+      _isDebug: boolean;
 
       componentWillMount() {
         super.componentWillMount && super.componentWillMount();
         this._isMounted = false;
 
         //will drop on production env
-        if (process.env.NODE_ENV != 'production') {
-          if ((this.store as any)._opts.debug) {
-            if (window) {
-              const cssRule =
-                'color: rgb(249, 162, 34);' +
-                'font-size: 40px;' +
-                'font-weight: bold;' +
-                'text-shadow: 1px 1px 5px rgb(249, 162, 34);' +
-                'filter: dropshadow(color=rgb(249, 162, 34), offx=1, offy=1);';
-              const version = require('../package.json').version;
-              console.log(`%cplume2@${version}🚀`, cssRule);
-            }
-            console.log(`${WrapperComponent.displayName} will mount 🚀`);
+        if (process.env.NODE_ENV != 'production' && this._isDebug) {
+          if (window) {
+            const cssRule =
+              'color: rgb(249, 162, 34);' +
+              'font-size: 40px;' +
+              'font-weight: bold;' +
+              'text-shadow: 1px 1px 5px rgb(249, 162, 34);' +
+              'filter: dropshadow(color=rgb(249, 162, 34), offx=1, offy=1);';
+            const version = require('../package.json').version;
+            console.log(`%cplume2@${version}🚀`, cssRule);
           }
+          console.log(`${WrapperComponent.displayName} will mount 🚀`);
         }
       }
 
@@ -74,14 +68,12 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
          * 1. 需要额外的去写构造函数
          * 2. 不同的App会覆盖window['store']
          */
-        if (process.env.NODE_ENV != 'production') {
-          if ((this.store as any)._opts.debug) {
-            const displayName = getDisplayName(Base);
-            window['_plume2App'] = window['_plume2App'] || {};
-            window['_plume2App'][displayName] = {
-              store: this.store
-            };
-          }
+        if (process.env.NODE_ENV != 'production' && this._isDebug) {
+          const displayName = getDisplayName(Base);
+          window['_plume2App'] = window['_plume2App'] || {};
+          window['_plume2App'][displayName] = {
+            store: this.store
+          };
         }
       }
 
@@ -100,14 +92,11 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
       componentWillUnmount() {
         super.componentWillUnmount && super.componentWillUnmount();
         this.store.unsubscribe(this._handleStoreChange);
-        //销毁store
         this.store.destroy();
 
-        if (process.env.NODE_ENV != 'production') {
-          if ((this.store as any)._opts.debug) {
-            const displayName = getDisplayName(Base);
-            delete window['_plume2App'][displayName];
-          }
+        if (process.env.NODE_ENV != 'production' && this._isDebug) {
+          const displayName = getDisplayName(Base);
+          delete window['_plume2App'][displayName];
         }
       }
 
@@ -117,10 +106,8 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
 
       _handleStoreChange = (state: IMap) => {
         //will drop on production env
-        if (process.env.NODE_ENV != 'production') {
-          if ((this.store as any)._opts.debug) {
-            console.log(`\n${WrapperComponent.displayName} will update 🚀`);
-          }
+        if (process.env.NODE_ENV != 'production' && this._isDebug) {
+          console.log(`\n${WrapperComponent.displayName} will update 🚀`);
         }
 
         this.setState(state.toObject());
