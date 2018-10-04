@@ -112,6 +112,11 @@ export default class Store<T = {}> {
     }
 
     const newStoreState = this._dispatchActor(msg, params);
+
+    if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+      console.groupEnd && console.groupEnd();
+    }
+
     //如果发生store的状态变化
     if (newStoreState != this._state) {
       this._state = newStoreState;
@@ -119,10 +124,6 @@ export default class Store<T = {}> {
       if (!this._isInTranstion) {
         this._notifier();
       }
-    }
-
-    if (process.env.NODE_ENV != 'production' && this._opts.debug) {
-      console.groupEnd && console.groupEnd();
     }
   }
 
@@ -361,7 +362,7 @@ export default class Store<T = {}> {
       const viewAction = new ViewAction();
 
       if (process.env.NODE_ENV != 'production' && this._opts.debug) {
-        console.log(`viewAction:merge ${viewAction.constructor.name}`);
+        console.log(`viewAction:merge ${(viewAction.constructor as any).name}`);
       }
 
       (viewAction as any)._bindStore(this);

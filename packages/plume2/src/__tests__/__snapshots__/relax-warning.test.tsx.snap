@@ -67,9 +67,9 @@ exports[`test output include warning 1`] = `
 
 exports[`test output include warning 2`] = `
 Array [
+  "%cplume2@1.1.1🚀",
   "===========store init==========",
   "Actor:reduce HelloActor",
-  "%cplume2@1.1.1🚀",
   "StoreProvider(Home) will mount 🚀",
   "Relax(Test) willMount rx store false 🚀",
   "props => {

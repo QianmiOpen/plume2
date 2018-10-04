@@ -24,9 +24,24 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
       constructor(props: Object) {
         super(props);
 
+        const cfg = opts || { debug: false };
+
+        if (process.env.NODE_ENV != 'production' && cfg.debug) {
+          if (window) {
+            const cssRule =
+              'color: rgb(249, 162, 34);' +
+              'font-size: 40px;' +
+              'font-weight: bold;' +
+              'text-shadow: 1px 1px 5px rgb(249, 162, 34);' +
+              'filter: dropshadow(color=rgb(249, 162, 34), offx=1, offy=1);';
+            const version = require('../package.json').version;
+            console.log(`%cplume2@${version}🚀`, cssRule);
+          }
+        }
+
         this._isMounted = false;
-        this.store = new AppStore(opts || { debug: false });
-        this._isDebug = (this.store as any)._opts.debug;
+        this.store = new AppStore(cfg);
+        this._isDebug = cfg.debug;
         this.state = { ...this.state, ...this.store.state().toObject() };
 
         this.store.subscribe(this._handleStoreChange);
@@ -43,16 +58,6 @@ export default function StoreProvider(AppStore: TStore, opts?: IOptions) {
 
         //will drop on production env
         if (process.env.NODE_ENV != 'production' && this._isDebug) {
-          if (window) {
-            const cssRule =
-              'color: rgb(249, 162, 34);' +
-              'font-size: 40px;' +
-              'font-weight: bold;' +
-              'text-shadow: 1px 1px 5px rgb(249, 162, 34);' +
-              'filter: dropshadow(color=rgb(249, 162, 34), offx=1, offy=1);';
-            const version = require('../package.json').version;
-            console.log(`%cplume2@${version}🚀`, cssRule);
-          }
           console.log(`${WrapperComponent.displayName} will mount 🚀`);
         }
       }
