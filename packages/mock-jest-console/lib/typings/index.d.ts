@@ -21,6 +21,9 @@ export declare class MockDebug extends BaseMock {
 export declare class MockError extends BaseMock {
     mock(): void;
 }
+export declare class MockTrace extends BaseMock {
+    mock(): void;
+}
 export declare class MockConsole extends BaseMock {
     mock(): void;
 }

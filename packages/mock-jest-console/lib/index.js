@@ -88,6 +88,17 @@ var MockError = /** @class */ (function (_super) {
     return MockError;
 }(BaseMock));
 exports.MockError = MockError;
+var MockTrace = /** @class */ (function (_super) {
+    __extends(MockTrace, _super);
+    function MockTrace() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    MockTrace.prototype.mock = function () {
+        console.trace = this.mockFn();
+    };
+    return MockTrace;
+}(BaseMock));
+exports.MockTrace = MockTrace;
 var MockConsole = /** @class */ (function (_super) {
     __extends(MockConsole, _super);
     function MockConsole() {
@@ -99,6 +110,7 @@ var MockConsole = /** @class */ (function (_super) {
         console.dir = this.mockFn();
         console.debug = this.mockFn();
         console.error = this.mockFn();
+        console.trace = this.mockFn();
     };
     return MockConsole;
 }(BaseMock));

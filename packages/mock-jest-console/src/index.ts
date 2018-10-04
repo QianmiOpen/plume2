@@ -53,6 +53,12 @@ export class MockError extends BaseMock {
   }
 }
 
+export class MockTrace extends BaseMock {
+  mock() {
+    console.trace = this.mockFn();
+  }
+}
+
 export class MockConsole extends BaseMock {
   mock() {
     console.warn = this.mockFn();
@@ -60,5 +66,6 @@ export class MockConsole extends BaseMock {
     console.dir = this.mockFn();
     console.debug = this.mockFn();
     console.error = this.mockFn();
+    console.trace = this.mockFn();
   }
 }

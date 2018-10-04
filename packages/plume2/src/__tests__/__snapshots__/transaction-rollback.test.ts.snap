@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test store transaction fail rollback test customRollBack 1`] = `
+Array [
+  "😭, some exception occur in transaction, store state roll back",
+  [Error: change exception],
+]
+`;
+
+exports[`test store transaction fail rollback test rollback 1`] = `
+Array [
+  "😭, some exception occur in transaction, store state roll back",
+  [Error: change exception],
+]
+`;

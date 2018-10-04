@@ -166,7 +166,7 @@ export default class Store<T = {}> {
         console.warn(
           '😭, some exception occur in transaction, store state roll back'
         );
-        console.trace(err);
+        console.log(err);
       }
     }
     //fn前后状态有没有发生变化

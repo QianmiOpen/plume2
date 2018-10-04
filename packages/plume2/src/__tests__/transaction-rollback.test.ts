@@ -1,3 +1,4 @@
+import { MockConsole } from 'mock-jest-console';
 import { Action, Actor, IMap, Store } from '../index';
 
 class HelloActor extends Actor {
@@ -68,17 +69,21 @@ class AppStore extends Store {
 
 describe('test store transaction fail rollback', () => {
   it('test rollback', () => {
+    const mockConsole = new MockConsole();
     const store = new AppStore();
     const state = store.state();
     store.rollBack();
     expect(store.state()).toEqual(state);
+    expect(mockConsole.logs).toMatchSnapshot();
   });
 
   it('test customRollBack', () => {
+    const mockConsole = new MockConsole();
     const store = new AppStore();
     const state = store.state();
     store.customRollBack();
     expect(store.state()).toEqual(state);
+    expect(mockConsole.logs).toMatchSnapshot();
   });
 
   it('test without rollback', () => {
