@@ -168,6 +168,7 @@ Store, 我们的数据状态容器中心，管理着整个 app 的数据的生�
 2.  分派 actor(单分派、事务分派)
 3.  通过 bigQuery 计算我们的查询语言(QL/PQL)
 4.  响应页面的事件(ViewAction)
+5.  注册响应 RL
 
 **Show me code!**
 

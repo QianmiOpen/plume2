@@ -10,15 +10,26 @@
 
 ### plume2 🚀🚀🚀
 
-light weight framework React for mobile web
+light-weight predict scalable framework React for web and mobile
 
 [![NPM](https://nodei.co/npm/plume2.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/plume2)
 
 Reactive and Predictable state container for React or ReactNative.
 
-- Thanks Immutable.js
-- Thanks MapReduce
-- Thanks Functional Reactive Programming.
+### Features
+
+- Light-weight
+- Reactive
+- Predict
+- Scalable
+- Trace Data Flow
+
+### Thanks
+
+- React/Native
+- Immutable.js
+- MapReduce
+- Functional Reactive Programming.
 
 ### iflux
 
