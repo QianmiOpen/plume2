@@ -57,8 +57,9 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
 
     props: Object;
     context: { _plume$Store: Store };
+    _relaxProxy: Object;
+
     private _isDebug: boolean;
-    private _relaxProxy: Object;
     private _relaxProps: Object;
     private _isMounted: boolean;
     private _isNeedRxStore: boolean;

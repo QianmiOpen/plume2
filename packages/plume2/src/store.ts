@@ -2,6 +2,7 @@ import { fromJS } from 'immutable';
 import raf from 'raf';
 import ReactDOM from 'react-dom';
 import Actor from './actor';
+import TimeTravel from './helper/time-travel';
 import { QueryLang } from './ql';
 import { RxLang } from './rx';
 import { isArray, isString } from './type';
@@ -39,12 +40,13 @@ export default class Store<T = {}> {
     this._isInTranstion = false;
 
     if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+      const TimeTravel = require('./helper/time-travel').default;
+      this.timeTravel = new TimeTravel(this);
       console.groupCollapsed && console.groupCollapsed(`Store init 🚀`);
     }
 
     //state
     this._state = fromJS({});
-    this._actorsState = [];
     this._reduceActorState();
 
     //view-action
@@ -60,6 +62,7 @@ export default class Store<T = {}> {
   }
 
   public readonly viewAction: TViewAction<T>;
+  public timeTravel: TimeTravel;
   //store的配置项
   private _opts: IOptions;
   //当前store的聚合状态
@@ -98,6 +101,13 @@ export default class Store<T = {}> {
    */
   dispatch(msg: string, params?: any) {
     if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+      //time-travel
+      this.timeTravel.record({
+        msg,
+        params,
+        isInTransaction: this._isInTranstion
+      });
+
       console.groupCollapsed &&
         console.groupCollapsed(`store dispatch => '${msg}'`);
       //如果参数存在
@@ -372,7 +382,9 @@ export default class Store<T = {}> {
 
   private _reduceActorState() {
     this._actors = [];
+    this._actorsState = [];
     const actors = this.bindActor() || [];
+
     this._state = this._state.withMutations(state => {
       for (let actor of actors) {
         //支持bindActor直接传递Actor本身不需要new
@@ -389,6 +401,7 @@ export default class Store<T = {}> {
         this._actorsState.push(initState);
         state = state.merge(initState);
       }
+
       return state;
     });
   }
@@ -461,13 +474,13 @@ export default class Store<T = {}> {
 
       //如果actor没有处理msg的方法，直接跳过
       if (!fn) {
-        if (process.env.NODE_ENV != 'production' && this._opts.debug) {
-          console.log(
-            `${
-              (actor.constructor as any).name
-            } receive '${msg}', but no handle 😭`
-          );
-        }
+        // if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+        //   console.log(
+        //     `${
+        //       (actor.constructor as any).name
+        //     } receive '${msg}', but no handle 😭`
+        //   );
+        // }
         continue;
       }
 
