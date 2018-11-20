@@ -1,4 +1,5 @@
 import { fromJS } from 'immutable';
+import { MockConsole } from 'mock-jest-console';
 import { Action, Actor, IMap, Store } from '../index';
 
 class HelloActor extends Actor {
@@ -34,6 +35,7 @@ class AppStore extends Store {
 }
 
 it('test init time-travel', () => {
+  const mock = new MockConsole();
   const store = new AppStore({
     debug: true
   });
@@ -88,4 +90,5 @@ it('test init time-travel', () => {
     hello: 'hello plume2 world',
     loading: true
   });
+  expect(mock.logs).toMatchSnapshot();
 });
