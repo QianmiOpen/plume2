@@ -116,7 +116,6 @@ export default class TimeTravel {
     }
 
     const timeline = this._timeline.slice(0, this._cursor);
-
     this._travel(timeline);
   }
 

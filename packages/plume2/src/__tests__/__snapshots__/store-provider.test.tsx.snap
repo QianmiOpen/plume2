@@ -4,7 +4,7 @@ exports[`store provider test suite debug mode 1`] = `<div />`;
 
 exports[`store provider test suite debug mode 2`] = `
 Array [
-  "%cplume2@1.1.1🚀",
+  "%cplume2@1.2.1🚀",
   "Store init 🚀",
   "Actor:reduce HelloActor",
   "StoreProvider(DebugApp) will mount 🚀",

@@ -51,7 +51,6 @@ Array [
     "id": 1,
     "name": "plume2",
   },
-  "HelloActor receive 'c', but no handle 😭",
 ]
 `;
 
