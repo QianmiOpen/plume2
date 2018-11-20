@@ -451,17 +451,19 @@ export default class Store<T = {}> {
     batchedUpdates(() => {
       this._uiSubscribers.forEach(cb => cb(this._state));
 
-      raf(() => {
-        if (process.env.NODE_ENV != 'production' && this._opts.debug) {
-          console.groupCollapsed && console.groupCollapsed('Reactive 🚀');
-        }
+      if (this._rxSubscribers.length > 0) {
+        raf(() => {
+          if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+            console.groupCollapsed && console.groupCollapsed('Reactive 🚀');
+          }
 
-        this._rxSubscribers.forEach(cb => cb());
+          this._rxSubscribers.forEach(cb => cb());
 
-        if (process.env.NODE_ENV != 'production' && this._opts.debug) {
-          console.groupEnd && console.groupEnd();
-        }
-      });
+          if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+            console.groupEnd && console.groupEnd();
+          }
+        });
+      }
     });
   }
 
