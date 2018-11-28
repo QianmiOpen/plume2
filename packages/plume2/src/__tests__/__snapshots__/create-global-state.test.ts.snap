@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`multiple store complex secene 1`] = `
+Array [
+  "Store init 🚀",
+  "Actor:reduce HelloActor",
+  "parse:rl -> helloRL",
+  "🔥:tracing: QL(helloQL)",
+  "dep:hello, cache:false, value:\\"hello\\"",
+  "QL(helloQL)|> \\"hello\\"",
+  "store dispatch => 'globalState'",
+  "params|> immutable[yes] ",
+  Object {
+    "hello": "hello global state",
+  },
+  "HelloActor receive => 'globalState'",
+  "Reactive 🚀",
+  "🔥:tracing: QL(helloQL)",
+  "dep:hello, cache:false, value:\\"hello global state\\"",
+  "QL(helloQL)|> \\"hello global state\\"",
+  "helloRL => 🔥",
+  "Store init 🚀",
+  "Actor:reduce HelloActor",
+  "store dispatch => 'globalState'",
+  "params|> immutable[yes] ",
+  Object {
+    "hello": "hello global state",
+  },
+  "HelloActor receive => 'globalState'",
+  "store dispatch => 'change'",
+  "params|> multiple store complex secene",
+  "HelloActor receive => 'change'",
+  "Reactive 🚀",
+  "🔥:tracing: QL(helloQL)",
+  "dep:hello, cache:false, value:\\"multiple store complex secene\\"",
+  "QL(helloQL)|> \\"multiple store complex secene\\"",
+  "helloRL => 🔥",
+  "store dispatch => 'globalState'",
+  "params|> immutable[yes] ",
+  Object {
+    "hello": "multiple store complex secene",
+  },
+  "HelloActor receive => 'globalState'",
+  "store dispatch => 'globalState'",
+  "params|> immutable[yes] ",
+  Object {
+    "hello": "multiple store complex secene",
+  },
+  "HelloActor receive => 'globalState'",
+]
+`;

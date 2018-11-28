@@ -1,5 +1,6 @@
 import i from 'immutable';
 import Actor from './actor';
+import { createGlobalState } from './create-global-state';
 import { Action } from './decorator';
 import { go } from './go';
 import msg from './msg';
@@ -8,7 +9,7 @@ import { QL } from './ql';
 import Relax from './relax';
 import { RL } from './rx';
 import Store from './store';
-import StoreProvider from './store-provder';
+import StoreProvider from './store-provider';
 import { IMap, IOptions, TViewAction } from './typing';
 import { ViewAction } from './view-action';
 
@@ -27,5 +28,6 @@ export {
   StoreProvider,
   IMap,
   IOptions,
-  TViewAction
+  TViewAction,
+  createGlobalState
 };

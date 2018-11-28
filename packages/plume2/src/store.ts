@@ -56,6 +56,9 @@ export default class Store<T = {}> {
     //rx
     this._initRx();
 
+    //subscribe global state
+    this.bindGlobalState();
+
     if (process.env.NODE_ENV != 'production' && this._opts.debug) {
       console.groupEnd && console.groupEnd();
     }
@@ -92,6 +95,8 @@ export default class Store<T = {}> {
   bindRx(): { [key: string]: RxLang } {
     return {};
   }
+
+  bindGlobalState(): void {}
 
   /**
    * store分发事件协同actor
