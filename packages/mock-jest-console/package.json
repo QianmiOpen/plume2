@@ -1,6 +1,6 @@
 {
   "name": "mock-jest-console",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "jest.fn mock console.xxx",
   "main": "./lib/index.js",
   "types": "./lib/typings/index.d.ts",

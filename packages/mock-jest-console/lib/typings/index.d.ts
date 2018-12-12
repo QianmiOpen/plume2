@@ -24,6 +24,15 @@ export declare class MockError extends BaseMock {
 export declare class MockTrace extends BaseMock {
     mock(): void;
 }
+export declare class MockGroup extends BaseMock {
+    mock(): void;
+}
+export declare class MockGroupCollapsed extends BaseMock {
+    mock(): void;
+}
+export declare class MockTime extends BaseMock {
+    mock(): void;
+}
 export declare class MockConsole extends BaseMock {
     mock(): void;
 }

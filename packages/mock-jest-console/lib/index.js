@@ -1,8 +1,11 @@
 "use strict";
 var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
     return function (d, b) {
         extendStatics(d, b);
         function __() { this.constructor = d; }
@@ -99,6 +102,39 @@ var MockTrace = /** @class */ (function (_super) {
     return MockTrace;
 }(BaseMock));
 exports.MockTrace = MockTrace;
+var MockGroup = /** @class */ (function (_super) {
+    __extends(MockGroup, _super);
+    function MockGroup() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    MockGroup.prototype.mock = function () {
+        console.group = this.mockFn();
+    };
+    return MockGroup;
+}(BaseMock));
+exports.MockGroup = MockGroup;
+var MockGroupCollapsed = /** @class */ (function (_super) {
+    __extends(MockGroupCollapsed, _super);
+    function MockGroupCollapsed() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    MockGroupCollapsed.prototype.mock = function () {
+        console.groupCollapsed = this.mockFn();
+    };
+    return MockGroupCollapsed;
+}(BaseMock));
+exports.MockGroupCollapsed = MockGroupCollapsed;
+var MockTime = /** @class */ (function (_super) {
+    __extends(MockTime, _super);
+    function MockTime() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    MockTime.prototype.mock = function () {
+        console.time = this.mockFn();
+    };
+    return MockTime;
+}(BaseMock));
+exports.MockTime = MockTime;
 var MockConsole = /** @class */ (function (_super) {
     __extends(MockConsole, _super);
     function MockConsole() {
@@ -111,6 +147,9 @@ var MockConsole = /** @class */ (function (_super) {
         console.debug = this.mockFn();
         console.error = this.mockFn();
         console.trace = this.mockFn();
+        console.group = this.mockFn();
+        console.groupCollapsed = this.mockFn();
+        console.time = this.mockFn();
     };
     return MockConsole;
 }(BaseMock));

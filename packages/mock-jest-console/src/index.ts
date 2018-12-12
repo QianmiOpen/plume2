@@ -59,6 +59,24 @@ export class MockTrace extends BaseMock {
   }
 }
 
+export class MockGroup extends BaseMock {
+  mock() {
+    console.group = this.mockFn();
+  }
+}
+
+export class MockGroupCollapsed extends BaseMock {
+  mock() {
+    console.groupCollapsed = this.mockFn();
+  }
+}
+
+export class MockTime extends BaseMock {
+  mock() {
+    console.time = this.mockFn();
+  }
+}
+
 export class MockConsole extends BaseMock {
   mock() {
     console.warn = this.mockFn();
@@ -67,5 +85,8 @@ export class MockConsole extends BaseMock {
     console.debug = this.mockFn();
     console.error = this.mockFn();
     console.trace = this.mockFn();
+    console.group = this.mockFn();
+    console.groupCollapsed = this.mockFn();
+    console.time = this.mockFn();
   }
 }
