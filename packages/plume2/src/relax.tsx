@@ -123,7 +123,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
       }
 
       if (process.env.NODE_ENV != 'production' && this._isDebug) {
-        require('./helper/relax-dev-helper').relaxDevHelper.ifTooManyRelaxContainer.unwatch(
+        require('./helper/relax-dev-helper').ifTooManyRelaxContainer.unwatch(
           Relax
         );
       }
