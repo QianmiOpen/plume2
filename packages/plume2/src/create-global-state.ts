@@ -1,10 +1,15 @@
 import { fromJS, is } from 'immutable';
-import { IMap } from '.';
+import { IMap } from './typing';
 
 export type TSubscriber = (state: IMap) => void;
 export type TSetter = (state: IMap) => void;
+export type TRetVal = {
+  state: IMap;
+  getter: (callback: TSubscriber) => void;
+  setter: (param: Object | TSetter) => void;
+};
 
-export function createGlobalState(data: Object) {
+export function createGlobalState(data: Object): TRetVal {
   let state: IMap = fromJS(data);
   let subscribers = [];
 
