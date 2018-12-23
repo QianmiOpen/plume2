@@ -13,6 +13,11 @@ class HelloActor extends Actor {
   change(state: IMap): IMap {
     return state.set('name', 'plume++');
   }
+
+  @Action()
+  change2(state: IMap): IMap {
+    return state.set('name', 'plume--');
+  }
 }
 
 class ReceiveActor extends Actor {
@@ -52,7 +57,8 @@ describe('actor test suite', () => {
   it('_route', () => {
     const helloActor = new HelloActor();
     expect((helloActor as any)._route).toEqual({
-      change: helloActor.change
+      change: helloActor.change,
+      change2: helloActor.change2
     });
   });
 
@@ -65,5 +71,13 @@ describe('actor test suite', () => {
     });
 
     expect(newState.toJS()).toEqual({ name: 'plume++' });
+  });
+
+  it('@Action method with no default name', () => {
+    const helloActor = new HelloActor();
+    const state = Map({ name: 'plume' });
+    const newState = helloActor.receive({ msg: 'change2', state });
+
+    expect(newState.toJS()).toEqual({ name: 'plume--' });
   });
 });
