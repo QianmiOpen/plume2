@@ -75,7 +75,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
         require('./helper/relax-dev-helper').outputRelaxProps({
           Relax,
           relax: this,
-          lifycycle: 'willMount'
+          lifecycle: 'willMount'
         });
       }
     }
@@ -107,7 +107,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
           require('./helper/relax-dev-helper').outputRelaxProps({
             Relax,
             relax: this,
-            lifycycle: 'willUpdate'
+            lifecycle: 'willUpdate'
           });
         }
 
