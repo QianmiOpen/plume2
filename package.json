@@ -6,8 +6,9 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "BABEL_ENV=production npx jest --verbose --watch",
-    "coverage": "npx jest --coverage",
+    "format": "prettier --write '**/*.{ts,tsx}'",
+    "test": "BABEL_ENV=production jest --verbose --watch",
+    "coverage": "jest --coverage",
     "build:plume2": "npm run clean:plume2 && tsc -p packages/plume2/tsconfig.json && tsc -p packages/plume2/tsconfig-es6.json",
     "clean:plume2": "rm -rf packages/plume2/es5 && rm -rf packages/plume2/es6"
   },
@@ -42,6 +43,7 @@
     "babel-preset-react": "^6.24.1",
     "jest": "^20.0.4",
     "lerna": "^2.0.0",
+    "prettier": "^1.15.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-test-renderer": "^15.6.1",
