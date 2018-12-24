@@ -2,12 +2,10 @@ import { fromJS } from 'immutable';
 import raf from 'raf';
 import ReactDOM from 'react-dom';
 import Actor from './actor';
-import TimeTravel from './helper/time-travel';
 import { QueryLang } from './ql';
 import { RxLang } from './rx';
 import { isArray, isString } from './type';
 import { IMap, IOptions, IViewActionMapper, TViewAction } from './typing';
-
 export type TDispatch = () => void;
 export type TRollback = () => void;
 export type TSubscribeHandler = (state: IMap) => void;
@@ -39,11 +37,7 @@ export default class Store<T = {}> {
     this._uiSubscribers = [];
     this._isInTranstion = false;
 
-    if (process.env.NODE_ENV != 'production' && this._opts.debug) {
-      const TimeTravel = require('./helper/time-travel').default;
-      this.timeTravel = new TimeTravel(this);
-      console.groupCollapsed && console.groupCollapsed(`Store init 🚀`);
-    }
+    console.groupCollapsed && console.groupCollapsed(`Store init 🚀`);
 
     //state
     this._state = fromJS({});
@@ -65,7 +59,6 @@ export default class Store<T = {}> {
   }
 
   public readonly viewAction: TViewAction<T>;
-  public timeTravel: TimeTravel;
   //store的配置项
   private _opts: IOptions;
   //当前store的聚合状态
@@ -106,13 +99,6 @@ export default class Store<T = {}> {
    */
   dispatch(msg: string, params?: any) {
     if (process.env.NODE_ENV != 'production' && this._opts.debug) {
-      //time-travel
-      this.timeTravel.record({
-        msg,
-        params,
-        isInTransaction: this._isInTranstion
-      });
-
       console.groupCollapsed &&
         console.groupCollapsed(`store dispatch => '${msg}'`);
       //如果参数存在
