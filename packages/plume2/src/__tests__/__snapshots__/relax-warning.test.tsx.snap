@@ -67,7 +67,7 @@ exports[`test output include warning 1`] = `
 
 exports[`test output include warning 2`] = `
 Array [
-  "%cplume2@1.2.4🚀",
+  "%cplume2@1.2.5🚀",
   "Store init 🚀",
   "Actor:reduce HelloActor",
   "StoreProvider(Home) will mount 🚀",
