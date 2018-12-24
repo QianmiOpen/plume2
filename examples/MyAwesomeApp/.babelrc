@@ -1,0 +1,7 @@
+{
+  "presets": ["module:metro-react-native-babel-preset"],
+  "plugins": [
+    ["plume2", { "reactnative": true }],
+    ["@babel/plugin-proposal-decorators", { "legacy": true }]
+  ]
+}
