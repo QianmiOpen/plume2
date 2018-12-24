@@ -28,10 +28,12 @@
   "homepage": "https://github.com/hufeng/plume#readme",
   "dependencies": {
     "commander": "^2.18.0",
-    "fs-extra": "^7.0.0",
     "immutable": "^3.8.1",
     "mitt": "^1.1.2",
     "prop-types": "^15.5.10",
     "raf": "^3.4.0"
+  },
+  "devDependencies": {
+    "fs-extra": "^7.0.0"
   }
 }
