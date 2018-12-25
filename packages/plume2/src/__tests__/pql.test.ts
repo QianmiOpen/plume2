@@ -1,5 +1,5 @@
-import { Actor, QL, Store } from '../index';
-import { PQL } from '../pql';
+import { Actor, QL, Store } from "../index";
+import { PQL } from "../pql";
 
 class LoadingActor extends Actor {
   defaultState() {
@@ -10,7 +10,7 @@ class LoadingActor extends Actor {
 class TodoActor extends Actor {
   defaultState() {
     return {
-      todo: [{ id: 1, text: 'hello plume', done: false }]
+      todo: [{ id: 1, text: "hello plume", done: false }]
     };
   }
 }
@@ -21,18 +21,18 @@ class AppStore extends Store {
   }
 }
 
-describe('dql test suite', () => {
-  it('todoDQL', () => {
+describe("dql test suite", () => {
+  it("todoDQL", () => {
     const store = new AppStore();
 
     //ql
-    const loadingQL = QL('loadingQL', ['loading', loading => loading]);
+    const loadingQL = QL("loadingQL", ["loading", loading => loading]);
 
     //pql
-    const todoPQL = PQL(index =>
-      QL('todoQL', [
+    const todoPQL = PQL("todoPQL", index =>
+      QL("todoQL", [
         loadingQL,
-        ['todo', index, 'text'],
+        ["todo", index, "text"],
         (loading, text) => ({
           loading,
           text
@@ -44,7 +44,7 @@ describe('dql test suite', () => {
 
     expect(fn(0)).toEqual({
       loading: false,
-      text: 'hello plume'
+      text: "hello plume"
     });
   });
 });

@@ -16,14 +16,20 @@
  *   }
  * }
  */
-import { QueryLang } from './ql';
+import { QueryLang } from "./ql";
 
 export class PartialQueryLang {
-  constructor(lang: (...args: any[]) => QueryLang) {
+  constructor(name: string, lang: (...args: any[]) => QueryLang) {
+    this._name = name;
     this._lang = lang;
   }
 
+  private _name: string;
   private _lang: (...args: any[]) => QueryLang;
+
+  name() {
+    return this._name;
+  }
 
   /**
    * 绑定bigQuery
@@ -37,6 +43,6 @@ export class PartialQueryLang {
   }
 }
 
-export const PQL = (lang: (...args: any[]) => QueryLang) => {
-  return new PartialQueryLang(lang);
+export const PQL = (name: string, lang: (...args: any[]) => QueryLang) => {
+  return new PartialQueryLang(name, lang);
 };

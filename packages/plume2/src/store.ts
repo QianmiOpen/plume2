@@ -1,11 +1,11 @@
-import { fromJS } from 'immutable';
-import raf from 'raf';
-import ReactDOM from 'react-dom';
-import Actor from './actor';
-import { QueryLang } from './ql';
-import { RxLang } from './rx';
-import { isArray, isString } from './type';
-import { IMap, IOptions, IViewActionMapper, TViewAction } from './typing';
+import { fromJS } from "immutable";
+import raf from "raf";
+import ReactDOM from "react-dom";
+import Actor from "./actor";
+import { QueryLang } from "./ql";
+import { RxLang } from "./rx";
+import { isArray, isString } from "./type";
+import { IMap, IOptions, IViewActionMapper, TViewAction } from "./typing";
 export type TDispatch = () => void;
 export type TRollback = () => void;
 export type TSubscribeHandler = (state: IMap) => void;
@@ -19,7 +19,7 @@ export type TSubscribeHandler = (state: IMap) => void;
  */
 const batchedUpdates =
   ReactDOM.unstable_batchedUpdates ||
-  function(cb) {
+  function(cb: Function) {
     cb();
   };
 
@@ -53,7 +53,7 @@ export default class Store<T = {}> {
     //subscribe global state
     this.bindGlobalState();
 
-    if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+    if (process.env.NODE_ENV != "production" && this._opts.debug) {
       console.groupEnd && console.groupEnd();
     }
   }
@@ -98,13 +98,13 @@ export default class Store<T = {}> {
    * @param params  参数
    */
   dispatch(msg: string, params?: any) {
-    if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+    if (process.env.NODE_ENV != "production" && this._opts.debug) {
       console.groupCollapsed &&
         console.groupCollapsed(`store dispatch => '${msg}'`);
       //如果参数存在
-      if (typeof params !== 'undefined') {
-        if (typeof params === 'object') {
-          console.log(`params|> immutable[${params.toJS ? 'yes' : 'no'}] `);
+      if (typeof params !== "undefined") {
+        if (typeof params === "object") {
+          console.log(`params|> immutable[${params.toJS ? "yes" : "no"}] `);
           console.dir && console.dir(params.toJS ? params.toJS() : params);
         } else {
           console.log(`params|> ${params}`);
@@ -114,7 +114,7 @@ export default class Store<T = {}> {
 
     const newStoreState = this._dispatchActor(msg, params);
 
-    if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+    if (process.env.NODE_ENV != "production" && this._opts.debug) {
       console.groupEnd && console.groupEnd();
     }
 
@@ -140,10 +140,10 @@ export default class Store<T = {}> {
     let isRollback = false;
 
     //log
-    if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+    if (process.env.NODE_ENV != "production" && this._opts.debug) {
       console.groupCollapsed &&
         console.groupCollapsed(
-          '::::::::::::::::🚀 open new transaction 🚀::::::::::::::::::'
+          "::::::::::::::::🚀 open new transaction 🚀::::::::::::::::::"
         );
     }
 
@@ -164,9 +164,9 @@ export default class Store<T = {}> {
       }
       isRollback = true;
 
-      if (process.env.NODE_ENV != 'production') {
+      if (process.env.NODE_ENV != "production") {
         console.warn(
-          '😭, some exception occur in transaction, store state roll back'
+          "😭, some exception occur in transaction, store state roll back"
         );
         console.log(err);
       }
@@ -179,7 +179,7 @@ export default class Store<T = {}> {
     this._isInTranstion = false;
 
     //log
-    if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+    if (process.env.NODE_ENV != "production" && this._opts.debug) {
       console.groupEnd && console.groupEnd();
     }
 
@@ -201,7 +201,7 @@ export default class Store<T = {}> {
     }
 
     if (!(ql instanceof QueryLang)) {
-      throw new Error('invalid QL');
+      throw new Error("invalid QL");
     }
 
     //数据是否过期,默认否
@@ -216,7 +216,7 @@ export default class Store<T = {}> {
     const rxFn = lang.pop();
 
     //will drop on production env
-    if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+    if (process.env.NODE_ENV != "production" && this._opts.debug) {
       console.groupCollapsed &&
         console.groupCollapsed(`🔥:tracing: QL(${name})`);
     }
@@ -229,7 +229,7 @@ export default class Store<T = {}> {
           this._cacheQL[id][index] = value;
         }
 
-        if (process.env.NODE_ENV != 'production') {
+        if (process.env.NODE_ENV != "production") {
           if (this._opts.debug) {
             console.log(
               `dep:${elem.name()}, cache:${!outdate},value:${JSON.stringify(
@@ -255,7 +255,7 @@ export default class Store<T = {}> {
           this._cacheQL[id][index] = value;
         }
 
-        if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+        if (process.env.NODE_ENV != "production" && this._opts.debug) {
           console.log(
             `dep:${elem}, cache:${!outdate}, value:${JSON.stringify(
               value,
@@ -274,14 +274,14 @@ export default class Store<T = {}> {
       const result = rxFn.apply(null, args);
       this._cacheQL[id][args.length] = result;
 
-      if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+      if (process.env.NODE_ENV != "production" && this._opts.debug) {
         console.log(`QL(${name})|> ${JSON.stringify(result, null, 2)}`);
         console.groupEnd && console.groupEnd();
       }
 
       return result;
     } else {
-      if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+      if (process.env.NODE_ENV != "production" && this._opts.debug) {
         console.log(
           `🚀:QL(${name}), cache: true, result: ${JSON.stringify(
             this._cacheQL[id][args.length],
@@ -324,7 +324,7 @@ export default class Store<T = {}> {
    * @param cb 回调函数
    */
   subscribe(cb: TSubscribeHandler) {
-    if (typeof cb != 'function' || this._uiSubscribers.indexOf(cb) != -1) {
+    if (typeof cb != "function" || this._uiSubscribers.indexOf(cb) != -1) {
       return;
     }
 
@@ -337,7 +337,7 @@ export default class Store<T = {}> {
    */
   unsubscribe(cb: TSubscribeHandler) {
     const index = this._uiSubscribers.indexOf(cb);
-    if (typeof cb != 'function' || index == -1) {
+    if (typeof cb != "function" || index == -1) {
       return;
     }
 
@@ -362,7 +362,7 @@ export default class Store<T = {}> {
       //init and pass current to viewAction
       const viewAction = new ViewAction();
 
-      if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+      if (process.env.NODE_ENV != "production" && this._opts.debug) {
         console.log(`viewAction:merge ${(viewAction.constructor as any).name}`);
       }
 
@@ -379,11 +379,11 @@ export default class Store<T = {}> {
     this._state = this._state.withMutations(state => {
       for (let actor of actors) {
         //支持bindActor直接传递Actor本身不需要new
-        if (typeof actor === 'function') {
+        if (typeof actor === "function") {
           actor = new actor();
         }
 
-        if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+        if (process.env.NODE_ENV != "production" && this._opts.debug) {
           console.log(`Actor:reduce ${(actor.constructor as any).name}`);
         }
 
@@ -411,7 +411,7 @@ export default class Store<T = {}> {
     const lang = rl.lang().slice();
     const rxFn = lang.pop();
 
-    if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+    if (process.env.NODE_ENV != "production" && this._opts.debug) {
       console.log(`parse:rl -> ${name}`);
     }
 
@@ -430,7 +430,7 @@ export default class Store<T = {}> {
         }
       });
       if (isChanged) {
-        if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+        if (process.env.NODE_ENV != "production" && this._opts.debug) {
           console.log(`${name} => 🔥`);
         }
         rxFn.apply(null, cache);
@@ -444,13 +444,13 @@ export default class Store<T = {}> {
 
       if (this._rxSubscribers.length > 0) {
         raf(() => {
-          if (process.env.NODE_ENV != 'production' && this._opts.debug) {
-            console.groupCollapsed && console.groupCollapsed('Reactive 🚀');
+          if (process.env.NODE_ENV != "production" && this._opts.debug) {
+            console.groupCollapsed && console.groupCollapsed("Reactive 🚀");
           }
 
           this._rxSubscribers.forEach(cb => cb());
 
-          if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+          if (process.env.NODE_ENV != "production" && this._opts.debug) {
             console.groupEnd && console.groupEnd();
           }
         });
@@ -478,7 +478,7 @@ export default class Store<T = {}> {
       }
 
       //debug
-      if (process.env.NODE_ENV != 'production' && this._opts.debug) {
+      if (process.env.NODE_ENV != "production" && this._opts.debug) {
         console.log(`${(actor.constructor as any).name} receive => '${msg}'`);
       }
 
@@ -503,7 +503,7 @@ export default class Store<T = {}> {
    * 打印store中的数据状态
    */
   pprint() {
-    if (process.env.NODE_ENV != 'production') {
+    if (process.env.NODE_ENV != "production") {
       console.log(JSON.stringify(this._state, null, 2));
     }
   }
@@ -512,7 +512,7 @@ export default class Store<T = {}> {
    * 打印store中的数据状态是从哪些Actor中聚合
    */
   pprintActor() {
-    if (process.env.NODE_ENV != 'production') {
+    if (process.env.NODE_ENV != "production") {
       const stateObj = {};
       this._actors.forEach((actor, index) => {
         const name = (actor.constructor as any).name;

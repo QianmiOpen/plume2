@@ -1,18 +1,18 @@
-import React from 'react';
-import renderer from 'react-test-renderer';
-import { Actor, QL, Relax, Store, StoreProvider } from '../index';
-import { PQL } from '../pql';
-import { IMap } from '../typing';
+import React from "react";
+import renderer from "react-test-renderer";
+import { Actor, QL, Relax, Store, StoreProvider } from "../index";
+import { PQL } from "../pql";
+import { IMap } from "../typing";
 
 class ProductActor extends Actor {
   defaultState() {
     return {
       products: [
-        { id: 1, name: 'p1' },
-        { id: 2, name: 'p2' },
-        { id: 3, name: 'p3' },
-        { id: 4, name: 'p4' },
-        { id: 5, name: 'p5' }
+        { id: 1, name: "p1" },
+        { id: 2, name: "p2" },
+        { id: 3, name: "p3" },
+        { id: 4, name: "p4" },
+        { id: 5, name: "p5" }
       ]
     };
   }
@@ -29,19 +29,21 @@ class ProductApp extends React.Component {
   store: Store;
 
   render() {
-    const products = this.store.state().get('products');
+    const products = this.store.state().get("products");
 
     return (
       <div>
         {products.map(p => {
-          return <ProductItem key={p.get('id')} />;
+          return <ProductItem key={p.get("id")} />;
         })}
       </div>
     );
   }
 }
 
-const productPQL = PQL(index => QL('productQL', [['products', index], p => p]));
+const productPQL = PQL("productPQL", index =>
+  QL("productQL", [["products", index], p => p])
+);
 
 @Relax
 class ProductItem extends React.Component {
@@ -67,8 +69,8 @@ class ProductItem extends React.Component {
   }
 }
 
-describe('relax dql', () => {
-  it('initialize', () => {
+describe("relax dql", () => {
+  it("initialize", () => {
     const tree = renderer.create(<ProductApp />).toJSON();
     expect(tree).toMatchSnapshot();
   });

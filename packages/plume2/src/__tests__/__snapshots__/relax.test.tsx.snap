@@ -56,6 +56,70 @@ Array [
 ]
 `;
 
+exports[`relax test suite test app relax array props 1`] = `
+<div>
+  <div />
+  <div>
+    hello world!
+  </div>
+  <div>
+    build tools for humna
+  </div>
+  <div>
+    hello world!
+  </div>
+  <div>
+    false-hello world!
+  </div>
+</div>
+`;
+
+exports[`relax test suite test app relax array props 2`] = `
+Array [
+  "%cplume2@1.2.5🚀",
+  "Store init 🚀",
+  "Actor:reduce LoadingActor",
+  "Actor:reduce HelloActor",
+  "StoreProvider(TestArrayRelax) will mount 🚀",
+  "🔥:tracing: QL(mottQL)",
+  "🔥:tracing: QL(loadingQL)",
+  "dep:loading, cache:false, value:false",
+  "QL(loadingQL)|> false",
+  "dep:loadingQL, cache:false,value:false",
+  "dep:mott, cache:false, value:\\"hello world!\\"",
+  "QL(mottQL)|> {
+  \\"loading\\": false,
+  \\"mott\\": \\"hello world!\\"
+}",
+  "Relax(ArrayRelax) willMount rx store true 🚀",
+  "props => {
+  \\"relaxProps\\": {
+    \\"loading\\": false,
+    \\"mott\\": \\"hello world!\\",
+    \\"dream\\": \\"build tools for humna\\",
+    \\"mottQL\\": {
+      \\"loading\\": false,
+      \\"mott\\": \\"hello world!\\"
+    },
+    \\"loadingPQL\\": \\"store@loadingPQL\\"
+  }
+}",
+  Object {
+    "dream": "build tools for humna",
+    "loading": false,
+    "loadingPQL": [Function],
+    "mott": "hello world!",
+    "mottQL": Object {
+      "loading": false,
+      "mott": "hello world!",
+    },
+  },
+  "🔥:tracing: QL(loadingPQL)",
+  "dep:mott, cache:false, value:\\"hello world!\\"",
+  "QL(loadingPQL)|> \\"hello world!\\"",
+]
+`;
+
 exports[`relax test suite test app relaxprops 1`] = `
 <div>
   <div />

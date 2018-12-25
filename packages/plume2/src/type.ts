@@ -8,12 +8,19 @@ const toString = Object.prototype.toString;
  * 判断是不是字符串
  * @param param
  */
-export const isString = (param: any) =>
-  toString.call(param) === '[object String]';
+export const isString = (param: any): param is string =>
+  toString.call(param) === "[object String]";
 
 /**
  * 判断是不是数组
  * @param param
  */
-export const isArray = (param: any) =>
-  toString.call(param) === '[object Array]';
+export const isArray = (param: any): param is Array<any> =>
+  toString.call(param) === "[object Array]";
+
+/**
+ * 判断是不是对象
+ * @param
+ */
+export const isObject = (param: any): param is Object =>
+  toString.call(param) === "[object Object]";

@@ -11,9 +11,8 @@
  * @param msg 事件名
  */
 
-export const Action = (msg: string) => (
+export const Action = (msg?: string) => (
   target: any,
-  //@ts-ignore
   property: any,
   descriptor: TypedPropertyDescriptor<any>
 ) => {
@@ -22,7 +21,7 @@ export const Action = (msg: string) => (
   /**
    * 如果有actor的Action中有重名的事件名，warning
    */
-  if (process.env.NODE_ENV != 'production') {
+  if (process.env.NODE_ENV != "production") {
     if (target._route[msg]) {
       const actorName = target.constructor.name;
       console.warn(
@@ -31,5 +30,6 @@ export const Action = (msg: string) => (
     }
   }
 
+  msg || (msg = property);
   target._route[msg] = descriptor.value;
 };

@@ -1,12 +1,12 @@
-import { fromJS, is } from 'immutable';
-import PropTypes from 'prop-types';
-import React from 'react';
-import { getDisplayName, isNeedRxStoreChange } from './helper';
-import { PartialQueryLang } from './pql';
-import { QueryLang } from './ql';
-import Store from './store';
-import { isArray, isString } from './type';
-import { IMap, IRelaxComponent, IRelaxContext } from './typing';
+import { fromJS, is } from "immutable";
+import PropTypes from "prop-types";
+import React from "react";
+import { getDisplayName, isNeedRxStoreChange } from "./helper";
+import { PartialQueryLang } from "./pql";
+import { QueryLang } from "./ql";
+import Store from "./store";
+import { isArray, isObject, isString } from "./type";
+import { IMap, IRelaxComponent, IRelaxContext } from "./typing";
 
 /**
  * Relax Container
@@ -30,19 +30,19 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
       //will drop on production env
       //优化开发体验，在relax判断是不是context是不是有绑定的store
       //如果没有提示用户需要在顶层的React组件加上StoreProvider
-      if (process.env.NODE_ENV != 'production') {
-        require('./helper/relax-dev-helper').ifNoStoreInContext(context);
+      if (process.env.NODE_ENV != "production") {
+        require("./helper/relax-dev-helper").ifNoStoreInContext(context);
       }
 
       this._isMounted = false;
       this.state = { storeState: {} };
-      this._isDebug = (context['_plume$Store'] as any)._opts.debug;
+      this._isDebug = (context["_plume$Store"] as any)._opts.debug;
 
       //will drop on production env
       //如果一个页面有太多的relaxcontainer说明设计上不是特别合理
       //比如在一个子列表中大量使用relax
-      if (process.env.NODE_ENV != 'production' && this._isDebug) {
-        require('./helper/relax-dev-helper').ifTooManyRelaxContainer.watch(
+      if (process.env.NODE_ENV != "production" && this._isDebug) {
+        require("./helper/relax-dev-helper").ifTooManyRelaxContainer.watch(
           Relax
         );
       }
@@ -71,11 +71,11 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
 
       //=======================AOT===============================
       //格式化props输出，方便在devtool检出注入数据
-      if (process.env.NODE_ENV != 'production' && this._isDebug) {
-        require('./helper/relax-dev-helper').outputRelaxProps({
+      if (process.env.NODE_ENV != "production" && this._isDebug) {
+        require("./helper/relax-dev-helper").outputRelaxProps({
           Relax,
           relax: this,
-          lifycycle: 'willMount'
+          lifycycle: "willMount"
         });
       }
     }
@@ -103,11 +103,11 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
 
         //=======================AOT===============================
         //格式化props输出，方便在devtool检出注入数据
-        if (process.env.NODE_ENV != 'production' && this._isDebug) {
-          require('./helper/relax-dev-helper').outputRelaxProps({
+        if (process.env.NODE_ENV != "production" && this._isDebug) {
+          require("./helper/relax-dev-helper").outputRelaxProps({
             Relax,
             relax: this,
-            lifycycle: 'willUpdate'
+            lifycycle: "willUpdate"
           });
         }
 
@@ -119,11 +119,11 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
 
     componentWillUnmount() {
       if (this._isNeedRxStore) {
-        this.context['_plume$Store'].unsubscribe(this._handleStoreChange);
+        this.context["_plume$Store"].unsubscribe(this._handleStoreChange);
       }
 
-      if (process.env.NODE_ENV != 'production' && this._isDebug) {
-        require('./helper/relax-dev-helper').ifTooManyRelaxContainer.unwatch(
+      if (process.env.NODE_ENV != "production" && this._isDebug) {
+        require("./helper/relax-dev-helper").ifTooManyRelaxContainer.unwatch(
           Relax
         );
       }
@@ -142,7 +142,7 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
     _computeRelaxProps() {
       const relaxProps = {};
       let staticRelaxProps = Relax.relaxProps;
-      const store: Store = this.context['_plume$Store'];
+      const store: Store = this.context["_plume$Store"];
 
       //如果relaxProps是Array，将数据格式做一些处理，来支撑这个格式
       //static relaxProps = [
@@ -155,12 +155,29 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
       //       worldQL,
       //   },
       //  ]
+
+      // 我们直接想用数组表达，规则
+      //static relaxProps = [
+      // 'hello',                          // 默认名字一样 hello
+      // ['goodsList', 0, 'goods'], // 默认使用最后的一个名字，goods
+      // helloQL,                       // 取 QL('name'), 比如：helloQL
+      // helloPQL,                    // 取 PQL('name'), 比如: helloPQL
+      //]
       if (isArray(staticRelaxProps)) {
         staticRelaxProps = (staticRelaxProps as Array<any>).reduce(
-          (preVal, curVal) => {
+          (preVal: Object, curVal) => {
             if (isString(curVal)) {
               preVal[curVal] = curVal;
-            } else {
+            } else if (isArray(curVal)) {
+              //取最后一个名字
+              const len = curVal.length;
+              const lastName = curVal[len - 1];
+              preVal[lastName] = curVal;
+            } else if (curVal instanceof QueryLang) {
+              preVal[curVal.name()] = curVal;
+            } else if (curVal instanceof PartialQueryLang) {
+              preVal[curVal.name()] = curVal;
+            } else if (isObject(curVal)) {
               preVal = { ...preVal, ...curVal };
             }
             return preVal;
@@ -173,11 +190,11 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
         //prop的属性值
         const propValue = staticRelaxProps[propName];
         //判断注入的属性是不是viewAction,如果是就直接将store中的viewAction注入
-        if (propValue === 'viewAction') {
+        if (propValue === "viewAction") {
           relaxProps[propName] = store.viewAction;
           //============AOT==================
-          if (process.env.NODE_ENV != 'production' && this._isDebug) {
-            require('./helper/relax-dev-helper').ifNoViewActionInStore(store);
+          if (process.env.NODE_ENV != "production" && this._isDebug) {
+            require("./helper/relax-dev-helper").ifNoViewActionInStore(store);
           }
         }
         //注入store中的值，或者QL对应的值
@@ -189,13 +206,13 @@ export default function RelaxContainer(Wrapper: IRelaxComponent): any {
           relaxProps[propName] = store.bigQuery(propValue);
         }
         //注入store中的方法
-        else if (typeof propValue === 'function') {
+        else if (typeof propValue === "function") {
           //如果该属性值是函数类型，注入store的method
           const storeMethod = store[propName];
           relaxProps[propName] = storeMethod || propValue;
 
           //=========AOT==========================
-          if (process.env.NODE_ENV != 'production') {
+          if (process.env.NODE_ENV != "production") {
             !storeMethod &&
               console.warn(`store can not find '${propName}' method.`);
           }
