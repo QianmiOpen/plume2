@@ -2,8 +2,8 @@
 
 exports[`babel-plugin-plume2 test suite optimize QL name 1`] = `
 "
-const helloQL = QL('', [/*...*/]);
-const worldQL = QL('', [/*...*/]);"
+const helloQL = QL('helloQL', [/*...*/]);
+const worldQL = QL('worldQL', [/*...*/]);"
 `;
 
 exports[`babel-plugin-plume2 test suite optimize StoreProvider opts 1`] = `

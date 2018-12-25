@@ -1,6 +1,6 @@
-import { Relax } from 'plume2';
-import React from 'react';
-import { valueQL } from '../ql';
+import { Relax } from "plume2";
+import React from "react";
+import { valueQL } from "../ql";
 
 @Relax
 export default class Header extends React.Component {
@@ -11,10 +11,7 @@ export default class Header extends React.Component {
     };
   };
 
-  static relaxProps = {
-    value: valueQL,
-    viewAction: 'viewAction'
-  };
+  static relaxProps = [valueQL, "viewAction"];
 
   render() {
     return (

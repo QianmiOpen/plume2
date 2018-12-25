@@ -1,6 +1,6 @@
-import { Relax } from 'plume2';
-import React from 'react';
-import { countQL } from '../ql';
+import { Relax } from "plume2";
+import React from "react";
+import { countQL } from "../ql";
 
 @Relax
 export default class Footer extends React.Component {
@@ -12,11 +12,7 @@ export default class Footer extends React.Component {
     };
   };
 
-  static relaxProps = {
-    count: countQL,
-    filterStatus: 'filterStatus',
-    viewAction: 'viewAction'
-  };
+  static relaxProps = [countQL, "filterStatus", "viewAction"];
 
   render() {
     const { count, filterStatus, viewAction } = this.props.relaxProps;
@@ -29,8 +25,8 @@ export default class Footer extends React.Component {
           <li>
             <a
               href="javascript:;"
-              className={'' === filterStatus ? 'selected' : ''}
-              onClick={() => viewAction.TodoAction.changeFilter('')}
+              className={"" === filterStatus ? "selected" : ""}
+              onClick={() => viewAction.TodoAction.changeFilter("")}
             >
               All
             </a>
@@ -38,8 +34,8 @@ export default class Footer extends React.Component {
           <li>
             <a
               href="javascript:;"
-              className={'active' === filterStatus ? 'selected' : ''}
-              onClick={() => viewAction.TodoAction.changeFilter('active')}
+              className={"active" === filterStatus ? "selected" : ""}
+              onClick={() => viewAction.TodoAction.changeFilter("active")}
             >
               Active
             </a>
@@ -47,8 +43,8 @@ export default class Footer extends React.Component {
           <li>
             <a
               href="javacript:;"
-              className={'completed' === filterStatus ? 'selected' : ''}
-              onClick={() => viewAction.TodoAction.changeFilter('completed')}
+              className={"completed" === filterStatus ? "selected" : ""}
+              onClick={() => viewAction.TodoAction.changeFilter("completed")}
             >
               Completed
             </a>
@@ -68,7 +64,7 @@ export default class Footer extends React.Component {
     if (count > 1) {
       return `${count} items left`;
     } else if (count === 1) {
-      return '1 item left';
+      return "1 item left";
     }
   }
 }

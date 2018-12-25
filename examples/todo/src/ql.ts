@@ -1,10 +1,10 @@
-import { QL } from 'plume2';
+import { QL } from "plume2";
 
 /**
  * 查询输入框的值
  */
-export const valueQL = QL('valueQL', [
-  'value',
+export const valueQL = QL("value", [
+  "value",
   /**
    * 转换UI需要的值
    */
@@ -14,17 +14,17 @@ export const valueQL = QL('valueQL', [
 /**
  * 查询todo
  */
-export const todoQL = QL('todoQL', [
-  'todo',
-  'filterStatus',
+export const todoQL = QL("todo", [
+  "todo",
+  "filterStatus",
   (todo, filterStatus) => {
-    if (filterStatus === '') {
+    if (filterStatus === "") {
       return todo;
     }
     //是否是完成状态
-    const done = filterStatus === 'completed';
+    const done = filterStatus === "completed";
     return todo.filter(v => {
-      return v.get('done') === done;
+      return v.get("done") === done;
     });
   }
 ]);
@@ -32,7 +32,7 @@ export const todoQL = QL('todoQL', [
 /**
  * 查询todo的数量
  */
-export const countQL = QL('countQL', [
+export const countQL = QL("count", [
   todoQL,
   /**
    * QL支持嵌套

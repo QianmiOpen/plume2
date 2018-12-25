@@ -1,8 +1,8 @@
-import { Relax } from 'plume2';
-import React from 'react';
-import { Text } from 'react-native';
-import { Loading } from 'uikit';
-import { THomeViewAction } from '../types';
+import { Relax } from "plume2";
+import React from "react";
+import { Text, TouchableOpacity } from "react-native";
+import { Loading } from "uikit";
+import { THomeViewAction } from "../types";
 
 @Relax
 export default class Hello extends React.Component {
@@ -14,7 +14,7 @@ export default class Hello extends React.Component {
     };
   };
 
-  static relaxProps = ['loading', 'count', 'viewAction'];
+  static relaxProps = ["loading", "count", "viewAction"];
 
   render() {
     const { loading, count, viewAction } = this.props.relaxProps;
@@ -22,9 +22,9 @@ export default class Hello extends React.Component {
       return <Loading />;
     } else {
       return (
-        <Text
-          onPress={viewAction.HomeViewAction.onIncCount}
-        >{`你一抹微笑如茉莉:) 😁${count}`}</Text>
+        <TouchableOpacity onPress={viewAction.HomeViewAction.onIncCount}>
+          <Text>{`你一抹微笑如茉莉:) 😁${count}`}</Text>
+        </TouchableOpacity>
       );
     }
   }

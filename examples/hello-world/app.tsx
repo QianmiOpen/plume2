@@ -8,39 +8,39 @@ import {
   StoreProvider,
   TViewAction,
   ViewAction
-} from 'plume2';
-import React from 'react';
-import ReactDOM from 'react-dom';
+} from "plume2";
+import React from "react";
+import ReactDOM from "react-dom";
 
 class HelloViewAction extends ViewAction {
-  handleClick() {
-    this.store.dispatch('click');
-  }
+  handleClick = () => {
+    this.store.dispatch("click");
+  };
 }
 
 class HelloActor extends Actor {
   defaultState() {
     return {
-      mott: 'Build tools for human!!'
+      mott: "Build tools for human!!"
     };
   }
 
-  @Action('click')
+  @Action()
   click(state: IMap) {
-    return state.set('mott', 'click me');
+    return state.set("mott", "click me");
   }
 }
 
 class WorldActor extends Actor {
   defaultState() {
     return {
-      text: 'plume'
+      text: "plume"
     };
   }
 
-  @Action('click')
+  @Action()
   click(state: IMap) {
-    return state.set('text', 'plume2');
+    return state.set("text", "plume2");
   }
 }
 
@@ -58,9 +58,9 @@ class AppStore extends Store {
   }
 }
 
-const helloQL = QL('helloQL', [
-  'mott',
-  'text',
+const helloQL = QL("hello", [
+  "mott",
+  "text",
   (mott: string, text: string) => `${mott}:${text}`
 ]);
 
@@ -76,22 +76,13 @@ class Mott extends React.Component {
       viewAction: THelloViewAction;
     };
   };
-  static relaxProps = [
-    'mott',
-    'text',
-    'viewAction',
-    {
-      hello: helloQL
-    }
-  ];
+  static relaxProps = ["mott", "text", "viewAction", helloQL];
 
   render() {
     const { mott, text, hello, viewAction } = this.props.relaxProps;
     return (
       <div>
-        <div onClick={() => viewAction.HelloViewAction.handleClick()}>
-          {mott}
-        </div>
+        <div onClick={viewAction.HelloViewAction.handleClick}>{mott}</div>
         <div>{text}</div>
         <div>{hello}</div>
       </div>
@@ -106,4 +97,4 @@ class HelloApp extends React.Component {
   }
 }
 
-ReactDOM.render(<HelloApp />, document.getElementById('app'));
+ReactDOM.render(<HelloApp />, document.getElementById("app"));

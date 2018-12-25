@@ -4,7 +4,7 @@ exports[`could not inject value from store 1`] = `<div />`;
 
 exports[`could not inject value from store 2`] = `
 Array [
-  "%cplume2@1.2.5🚀",
+  "%cplume2@1.2.6🚀",
   "Store init 🚀",
   "Actor:reduce HelloActor",
   "StoreProvider(TestApp) will mount 🚀",

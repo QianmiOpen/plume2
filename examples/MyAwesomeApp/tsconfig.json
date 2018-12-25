@@ -15,7 +15,9 @@
       "uikit": ["src/uikit"]
     },
     "strictNullChecks": false,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
   },
   "exclude": ["node_modules"]
 }

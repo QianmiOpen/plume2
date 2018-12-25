@@ -19,7 +19,7 @@ exports[`relax test suite initial render relax 1`] = `
 
 exports[`relax test suite initial render relax 2`] = `
 Array [
-  "%cplume2@1.2.5🚀",
+  "%cplume2@1.2.6🚀",
   "Store init 🚀",
   "Actor:reduce LoadingActor",
   "Actor:reduce HelloActor",
@@ -76,7 +76,7 @@ exports[`relax test suite test app relax array props 1`] = `
 
 exports[`relax test suite test app relax array props 2`] = `
 Array [
-  "%cplume2@1.2.5🚀",
+  "%cplume2@1.2.6🚀",
   "Store init 🚀",
   "Actor:reduce LoadingActor",
   "Actor:reduce HelloActor",
@@ -131,7 +131,7 @@ exports[`relax test suite test app relaxprops 1`] = `
 
 exports[`relax test suite test app relaxprops 2`] = `
 Array [
-  "%cplume2@1.2.5🚀",
+  "%cplume2@1.2.6🚀",
   "Store init 🚀",
   "Actor:reduce LoadingActor",
   "Actor:reduce HelloActor",

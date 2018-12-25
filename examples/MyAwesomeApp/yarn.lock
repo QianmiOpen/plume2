@@ -1077,10 +1077,12 @@ babel-plugin-jest-hoist@^23.2.0:
   resolved "http://registry.npm.taobao.org/babel-plugin-jest-hoist/download/babel-plugin-jest-hoist-23.2.0.tgz#e61fae05a1ca8801aadee57a6d66b8cefaf44167"
   integrity sha1-5h+uBaHKiAGq3uV6bWa4zvr0QWc=
 
-babel-plugin-plume2@^0.0.3:
-  version "0.0.3"
-  resolved "http://registry.npm.taobao.org/babel-plugin-plume2/download/babel-plugin-plume2-0.0.3.tgz#bd6330e3750252ae8b76c953bf6c89292aac921e"
-  integrity sha1-vWMw43UCUq6LdslTv2yJKSqskh4=
+babel-plugin-plume2@^0.0.4:
+  version "0.0.4"
+  resolved "http://registry.npm.taobao.org/babel-plugin-plume2/download/babel-plugin-plume2-0.0.4.tgz#9c2b584f647d227702d716e3d26aa0765646521f"
+  integrity sha1-nCtYT2R9IncC1xbj0mqgdlZGUh8=
+  dependencies:
+    debug "^4.0.1"
 
 babel-plugin-syntax-object-rest-spread@^6.13.0:
   version "6.13.0"
@@ -1668,7 +1670,7 @@ debug@^3.1.0:
   dependencies:
     ms "^2.1.1"
 
-debug@^4.1.0:
+debug@^4.0.1, debug@^4.1.0:
   version "4.1.1"
   resolved "http://registry.npm.taobao.org/debug/download/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
   integrity sha1-O3ImAlUQnGtYnO4FDx1RYTlmR5E=
@@ -4463,10 +4465,10 @@ plugin-error@^0.1.2:
     arr-union "^2.0.1"
     extend-shallow "^1.1.2"
 
-plume2@^1.2.5:
-  version "1.2.5"
-  resolved "http://registry.npm.taobao.org/plume2/download/plume2-1.2.5.tgz#5b4242acb1cd1d7b1f850c4d15086cfd8e7914ff"
-  integrity sha1-W0JCrLHNHXsfhQxNFQhs/Y55FP8=
+plume2@^1.2.6:
+  version "1.2.6"
+  resolved "http://registry.npm.taobao.org/plume2/download/plume2-1.2.6.tgz#c1a2fb4218143c3e1964d15a477760073d5a6a83"
+  integrity sha1-waL7QhgUPD4ZZNFaR3dgBz1aaoM=
   dependencies:
     commander "^2.18.0"
     immutable "^3.8.1"

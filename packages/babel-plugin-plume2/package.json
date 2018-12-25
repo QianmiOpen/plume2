@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-plume2",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "use babel to transform plume2 app",
   "main": "./src/index.js",
   "keywords": [

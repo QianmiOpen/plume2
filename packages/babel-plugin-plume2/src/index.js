@@ -1,7 +1,7 @@
-const debug = require('debug')('babel-plugin-plume2');
-const isProd = (process.env.BABEL_ENV || process.env.NODE_ENV) === 'production';
+const debug = require("debug")("babel-plugin-plume2");
+const isProd = (process.env.BABEL_ENV || process.env.NODE_ENV) === "production";
 
-debug('production env? ', isProd);
+debug("production env? ", isProd);
 
 /**
  * 判断当前的call-expression是不是require('react-dom')
@@ -10,17 +10,17 @@ debug('production env? ', isProd);
  */
 function isRequireReactDOM(t, path) {
   return (
-    t.isIdentifier(path.node.callee, { name: 'require' }) &&
-    path.get('arguments.0').isStringLiteral({ value: 'react-dom' })
+    t.isIdentifier(path.node.callee, { name: "require" }) &&
+    path.get("arguments.0").isStringLiteral({ value: "react-dom" })
   );
 }
 
 function isPlume2QL(t, path) {
-  return t.isIdentifier(path.node.callee, { name: 'QL' });
+  return t.isIdentifier(path.node.callee, { name: "QL" });
 }
 
 function isStoreProvider(t, path) {
-  return t.isIdentifier(path.node.callee, { name: 'StoreProvider' });
+  return t.isIdentifier(path.node.callee, { name: "StoreProvider" });
 }
 
 module.exports = function(babel) {
@@ -38,10 +38,10 @@ module.exports = function(babel) {
         if (
           opts.reactnative &&
           t.isStringLiteral(path.node.source, {
-            value: 'react-dom'
+            value: "react-dom"
           })
         ) {
-          path.node.source = t.StringLiteral('react-native');
+          path.node.source = t.StringLiteral("react-native");
         }
       },
 
@@ -56,7 +56,7 @@ module.exports = function(babel) {
          */
         if (opts.reactnative && isRequireReactDOM(t, path)) {
           debug(`react-native env replace react-dom -> react-native`);
-          path.node.arguments[0] = t.StringLiteral('react-native');
+          path.node.arguments[0] = t.StringLiteral("react-native");
           return;
         }
 
@@ -68,15 +68,15 @@ module.exports = function(babel) {
          * const helloQL = QL('', [....])
          * reduce javascript size
          */
-        if (isProd && isPlume2QL(t, path)) {
-          const qlName = path.get('arguments.0').node.value;
-          if (qlName) {
-            debug(`optimize %s to empty str`, qlName);
-            //assign empty string
-            path.get('arguments.0').node.value = '';
-          }
-          return;
-        }
+        // if (isProd && isPlume2QL(t, path)) {
+        //   const qlName = path.get('arguments.0').node.value;
+        //   if (qlName) {
+        //     debug(`optimize %s to empty str`, qlName);
+        //     //assign empty string
+        //     path.get('arguments.0').node.value = '';
+        //   }
+        //   return;
+        // }
 
         /**
          * if current env is production
@@ -86,9 +86,9 @@ module.exports = function(babel) {
          * StoreProvider(AppStore)
          */
         if (isProd && isStoreProvider(t, path)) {
-          if (path.get('arguments') && path.get('arguments').length > 1) {
+          if (path.get("arguments") && path.get("arguments").length > 1) {
             //get opts arguments
-            const opts = path.get('arguments.1');
+            const opts = path.get("arguments.1");
             opts && opts.remove();
             debug(`optimize StoreProvider opts`);
             return;

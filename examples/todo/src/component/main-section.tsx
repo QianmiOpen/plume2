@@ -1,7 +1,7 @@
-import { List } from 'immutable';
-import { IMap, Relax } from 'plume2';
-import React from 'react';
-import { todoQL } from '../ql';
+import { List } from "immutable";
+import { IMap, Relax } from "plume2";
+import React from "react";
+import { todoQL } from "../ql";
 
 @Relax
 export default class MainSection extends React.Component {
@@ -13,10 +13,7 @@ export default class MainSection extends React.Component {
     };
   };
 
-  static relaxProps = {
-    todo: todoQL,
-    viewAction: 'viewAction'
-  };
+  static relaxProps = [todoQL, "viewAction"];
 
   render() {
     const { todo, viewAction } = this.props.relaxProps;
@@ -31,15 +28,15 @@ export default class MainSection extends React.Component {
         <label htmlFor="toggle-all">Mark all as complete</label>
         <ul className="todo-list">
           {todo.toArray().map((v, k) => (
-            <li key={v.get('id')}>
+            <li key={v.get("id")}>
               <div className="view">
                 <input
                   className="toggle"
                   type="checkbox"
-                  checked={v.get('done')}
+                  checked={v.get("done")}
                   onChange={() => viewAction.TodoAction.toggle(k)}
                 />
-                <label>{v.get('text')}</label>
+                <label>{v.get("text")}</label>
                 <button
                   className="destroy"
                   onClick={() => viewAction.TodoAction.destroy(k)}
