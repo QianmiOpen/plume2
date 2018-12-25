@@ -21,10 +21,10 @@ const relaxData = relaxProps => {
  * @param relax
  * @param Relax
  */
-export const outputRelaxProps = ({ Relax, relax, lifycycle }) => {
+export const outputRelaxProps = ({ Relax, relax, lifecycle }) => {
   console.groupCollapsed &&
     console.groupCollapsed(
-      `${Relax.displayName} ${lifycycle} rx store ${relax._isNeedRxStore} 🚀`
+      `${Relax.displayName} ${lifecycle} rx store ${relax._isNeedRxStore} 🚀`
     );
 
   const _relaxProps = relax._relaxProps;

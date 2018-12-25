@@ -11,6 +11,9 @@
     "build:plume2": "npm run clean:plume2 && tsc -p packages/plume2/tsconfig.json && tsc -p packages/plume2/tsconfig-es6.json",
     "clean:plume2": "rm -rf packages/plume2/es5 && rm -rf packages/plume2/es6"
   },
+  "prettier": {
+    "singleQuote": true
+  },
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"
