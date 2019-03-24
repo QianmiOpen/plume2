@@ -23,16 +23,17 @@ export interface IRelaxContext<Store> {
 /**
  * Relax容器组件的props类型
  */
-export interface IRelaxProps {
-  relaxProps?: Object;
+export interface IRelaxProps<T extends Object = Object> {
+  relaxProps?: T;
   [name: string]: any;
 }
 
 /**
  * Relax容器组件的类型
  */
-export interface IRelaxComponent extends React.ComponentClass<IRelaxProps> {
-  relaxProps?: Object;
+export interface IRelaxComponent<T extends Object = Object>
+  extends React.ComponentClass<IRelaxProps<T>> {
+  relaxProps?: T;
 }
 
 /**
